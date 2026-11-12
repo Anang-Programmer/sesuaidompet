@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Info, Pencil, Search } from 'lucide-react';
+import { Info, Pencil, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { PageHeader } from '../components/PageHeader';
 import { PageHeaderSkeleton, TableSkeleton } from '../components/Skeleton';
@@ -13,15 +13,18 @@ import {
 import { isCompleteSmartphone } from '../utils/sawCalculator';
 import { formatCriterionValue } from '../utils/formatters';
 
+const ITEMS_PER_PAGE = 10;
+
 export default function Penilaian() {
   const { user, isAdmin } = useAuth();
   const [smartphones, setSmartphones] = useState([]);
   const [criteria, setCriteria] = useState([]);
   const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all'); // 'all' | 'complete' | 'incomplete'
+  const [statusFilter, setStatusFilter] = useState('all');
   const [editingPhone, setEditingPhone] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
 
   async function reloadData() {
     const [phoneData, criteriaData] = await Promise.all([
@@ -57,6 +60,10 @@ export default function Penilaian() {
     };
   }, []);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, statusFilter]);
+
   const filteredPhones = useMemo(() => {
     const q = search.trim().toLowerCase();
     return smartphones.filter((phone) => {
@@ -67,6 +74,10 @@ export default function Penilaian() {
       return true;
     });
   }, [smartphones, criteria, search, statusFilter]);
+
+  const totalPages = Math.ceil(filteredPhones.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const paginatedPhones = filteredPhones.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
   async function handleSavePenilaian(payload) {
     setError('');
@@ -105,7 +116,6 @@ export default function Penilaian() {
         </div>
       )}
 
-      {/* Filter */}
       <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div className="relative flex-1 sm:max-w-xs">
           <Search className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
@@ -140,7 +150,6 @@ export default function Penilaian() {
         </div>
       </div>
 
-      {/* Tabel Matriks Nilai Asli */}
       <div className="overflow-hidden rounded-sm border border-slate-200 bg-white shadow-2xs">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
@@ -167,13 +176,14 @@ export default function Penilaian() {
                   </td>
                 </tr>
               ) : (
-                filteredPhones.map((phone, idx) => {
+                paginatedPhones.map((phone, idx) => {
+                  const actualIndex = startIndex + idx;
                   const complete = isCompleteSmartphone(phone, criteria);
 
                   return (
                     <tr key={phone.id} className="hover:bg-slate-50/70">
                       <td className="px-3 py-2 font-bold text-slate-700">
-                        A{idx + 1}
+                        A{actualIndex + 1}
                       </td>
                       <td className="px-3 py-2">
                         <div className="font-semibold text-slate-900">
@@ -213,6 +223,37 @@ export default function Penilaian() {
             </tbody>
           </table>
         </div>
+
+        {filteredPhones.length > 0 && (
+          <div className="flex items-center justify-between border-t border-slate-200 bg-slate-50 px-3.5 py-3">
+            <span className="text-sm text-slate-600">
+              Menampilkan <span className="font-semibold">{startIndex + 1}</span> - <span className="font-semibold">{Math.min(startIndex + ITEMS_PER_PAGE, filteredPhones.length)}</span> dari <span className="font-semibold">{filteredPhones.length}</span> data
+            </span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="inline-flex items-center gap-1 rounded-sm border border-slate-300 bg-white px-2.5 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <ChevronLeft className="h-4 w-4" />
+                <span>Sebelumnya</span>
+              </button>
+              <span className="text-sm font-medium text-slate-700">
+                Halaman {currentPage} dari {totalPages}
+              </span>
+              <button
+                type="button"
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                className="inline-flex items-center gap-1 rounded-sm border border-slate-300 bg-white px-2.5 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <span>Selanjutnya</span>
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {editingPhone && (
