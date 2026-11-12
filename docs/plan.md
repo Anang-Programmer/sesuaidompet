@@ -226,10 +226,10 @@ Database dibuat **ringkas dan jelas: 4 tabel saja**.
 | results_snapshot | jsonb | Snapshot matriks & daftar ranking lengkap |
 | created_at | timestamptz | Waktu perhitungan disimpan |
 
-### Script SQL (jalankan sekali di Supabase → SQL Editor)
+### Script SQL (jalankan di Supabase → SQL Editor)
 ```sql
 -- 1. Tabel users (profil + role)
-create table public.users (
+create table if not exists public.users (
   id         uuid primary key references auth.users(id) on delete cascade,
   name       text not null default '',
   email      text not null,
@@ -248,10 +248,11 @@ begin
   insert into public.users (id, name, email, role)
   values (
     new.id,
-    coalesce(new.raw_user_meta_data->>'name', split_part(new.email, '@', 1)),
-    new.email,
+    coalesce(nullif(trim(new.raw_user_meta_data->>'name'), ''), split_part(coalesce(new.email, ''), '@', 1)),
+    coalesce(new.email, ''),
     'user'
-  );
+  )
+  on conflict (id) do nothing;
   return new;
 end;
 $$;
@@ -261,12 +262,23 @@ create trigger on_auth_user_created
   after insert on auth.users
   for each row execute function public.handle_new_user();
 
+-- Sinkronkan jika sudah terlanjur ada akun di auth.users sebelum script dijalankan
+insert into public.users (id, name, email, role)
+select
+  id,
+  coalesce(nullif(trim(raw_user_meta_data->>'name'), ''), split_part(coalesce(email, ''), '@', 1)),
+  coalesce(email, ''),
+  'user'
+from auth.users
+on conflict (id) do nothing;
+
 -- Helper untuk cek apakah user yang login adalah admin
 create or replace function public.is_admin()
 returns boolean
 language sql
 security definer
 set search_path = public
+stable
 as $$
   select exists (
     select 1 from public.users
@@ -275,7 +287,7 @@ as $$
 $$;
 
 -- 2. Tabel kriteria
-create table public.criteria (
+create table if not exists public.criteria (
   id     serial primary key,
   code   text not null unique,
   name   text not null,
@@ -288,7 +300,7 @@ create table public.criteria (
 -- 3. Tabel smartphone (alternatif + nilai spesifikasi)
 --    user_id NULL = katalog master Admin (terlihat semua user)
 --    user_id terisi = input manual pribadi milik user tersebut
-create table public.smartphones (
+create table if not exists public.smartphones (
   id          serial primary key,
   user_id     uuid references public.users(id) on delete cascade default null,
   name        text not null,
@@ -302,9 +314,9 @@ create table public.smartphones (
 );
 
 -- 4. Tabel riwayat perhitungan SAW
-create table public.calculation_histories (
+create table if not exists public.calculation_histories (
   id                  serial primary key,
-  user_id             uuid not null references public.users(id) on delete cascade,
+  user_id             uuid not null references public.users(id) on delete cascade default auth.uid(),
   title               text not null default 'Perhitungan SAW',
   max_budget          bigint check (max_budget > 0),
   weights_used        jsonb not null,
@@ -321,7 +333,8 @@ insert into public.criteria (code, name, field, type, weight, unit) values
   ('C3', 'RAM',                   'ram_gb',      'benefit', 0.265, 'GB'),
   ('C4', 'Baterai',               'battery_mah', 'benefit', 0.177, 'mAh'),
   ('C5', 'Kapasitas Penyimpanan', 'storage_gb',  'benefit', 0.152, 'GB'),
-  ('C6', 'Prosesor (AnTuTu)',     'antutu',      'benefit', 0.100, 'skor');
+  ('C6', 'Prosesor (AnTuTu)',     'antutu',      'benefit', 0.100, 'skor')
+on conflict (code) do nothing;
 
 -- 6. Keamanan (Row Level Security)
 alter table public.users                 enable row level security;
@@ -330,35 +343,55 @@ alter table public.smartphones           enable row level security;
 alter table public.calculation_histories enable row level security;
 
 -- Users: baca profil sendiri atau semua (jika admin), kelola hanya admin
+drop policy if exists "read own or admin" on public.users;
 create policy "read own or admin" on public.users
   for select to authenticated using (auth.uid() = id or public.is_admin());
+
+drop policy if exists "admin manage users" on public.users;
 create policy "admin manage users" on public.users
   for all to authenticated using (public.is_admin()) with check (public.is_admin());
 
 -- Criteria: semua user login boleh baca, hanya admin boleh ubah
+drop policy if exists "authenticated read criteria" on public.criteria;
 create policy "authenticated read criteria" on public.criteria
   for select to authenticated using (true);
+
+drop policy if exists "admin write criteria" on public.criteria;
 create policy "admin write criteria" on public.criteria
   for all to authenticated using (public.is_admin()) with check (public.is_admin());
 
 -- Smartphones: baca katalog master (user_id is null) atau milik sendiri (atau admin),
 --              user biasa bisa tambah/edit/hapus milik sendiri, admin bisa kelola semua
+drop policy if exists "read master or own smartphones" on public.smartphones;
 create policy "read master or own smartphones" on public.smartphones
   for select to authenticated using (user_id is null or user_id = auth.uid() or public.is_admin());
+
+drop policy if exists "user insert own smartphones" on public.smartphones;
 create policy "user insert own smartphones" on public.smartphones
   for insert to authenticated with check (user_id = auth.uid());
+
+drop policy if exists "user update own smartphones" on public.smartphones;
 create policy "user update own smartphones" on public.smartphones
   for update to authenticated using (user_id = auth.uid()) with check (user_id = auth.uid());
+
+drop policy if exists "user delete own smartphones" on public.smartphones;
 create policy "user delete own smartphones" on public.smartphones
   for delete to authenticated using (user_id = auth.uid());
+
+drop policy if exists "admin write smartphones" on public.smartphones;
 create policy "admin write smartphones" on public.smartphones
   for all to authenticated using (public.is_admin()) with check (public.is_admin());
 
 -- Calculation Histories: baca milik sendiri atau semua (jika admin), tambah/hapus milik sendiri
+drop policy if exists "read own or admin histories" on public.calculation_histories;
 create policy "read own or admin histories" on public.calculation_histories
   for select to authenticated using (user_id = auth.uid() or public.is_admin());
+
+drop policy if exists "user insert own histories" on public.calculation_histories;
 create policy "user insert own histories" on public.calculation_histories
   for insert to authenticated with check (user_id = auth.uid());
+
+drop policy if exists "user or admin delete histories" on public.calculation_histories;
 create policy "user or admin delete histories" on public.calculation_histories
   for delete to authenticated using (user_id = auth.uid() or public.is_admin());
 ```
@@ -374,7 +407,7 @@ create policy "user or admin delete histories" on public.calculation_histories
 - **Hak Akses:**
   - **Admin:** melihat semua halaman + edit bobot/jenis kriteria + kelola katalog master smartphone (`user_id = null`) + lihat semua riwayat perhitungan.
   - **User Biasa:** melihat katalog master smartphone, tambah/edit/hapus HP input manual miliknya sendiri, lihat kriteria & bobot default (plus opsi simulasi bobot kustom/budget), jalankan perhitungan SAW, serta simpan & lihat riwayat perhitungannya sendiri.
-- File `.env.local` berisi `VITE_SUPABASE_URL` dan `VITE_SUPABASE_ANON_KEY`. `.env.example` berisi nama variabel yang sama dengan nilai kosong.
+- File `.env.local` berisi `VITE_SUPABASE_URL` dan `VITE_SUPABASE_PUBLISHABLE_KEY`. `.env.example` berisi nama variabel yang sama dengan nilai kosong.
 
 ---
 
