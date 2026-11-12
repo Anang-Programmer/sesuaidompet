@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Check, Pencil, Plus, Scale, Search, Trash2 } from 'lucide-react';
+import { ArrowRight, Check, Pencil, Plus, Scale, Search, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { useSawSession } from '../hooks/useSawSession';
 import { PageHeader } from '../components/PageHeader';
@@ -17,16 +17,21 @@ import {
 import { isCompleteSmartphone } from '../utils/sawCalculator';
 import { formatRupiah } from '../utils/formatters';
 
+const ITEMS_PER_PAGE = 10;
+
 export default function Alternatif() {
   const { user, isAdmin } = useAuth();
   const { compareIds, toggleCompareId, clearCompareIds } = useSawSession();
   const [smartphones, setSmartphones] = useState([]);
   const [criteria, setCriteria] = useState([]);
   const [search, setSearch] = useState('');
-  const [sourceFilter, setSourceFilter] = useState('all'); // 'all' | 'mine'
+  const [sourceFilter, setSourceFilter] = useState('all');
   const [modalState, setModalState] = useState({ open: false, phone: null });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  
+  // State untuk pagination
+  const [currentPage, setCurrentPage] = useState(1);
 
   async function reloadData() {
     const [phoneData, criteriaData] = await Promise.all([
@@ -62,6 +67,11 @@ export default function Alternatif() {
     };
   }, []);
 
+  // Reset ke halaman 1 jika user mencari atau mengganti filter
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, sourceFilter]);
+
   const hasMyPhones = useMemo(
     () => smartphones.some((p) => p.user_id && p.user_id === user?.id),
     [smartphones, user?.id]
@@ -75,6 +85,11 @@ export default function Alternatif() {
       return true;
     });
   }, [smartphones, search, sourceFilter, user?.id]);
+
+  // Logika Pagination
+  const totalPages = Math.ceil(filteredPhones.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const paginatedPhones = filteredPhones.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
   async function handleSaveModal(payload) {
     setError('');
@@ -225,7 +240,8 @@ export default function Alternatif() {
                   </td>
                 </tr>
               ) : (
-                filteredPhones.map((phone, idx) => {
+                paginatedPhones.map((phone, idx) => {
+                  const actualIndex = startIndex + idx;
                   const canEdit = isAdmin || phone.user_id === user?.id;
                   const complete = isCompleteSmartphone(phone, criteria);
                   const inCompare = compareIds.includes(phone.id);
@@ -234,7 +250,7 @@ export default function Alternatif() {
                   return (
                     <tr key={phone.id} className="hover:bg-slate-50/70">
                       <td className="px-3.5 py-2 font-bold text-slate-700">
-                        A{idx + 1}
+                        A{actualIndex + 1}
                       </td>
                       <td className="px-3.5 py-2 font-semibold text-slate-900">
                         <div className="flex flex-wrap items-center gap-1.5">
@@ -320,6 +336,38 @@ export default function Alternatif() {
             </tbody>
           </table>
         </div>
+        
+        {/* Navigasi Pagination */}
+        {filteredPhones.length > 0 && (
+          <div className="flex items-center justify-between border-t border-slate-200 bg-slate-50 px-3.5 py-3">
+            <span className="text-sm text-slate-600">
+              Menampilkan <span className="font-semibold">{startIndex + 1}</span> - <span className="font-semibold">{Math.min(startIndex + ITEMS_PER_PAGE, filteredPhones.length)}</span> dari <span className="font-semibold">{filteredPhones.length}</span> data
+            </span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="inline-flex items-center gap-1 rounded-sm border border-slate-300 bg-white px-2.5 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <ChevronLeft className="h-4 w-4" />
+                <span>Sebelumnya</span>
+              </button>
+              <span className="text-sm font-medium text-slate-700">
+                Halaman {currentPage} dari {totalPages}
+              </span>
+              <button
+                type="button"
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                className="inline-flex items-center gap-1 rounded-sm border border-slate-300 bg-white px-2.5 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <span>Selanjutnya</span>
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {modalState.open && (

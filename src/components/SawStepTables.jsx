@@ -1,6 +1,51 @@
+import { useState } from 'react';
 import { formatCriterionValue, formatDecimal } from '../utils/formatters';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+
+function TablePagination({ currentPage, totalPages, onPageChange, totalItems, itemsPerPage }) {
+  if (totalItems === 0) return null;
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+
+  return (
+    <div className="flex items-center justify-between border-t border-slate-200 bg-slate-50 px-3.5 py-2.5">
+      <span className="text-xs text-slate-600">
+        Menampilkan <span className="font-semibold">{startIndex + 1}</span> - <span className="font-semibold">{endIndex}</span> dari <span className="font-semibold">{totalItems}</span> data
+      </span>
+      <div className="flex items-center gap-1.5">
+        <button
+          type="button"
+          onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
+          disabled={currentPage === 1}
+          className="inline-flex items-center gap-0.5 rounded-sm border border-slate-300 bg-white px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          <ChevronLeft className="h-3.5 w-3.5" />
+          <span>Prev</span>
+        </button>
+        <span className="text-xs font-semibold text-slate-700">
+          {currentPage} / {totalPages}
+        </span>
+        <button
+          type="button"
+          onClick={() => onPageChange(Math.min(currentPage + 1, totalPages))}
+          disabled={currentPage === totalPages}
+          className="inline-flex items-center gap-0.5 rounded-sm border border-slate-300 bg-white px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          <span>Next</span>
+          <ChevronRight className="h-3.5 w-3.5" />
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export function SawStepTables({ sawResult }) {
+  const [pageX, setPageX] = useState(1);
+  const [pageR, setPageR] = useState(1);
+  const [pageV, setPageV] = useState(1);
+  const rowsPerPage = 10;
+
   if (!sawResult?.isReady) {
     return null;
   }
@@ -14,6 +59,15 @@ export function SawStepTables({ sawResult }) {
     matriksNormalisasi,
     rincianPreferensi,
   } = sawResult;
+
+  const paginate = (data, page) => {
+    const start = (page - 1) * rowsPerPage;
+    return data.slice(start, start + rowsPerPage);
+  };
+
+  const paginatedX = paginate(matriksAwal, pageX);
+  const paginatedR = paginate(matriksNormalisasi, pageR);
+  const paginatedV = paginate(rincianPreferensi, pageV);
 
   return (
     <div className="space-y-3.5">
@@ -89,17 +143,17 @@ export function SawStepTables({ sawResult }) {
       </section>
 
       {/* Langkah 3: Matriks Keputusan (X) */}
-      <section className="rounded-sm border border-slate-200 bg-white p-3.5 shadow-2xs">
-        <div className="mb-2">
+      <section className="rounded-sm border border-slate-200 bg-white shadow-2xs">
+        <div className="p-3.5 pb-0">
           <h3 className="text-base font-bold text-slate-900">
             Langkah 3: Matriks Keputusan (X)
           </h3>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-500 mb-2">
             Nilai angka asli spesifikasi setiap alternatif smartphone terhadap ke-6 kriteria.
           </p>
         </div>
 
-        <div className="overflow-x-auto rounded-sm border border-slate-200">
+        <div className="overflow-x-auto border-y border-slate-200">
           <table className="w-full text-left text-sm">
             <thead className="border-b border-slate-200 bg-slate-50 text-xs font-semibold uppercase tracking-wide text-slate-600">
               <tr>
@@ -113,7 +167,7 @@ export function SawStepTables({ sawResult }) {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200">
-              {matriksAwal.map((row) => (
+              {paginatedX.map((row) => (
                 <tr key={row.code} className="hover:bg-slate-50/70">
                   <td className="px-3 py-2 font-bold text-slate-700">{row.code}</td>
                   <td className="whitespace-nowrap px-3 py-2 font-semibold text-slate-900">
@@ -132,6 +186,13 @@ export function SawStepTables({ sawResult }) {
             </tbody>
           </table>
         </div>
+        <TablePagination 
+          currentPage={pageX} 
+          totalPages={Math.ceil(matriksAwal.length / rowsPerPage)} 
+          onPageChange={setPageX} 
+          totalItems={matriksAwal.length} 
+          itemsPerPage={rowsPerPage} 
+        />
       </section>
 
       {/* Langkah 4: Nilai Max & Min setiap kriteria */}
@@ -202,18 +263,18 @@ export function SawStepTables({ sawResult }) {
       </section>
 
       {/* Langkah 5: Matriks Ternormalisasi (R) */}
-      <section className="rounded-sm border border-slate-200 bg-white p-3.5 shadow-2xs">
-        <div className="mb-2">
+      <section className="rounded-sm border border-slate-200 bg-white shadow-2xs">
+        <div className="p-3.5 pb-0">
           <h3 className="text-base font-bold text-slate-900">
             Langkah 5: Matriks Ternormalisasi (R)
           </h3>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-500 mb-2">
             Benefit: <code className="rounded-xs bg-slate-100 px-1 py-0.5">r_ij = x_ij / max(x_ij)</code> ·
             Cost: <code className="rounded-xs bg-slate-100 px-1 py-0.5">r_ij = min(x_ij) / x_ij</code> (ditampilkan 4 angka di belakang koma).
           </p>
         </div>
 
-        <div className="overflow-x-auto rounded-sm border border-slate-200">
+        <div className="overflow-x-auto border-y border-slate-200">
           <table className="w-full text-left text-sm">
             <thead className="border-b border-slate-200 bg-slate-50 text-xs font-semibold uppercase tracking-wide text-slate-600">
               <tr>
@@ -233,7 +294,7 @@ export function SawStepTables({ sawResult }) {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200">
-              {matriksNormalisasi.map((row) => (
+              {paginatedR.map((row) => (
                 <tr key={row.code} className="hover:bg-slate-50/70">
                   <td className="px-3 py-2 font-bold text-slate-700">{row.code}</td>
                   <td className="whitespace-nowrap px-3 py-2 font-semibold text-slate-900">
@@ -252,21 +313,28 @@ export function SawStepTables({ sawResult }) {
             </tbody>
           </table>
         </div>
+        <TablePagination 
+          currentPage={pageR} 
+          totalPages={Math.ceil(matriksNormalisasi.length / rowsPerPage)} 
+          onPageChange={setPageR} 
+          totalItems={matriksNormalisasi.length} 
+          itemsPerPage={rowsPerPage} 
+        />
       </section>
 
       {/* Langkah 6: Perhitungan Nilai Preferensi (V_i) */}
-      <section className="rounded-sm border border-slate-200 bg-white p-3.5 shadow-2xs">
-        <div className="mb-2">
+      <section className="rounded-sm border border-slate-200 bg-white shadow-2xs">
+        <div className="p-3.5 pb-0">
           <h3 className="text-base font-bold text-slate-900">
             Langkah 6: Perhitungan Nilai Preferensi (V_i)
           </h3>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-500 mb-2">
             Rincian perkalian <code className="rounded-xs bg-slate-100 px-1 py-0.5">W_j × r_ij</code> pada setiap kriteria dan penjumlahannya menjadi nilai akhir{' '}
             <code className="rounded-xs bg-slate-100 px-1 py-0.5">V_i = Σ (W_j × r_ij)</code>.
           </p>
         </div>
 
-        <div className="overflow-x-auto rounded-sm border border-slate-200">
+        <div className="overflow-x-auto border-y border-slate-200">
           <table className="w-full text-left text-sm">
             <thead className="border-b border-slate-200 bg-slate-50 text-xs font-semibold uppercase tracking-wide text-slate-600">
               <tr>
@@ -286,7 +354,7 @@ export function SawStepTables({ sawResult }) {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200">
-              {rincianPreferensi.map((row) => (
+              {paginatedV.map((row) => (
                 <tr key={row.code} className="hover:bg-slate-50/70">
                   <td className="px-3 py-2 font-bold text-slate-700">{row.code}</td>
                   <td className="whitespace-nowrap px-3 py-2 font-semibold text-slate-900">
@@ -308,8 +376,14 @@ export function SawStepTables({ sawResult }) {
             </tbody>
           </table>
         </div>
+        <TablePagination 
+          currentPage={pageV} 
+          totalPages={Math.ceil(rincianPreferensi.length / rowsPerPage)} 
+          onPageChange={setPageV} 
+          totalItems={rincianPreferensi.length} 
+          itemsPerPage={rowsPerPage} 
+        />
       </section>
     </div>
   );
 }
-
