@@ -31,3 +31,6 @@ __pycache__/
 *.njsproj
 *.sln
 *.sw?
+rancangan fitur AI.md
+supabase\functions\sedo-ai\index.ts
+

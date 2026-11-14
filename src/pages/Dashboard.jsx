@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import {
   ArrowRight,
   Award,
+  Bot,
   Calculator,
   CheckCircle2,
   ClipboardList,
@@ -158,6 +159,35 @@ export default function Dashboard() {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Banner SEDO AI */}
+      <div className="mt-3.5 flex flex-col gap-3 rounded-sm border border-emerald-300 bg-gradient-to-r from-emerald-50/80 via-teal-50/50 to-white p-3.5 shadow-2xs sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-3">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm bg-emerald-600 text-white shadow-2xs">
+            <Bot className="h-5 w-5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-1.5">
+              <h2 className="text-sm font-bold text-slate-900">
+                SEDO AI: Asisten SPK Berbasis Percakapan
+              </h2>
+              <span className="rounded-xs bg-emerald-100 px-1.5 py-0.5 text-[10px] font-bold text-emerald-800">
+                Fitur Baru
+              </span>
+            </div>
+            <p className="mt-0.5 text-xs text-slate-600">
+              Sebutkan pilihan HP yang ingin kamu bandingkan via teks atau suara. SEDO AI akan melengkapi spesifikasinya dan menghitung rekomendasi terbaik.
+            </p>
+          </div>
+        </div>
+        <Link
+          to="/sedo-ai"
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-sm bg-emerald-600 px-3.5 py-1.5 text-xs font-semibold text-white shadow-2xs hover:bg-emerald-700"
+        >
+          <span>Buka SEDO AI</span>
+          <ArrowRight className="h-3.5 w-3.5" />
+        </Link>
       </div>
 
       {/* Rekomendasi Peringkat 1 Saat Ini */}

@@ -12,6 +12,7 @@ import Alternatif from './pages/Alternatif';
 import Penilaian from './pages/Penilaian';
 import Perhitungan from './pages/Perhitungan';
 import Bandingkan from './pages/Bandingkan';
+import SedoAI from './pages/SedoAI';
 import Hasil from './pages/Hasil';
 import Riwayat from './pages/Riwayat';
 
@@ -32,6 +33,7 @@ export default function App() {
                 <Route path="/alternatif" element={<Alternatif />} />
                 <Route path="/penilaian" element={<Penilaian />} />
                 <Route path="/bandingkan" element={<Bandingkan />} />
+                <Route path="/sedo-ai" element={<SedoAI />} />
                 <Route path="/perhitungan" element={<Perhitungan />} />
                 <Route path="/hasil" element={<Hasil />} />
                 <Route path="/riwayat" element={<Riwayat />} />
