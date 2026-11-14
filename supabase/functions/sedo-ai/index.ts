@@ -137,7 +137,7 @@ async function tavilySearchPhone(phoneName: string): Promise<{
         query,
         search_depth: 'basic',
         topic: 'general',
-        max_results: 4,
+        max_results: 2,
         include_answer: false,
         include_raw_content: false,
         include_published_date: true,
@@ -160,10 +160,10 @@ async function tavilySearchPhone(phoneName: string): Promise<{
 
     return {
       query,
-      results: results.slice(0, 4).map((item: any) => ({
+      results: results.slice(0, 2).map((item: any) => ({
         title: String(item?.title || ''),
         url: String(item?.url || ''),
-        content: String(item?.content || '').slice(0, 1600),
+        content: String(item?.content || '').slice(0, 350),
         score: safeNumber(item?.score) ?? undefined,
         published_date: item?.published_date || null,
       })).filter((item: TavilySearchResult) => item.url),
@@ -205,11 +205,15 @@ function buildPhoneCandidateContext(
       };
     }
 
+    const rawSearch = searches.get(candidate.name);
     return {
       requestedName: candidate.name,
       sourceType: 'web_search',
       databaseRecord: null,
-      search: searches.get(candidate.name) || { query: '', results: [] },
+      search: (rawSearch?.results || []).slice(0, 2).map((item) => ({
+        title: item.title,
+        content: item.content,
+      })),
     };
   });
 }
@@ -256,7 +260,7 @@ async function callAI(prompt: string, systemInstruction?: string, isJson = false
             'Authorization': `Bearer ${provider.apiKey}`,
           },
           body: JSON.stringify(payload),
-          signal: AbortSignal.timeout(15000),
+          signal: AbortSignal.timeout(25000),
         });
 
         console.log(`[SEDO-AI Edge] Status respon dari ${provider.name}:`, res.status, res.statusText);
@@ -293,7 +297,7 @@ async function callAI(prompt: string, systemInstruction?: string, isJson = false
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
-          signal: AbortSignal.timeout(15000),
+          signal: AbortSignal.timeout(25000),
         });
 
         console.log(`[SEDO-AI Edge] Status respon dari ${provider.name}:`, res.status, res.statusText);
