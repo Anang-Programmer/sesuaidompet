@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import {
   Award,
+  Bot,
   Calculator,
   ClipboardList,
   History,
@@ -11,12 +12,14 @@ import {
   Scale,
   SlidersHorizontal,
   Smartphone,
+  Sparkles,
   X,
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 
 const NAV_ITEMS = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { to: '/sedo-ai', label: 'SEDO AI', icon: Bot, isAi: true },
   { to: '/kriteria', label: 'Kriteria & Bobot', icon: SlidersHorizontal },
   { to: '/alternatif', label: 'Data Alternatif', icon: Smartphone },
   { to: '/penilaian', label: 'Data Penilaian', icon: ClipboardList },
@@ -82,7 +85,7 @@ export function Layout() {
         </div>
 
         <nav className="flex-1 space-y-0.5 overflow-y-auto px-2.5 py-2.5">
-          {NAV_ITEMS.map(({ to, label, icon: Icon }) => (
+          {NAV_ITEMS.map(({ to, label, icon: Icon, isAi }) => (
             <NavLink
               key={to}
               to={to}
@@ -90,13 +93,22 @@ export function Layout() {
               className={({ isActive }) =>
                 `flex items-center gap-2.5 rounded-sm px-2.5 py-2 text-sm font-medium transition-colors ${
                   isActive
-                    ? 'bg-emerald-50 text-emerald-700'
+                    ? 'bg-emerald-50 text-emerald-700 font-semibold'
                     : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                 }`
               }
             >
-              <Icon className="h-4 w-4 shrink-0" />
-              <span>{label}</span>
+              <Icon
+                className={`h-4 w-4 shrink-0 ${
+                  isAi ? 'text-emerald-600' : ''
+                }`}
+              />
+              <span className="flex-1">{label}</span>
+              {isAi && (
+                <span className="rounded-xs bg-emerald-100 px-1.5 py-0.5 text-[10px] font-bold text-emerald-800">
+                  AI
+                </span>
+              )}
             </NavLink>
           ))}
         </nav>
