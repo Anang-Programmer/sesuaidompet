@@ -1,19 +1,40 @@
-export function PageHeader({ title, description, badge, action }) {
+
+export function PageHeader({
+  title,
+  description,
+  badge,
+  action,
+  kicker = 'SesuaiDompet',
+}) {
   return (
-    <div className="mb-3.5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-      <div>
-        <div className="flex items-center gap-2">
-          <h1 className="text-xl font-bold tracking-tight text-slate-900">
+    <div className="sd-page-heading">
+      <div className="sd-page-heading-copy">
+        {kicker && (
+          <div className="sd-page-kicker">
+            {kicker}
+          </div>
+        )}
+
+        <div className="sd-page-title-row">
+          <h1 className="sd-page-title">
             {title}
           </h1>
+
           {badge}
         </div>
+
         {description && (
-          <p className="mt-0.5 text-sm text-slate-600">{description}</p>
+          <p className="sd-page-description">
+            {description}
+          </p>
         )}
       </div>
-      {action && <div className="shrink-0">{action}</div>}
+
+      {action && (
+        <div className="sd-page-heading-action">
+          {action}
+        </div>
+      )}
     </div>
   );
 }
-

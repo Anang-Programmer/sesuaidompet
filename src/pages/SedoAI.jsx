@@ -1,21 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   ArrowRight,
   Bot,
   Calculator,
-  CheckCircle2,
-  ChevronDown,
-  ChevronUp,
   Clock,
-  Cpu,
   Database,
-  HelpCircle,
   History,
   MessageSquare,
   Mic,
   MicOff,
-  Pencil,
   Plus,
   RefreshCw,
   Send,
@@ -25,20 +19,25 @@ import {
   User,
   X,
 } from 'lucide-react';
+
 import { useAuth } from '../hooks/useAuth';
 import { useSawSession } from '../hooks/useSawSession';
-import { PageHeader } from '../components/PageHeader';
-import { SawStepTables } from '../components/SawStepTables';
 import { MarkdownRenderer } from '../components/MarkdownRenderer';
-import { fetchCriteria, fetchSmartphones } from '../services/spkService';
+
+import {
+  fetchCriteria,
+  fetchSmartphones,
+} from '../services/spkService';
+
 import {
   explainSawRecommendation,
   extractAndLookupPhones,
   saveNewlyCreatedPhones,
 } from '../services/sedoAiService';
+
 import { calculateSAW } from '../utils/sawCalculator';
+
 import {
-  formatCriterionValue,
   formatDecimal,
   formatRupiah,
 } from '../utils/formatters';
@@ -104,7 +103,6 @@ export default function SedoAI() {
 
   const [criteria, setCriteria] = useState([]);
   const [smartphones, setSmartphones] = useState([]);
-  const [loadingInit, setLoadingInit] = useState(true);
 
   // Riwayat Sesi Obrolan
   const [sessions, setSessions] = useState(() => {
@@ -126,7 +124,7 @@ export default function SedoAI() {
       const activeKey = getActiveKey(user?.id);
       const savedActive = localStorage.getItem(activeKey);
       if (savedActive) return savedActive;
-    } catch (e) {
+    } catch {
       // ignore
     }
     return `session-${Date.now()}`;
@@ -185,8 +183,6 @@ export default function SedoAI() {
         setSmartphones(phoneData);
       } catch (err) {
         console.error('Gagal memuat data referensi:', err);
-      } finally {
-        setLoadingInit(false);
       }
     }
     loadData();
@@ -309,7 +305,7 @@ export default function SedoAI() {
     setMessages([DEFAULT_WELCOME_MESSAGE]);
     try {
       localStorage.setItem(getActiveKey(user?.id), newId);
-    } catch (e) {
+    } catch {
       // ignore
     }
     if (window.innerWidth < 768) {
@@ -327,7 +323,7 @@ export default function SedoAI() {
     setMessages(session.messages || [DEFAULT_WELCOME_MESSAGE]);
     try {
       localStorage.setItem(getActiveKey(user?.id), session.id);
-    } catch (e) {
+    } catch {
       // ignore
     }
     if (window.innerWidth < 768) {
@@ -344,7 +340,7 @@ export default function SedoAI() {
     setSessions(nextSessions);
     try {
       localStorage.setItem(getStorageKey(user?.id), JSON.stringify(nextSessions));
-    } catch (err) {
+    } catch {
       // ignore
     }
 
@@ -369,7 +365,7 @@ export default function SedoAI() {
     try {
       localStorage.removeItem(getStorageKey(user?.id));
       localStorage.removeItem(getActiveKey(user?.id));
-    } catch (err) {
+    } catch {
       // ignore
     }
     setSessions([]);
@@ -1263,4 +1259,3 @@ export default function SedoAI() {
 </div>
   );
 }
-

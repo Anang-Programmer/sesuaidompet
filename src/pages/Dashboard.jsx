@@ -1,346 +1,746 @@
+
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+
 import {
   ArrowRight,
+  ArrowUpRight,
   Award,
   Bot,
   Calculator,
   CheckCircle2,
   ClipboardList,
+  Clock3,
+  Database,
   History,
-  SlidersHorizontal,
+  ListChecks,
+  Settings2,
   Smartphone,
+  Sparkles,
+  Trophy,
 } from 'lucide-react';
+
 import { useAuth } from '../hooks/useAuth';
 import { PageHeader } from '../components/PageHeader';
-import { DashboardSkeleton } from '../components/Skeleton';
+
 import {
   fetchCriteria,
   fetchHistoriesCount,
   fetchSmartphones,
 } from '../services/spkService';
-import { calculateSAW, isCompleteSmartphone } from '../utils/sawCalculator';
+
+import {
+  calculateSAW,
+  isCompleteSmartphone,
+} from '../utils/sawCalculator';
+
 import {
   formatCriterionValue,
   formatDecimal,
   formatRupiah,
 } from '../utils/formatters';
 
+
+/* =========================================
+   LOADING DASHBOARD
+========================================= */
+
+function DashboardLoading() {
+  return (
+    <div
+      className="sd-dashboard"
+      aria-label="Memuat dashboard"
+      aria-busy="true"
+    >
+      <div className="space-y-3">
+        <div className="sd-loading-block w-28" />
+        <div className="sd-loading-block h-9 w-2/3" />
+        <div className="sd-loading-block w-full max-w-xl" />
+      </div>
+
+      <div className="sd-welcome-banner">
+        <div className="w-full max-w-xl space-y-3">
+          <div className="sd-loading-block w-32" />
+          <div className="sd-loading-block h-8 w-3/4" />
+          <div className="sd-loading-block w-full" />
+        </div>
+      </div>
+
+      <div className="sd-stats-grid">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <div className="sd-stat-card" key={index}>
+            <div className="sd-loading-block h-11 w-11 rounded-xl" />
+
+            <div className="flex-1 space-y-2">
+              <div className="sd-loading-block w-20" />
+              <div className="sd-loading-block h-7 w-14" />
+              <div className="sd-loading-block w-24" />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="sd-recommendation-card space-y-4">
+        <div className="sd-loading-block w-48" />
+        <div className="sd-loading-block h-32 w-full" />
+      </div>
+    </div>
+  );
+}
+
+
+/* =========================================
+   KOMPONEN KARTU STATISTIK
+========================================= */
+
+function StatCard({
+  label,
+  value,
+  description,
+  icon: Icon,
+}) {
+  return (
+    <article className="sd-stat-card">
+      <div className="sd-stat-icon">
+        <Icon aria-hidden="true" />
+      </div>
+
+      <div className="min-w-0">
+        <div className="sd-stat-label">
+          {label}
+        </div>
+
+        <div className="sd-stat-value">
+          {value}
+        </div>
+
+        <div className="sd-stat-sub">
+          {description}
+        </div>
+      </div>
+    </article>
+  );
+}
+
+
+/* =========================================
+   KOMPONEN JUDUL BAGIAN
+========================================= */
+
+function SectionHeading({
+  icon: Icon,
+  title,
+  description,
+  action,
+}) {
+  return (
+    <div className="sd-section-heading">
+      <div className="sd-section-title-wrap">
+        <div className="sd-section-icon">
+          <Icon aria-hidden="true" />
+        </div>
+
+        <div>
+          <h2 className="sd-section-title">
+            {title}
+          </h2>
+
+          {description && (
+            <p className="sd-section-description">
+              {description}
+            </p>
+          )}
+        </div>
+      </div>
+
+      {action}
+    </div>
+  );
+}
+
+
+/* =========================================
+   DASHBOARD UTAMA
+========================================= */
+
 export default function Dashboard() {
   const { user, profile, isAdmin } = useAuth();
+
   const [criteria, setCriteria] = useState([]);
   const [smartphones, setSmartphones] = useState([]);
   const [historiesCount, setHistoriesCount] = useState(0);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+
+  /* Mengambil data dashboard dari Supabase */
 
   useEffect(() => {
     let active = true;
 
     async function loadSummary() {
       try {
-        const [criteriaData, phoneData, historyTotal] = await Promise.all([
+        const [
+          criteriaData,
+          phoneData,
+          historyTotal,
+        ] = await Promise.all([
           fetchCriteria(),
           fetchSmartphones(),
           fetchHistoriesCount(),
         ]);
+
         if (!active) return;
+
         setCriteria(criteriaData);
         setSmartphones(phoneData);
         setHistoriesCount(historyTotal);
+
       } catch (err) {
         if (active) {
-          setError(err.message || 'Gagal memuat ringkasan dashboard.');
+          setError(
+            err.message || 'Gagal memuat ringkasan dashboard.'
+          );
         }
+
       } finally {
-        if (active) setLoading(false);
+        if (active) {
+          setLoading(false);
+        }
       }
     }
 
     loadSummary();
+
     return () => {
       active = false;
     };
   }, []);
 
+
+  /* Menghitung statistik */
+
   const stats = useMemo(() => {
-    const readyCount = smartphones.filter((s) =>
-      isCompleteSmartphone(s, criteria)
+    const readyCount = smartphones.filter((smartphone) =>
+      isCompleteSmartphone(smartphone, criteria)
     ).length;
+
     const incompleteCount = smartphones.length - readyCount;
 
-    return { totalCount: smartphones.length, readyCount, incompleteCount };
+    return {
+      totalCount: smartphones.length,
+      readyCount,
+      incompleteCount,
+    };
   }, [smartphones, criteria]);
+
+
+  /* Preview hasil metode SAW */
 
   const sawPreview = useMemo(
     () => calculateSAW(criteria, smartphones),
     [criteria, smartphones]
   );
 
+
+  /* Informasi pengguna */
+
   const displayName =
     profile?.name || user?.email?.split('@')[0] || 'Pengguna';
 
+  const firstName =
+    displayName.trim().split(/\s+/)[0] || 'Pengguna';
+
+
   if (loading) {
-    return <DashboardSkeleton />;
+    return <DashboardLoading />;
   }
+
+
+  /* Data kartu statistik */
 
   const statCards = [
     {
-      label: 'Total Smartphone',
-      value: stats.totalCount,
-      sub: 'Alternatif terdaftar',
+      label: 'Total smartphone',
+      value: stats.totalCount.toLocaleString('id-ID'),
+      description: 'Alternatif terdaftar',
       icon: Smartphone,
-      tone: 'bg-emerald-50 text-emerald-700',
     },
     {
-      label: 'Siap Dihitung SAW',
-      value: stats.readyCount,
-      sub:
+      label: 'Siap dihitung SAW',
+      value: stats.readyCount.toLocaleString('id-ID'),
+      description:
         stats.incompleteCount > 0
-          ? `${stats.incompleteCount} belum lengkap`
-          : 'Semua spesifikasi lengkap',
+          ? `${stats.incompleteCount} data belum lengkap`
+          : 'Semua data sudah lengkap',
       icon: CheckCircle2,
-      tone: 'bg-sky-50 text-sky-700',
     },
     {
-      label: 'Kriteria Aktif',
-      value: criteria.length,
-      sub: 'Metode SAW (100%)',
-      icon: SlidersHorizontal,
-      tone: 'bg-violet-50 text-violet-700',
+      label: 'Kriteria aktif',
+      value: criteria.length.toLocaleString('id-ID'),
+      description: 'Kriteria dalam metode SAW',
+      icon: Settings2,
     },
     {
-      label: 'Riwayat Tersimpan',
-      value: historiesCount,
-      sub: 'Snapshot perhitungan',
+      label: 'Riwayat tersimpan',
+      value: historiesCount.toLocaleString('id-ID'),
+      description: 'Snapshot perhitungan',
       icon: History,
-      tone: 'bg-amber-50 text-amber-700',
     },
   ];
 
+
   const topPhone = sawPreview.rekomendasiTerbaik;
 
+
   return (
-    <div>
+    <div className="sd-dashboard">
+
+      {/* HEADER DASHBOARD */}
+
       <PageHeader
-        title={`Halo, ${displayName}!`}
-        description="Selamat datang di SesuaiDompet, Sistem Pendukung Keputusan pemilihan smartphone berbasis metode SAW."
+        kicker="Ringkasan aktivitas"
+        title={`Selamat datang, ${firstName}!`}
+        description="Temukan smartphone yang paling sesuai dengan kebutuhan dan anggaranmu melalui perhitungan yang terstruktur."
         badge={
           isAdmin ? (
-            <span className="rounded-xs bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-800">
-              Admin
+            <span className="sd-admin-pill">
+              Administrator
             </span>
           ) : null
         }
       />
 
+
+      {/* PESAN ERROR */}
+
       {error && (
-        <div className="mb-3 rounded-sm border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
+        <div
+          className="sd-error-alert"
+          role="alert"
+        >
           {error}
         </div>
       )}
 
-      {/* 4 Kartu Statistik */}
-      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 xl:grid-cols-4">
-        {statCards.map(({ label, value, sub, icon: Icon, tone }) => (
-          <div
-            key={label}
-            className="rounded-sm border border-slate-200 bg-white p-3.5 shadow-2xs"
-          >
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-xs font-medium text-slate-500">{label}</p>
-                <p className="mt-1 text-2xl font-bold text-slate-900">{value}</p>
-                <p className="mt-0.5 text-xs text-slate-500">{sub}</p>
-              </div>
-              <div className={`rounded-sm p-2 ${tone}`}>
-                <Icon className="h-4 w-4" />
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
 
-      {/* Banner SEDO AI */}
-      <div className="mt-3.5 flex flex-col gap-3 rounded-sm border border-emerald-300 bg-gradient-to-r from-emerald-50/80 via-teal-50/50 to-white p-3.5 shadow-2xs sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm bg-emerald-600 text-white shadow-2xs">
-            <Bot className="h-5 w-5" />
-          </div>
-          <div>
-            <div className="flex items-center gap-1.5">
-              <h2 className="text-sm font-bold text-slate-900">
-                SEDO AI: Asisten SPK Berbasis Percakapan
-              </h2>
-              <span className="rounded-xs bg-emerald-100 px-1.5 py-0.5 text-[10px] font-bold text-emerald-800">
-                Fitur Baru
-              </span>
-            </div>
-            <p className="mt-0.5 text-xs text-slate-600">
-              Sebutkan pilihan HP yang ingin kamu bandingkan via teks atau suara. SEDO AI akan melengkapi spesifikasinya dan menghitung rekomendasi terbaik.
-            </p>
-          </div>
-        </div>
-        <Link
-          to="/sedo-ai"
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-sm bg-emerald-600 px-3.5 py-1.5 text-xs font-semibold text-white shadow-2xs hover:bg-emerald-700"
-        >
-          <span>Buka SEDO AI</span>
-          <ArrowRight className="h-3.5 w-3.5" />
-        </Link>
-      </div>
+      {/* BANNER UTAMA */}
 
-      {/* Rekomendasi Peringkat 1 Saat Ini */}
-      <div className="mt-3.5 rounded-sm border border-slate-200 bg-white p-4 shadow-2xs">
-        <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-sm bg-emerald-600 text-white">
-              <Award className="h-4 w-4" />
-            </div>
-            <div>
-              <h2 className="text-base font-bold text-slate-900">
-                Rekomendasi Peringkat #1 Saat Ini
-              </h2>
-              <p className="text-xs text-slate-500">
-                Berdasarkan bobot kriteria aktif dan seluruh smartphone yang spesifikasinya lengkap
-              </p>
-            </div>
+      <section className="sd-welcome-banner">
+
+        <div className="sd-welcome-copy">
+          <div className="sd-welcome-kicker">
+            <Sparkles size={14} />
+            Pilih smartphone dengan lebih yakin
           </div>
+
+          <h2 className="sd-welcome-title">
+            Pilihan yang tepat, sesuai kebutuhan dan isi dompet.
+          </h2>
+
+          <p className="sd-welcome-description">
+            Bandingkan spesifikasi, tentukan prioritas,
+            dan lihat rekomendasi berdasarkan metode
+            Simple Additive Weighting (SAW).
+          </p>
 
           <Link
-            to="/perhitungan"
-            className="inline-flex items-center gap-1.5 rounded-sm bg-emerald-600 px-3.5 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
+            to="/bandingkan"
+            className="sd-primary-button"
           >
-            <Calculator className="h-4 w-4" />
-            <span>Lihat Proses Perhitungan</span>
+            Mulai perbandingan
+            <ArrowUpRight size={16} />
           </Link>
         </div>
 
-        {topPhone ? (
-          <div className="mt-3 rounded-sm border border-emerald-200 bg-emerald-50/60 p-3.5">
-            <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <span className="inline-block rounded-xs bg-emerald-600 px-2 py-0.5 text-[11px] font-semibold text-white">
-                  Peringkat 1 • {topPhone.code}
-                </span>
-                <h3 className="mt-1 text-lg font-bold text-slate-900">
-                  {topPhone.smartphone.name}
-                </h3>
-                <p className="text-sm font-medium text-emerald-700">
-                  {formatRupiah(topPhone.smartphone.price)}
-                </p>
-              </div>
+        <div
+          className="sd-welcome-visual"
+          aria-hidden="true"
+        >
+          <div className="sd-phone-orbit" />
 
-              <div className="rounded-sm bg-white px-3.5 py-2 text-left shadow-2xs ring-1 ring-emerald-200 sm:text-right">
-                <p className="text-xs font-medium text-slate-500">
-                  Nilai Preferensi (V)
-                </p>
-                <p className="text-xl font-bold text-emerald-700">
-                  {formatDecimal(topPhone.totalScore, 4)}
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
-              {criteria.map((c) => (
-                <div
-                  key={c.code}
-                  className="rounded-xs bg-white/90 px-2.5 py-1.5 ring-1 ring-slate-200/80"
-                >
-                  <p className="text-[11px] font-medium text-slate-500">
-                    {c.code} • {c.name}
-                  </p>
-                  <p className="mt-0.5 text-xs font-semibold text-slate-800">
-                    {formatCriterionValue(c.field, topPhone.smartphone[c.field])}
-                  </p>
-                </div>
-              ))}
-            </div>
+          <div className="sd-phone-illustration">
+            <Smartphone />
           </div>
+        </div>
+
+      </section>
+
+
+      {/* RINGKASAN STATISTIK */}
+
+      <section
+        className="sd-stats-grid"
+        aria-label="Ringkasan data aplikasi"
+      >
+        {statCards.map((card) => (
+          <StatCard
+            key={card.label}
+            {...card}
+          />
+        ))}
+      </section>
+
+
+      {/* REKOMENDASI TERBAIK */}
+
+      <section className="sd-recommendation-card">
+
+        <SectionHeading
+          icon={Trophy}
+          title="Rekomendasi terbaik saat ini"
+          description="Berdasarkan bobot kriteria aktif dan smartphone dengan data spesifikasi lengkap."
+          action={
+            <Link
+              to="/perhitungan"
+              className="sd-outline-button"
+            >
+              Detail perhitungan
+              <ArrowRight size={14} />
+            </Link>
+          }
+        />
+
+
+        {topPhone ? (
+
+          <div className="sd-recommendation-body">
+
+            <div className="min-w-0">
+
+              <span className="sd-rank-label">
+                <Award size={13} />
+                Peringkat pertama · {topPhone.code}
+              </span>
+
+              <h3 className="sd-recommendation-name">
+                {topPhone.smartphone.name}
+              </h3>
+
+              <div className="sd-recommendation-price">
+                {formatRupiah(topPhone.smartphone.price)}
+              </div>
+
+              <p className="sd-recommendation-note">
+                Rekomendasi dihitung dari data yang tersedia
+                dan bobot kriteria aktif.
+              </p>
+
+            </div>
+
+
+            <div className="sd-score-panel">
+
+              <div className="sd-score-caption">
+                Nilai preferensi (V)
+              </div>
+
+              <div className="sd-score-value">
+                {formatDecimal(topPhone.totalScore, 4)}
+              </div>
+
+              <div className="sd-score-footnote">
+                Skor hasil metode SAW
+              </div>
+
+            </div>
+
+          </div>
+
         ) : (
-          <div className="mt-3 rounded-sm border border-dashed border-slate-300 bg-slate-50 p-4 text-center">
-            <p className="text-sm font-medium text-slate-700">
-              Belum ada smartphone dengan spesifikasi lengkap untuk dihitung.
+
+          <div className="sd-empty-state">
+
+            <div className="sd-empty-icon">
+              <Database size={23} />
+            </div>
+
+            <h3 className="sd-empty-title">
+              Belum ada smartphone yang siap dihitung
+            </h3>
+
+            <p className="sd-empty-description">
+              Tambahkan alternatif dan lengkapi enam
+              spesifikasi penilaian (harga, kamera, RAM,
+              baterai, penyimpanan, dan skor AnTuTu)
+              untuk melihat rekomendasi.
             </p>
-            <p className="mt-1 text-xs text-slate-500">
-              Tambahkan data smartphone dan lengkapi ke-6 spesifikasinya (Harga, Kamera, RAM, Baterai, ROM, AnTuTu).
-            </p>
-            <div className="mt-3 flex flex-wrap justify-center gap-2">
+
+            <div className="sd-button-row">
+
               <Link
                 to="/alternatif"
-                className="inline-flex items-center gap-1.5 rounded-sm bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-emerald-700"
+                className="sd-primary-button"
               >
-                <Smartphone className="h-4 w-4" />
-                <span>Tambah Alternatif</span>
+                <Smartphone size={15} />
+                Tambah alternatif
               </Link>
+
               <Link
                 to="/penilaian"
-                className="inline-flex items-center gap-1.5 rounded-sm border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+                className="sd-outline-button"
               >
-                <ClipboardList className="h-4 w-4" />
-                <span>Isi Data Penilaian</span>
+                <ClipboardList size={15} />
+                Lengkapi penilaian
               </Link>
+
             </div>
+
+          </div>
+
+        )}
+
+
+        {/* DETAIL KRITERIA SMARTPHONE TERBAIK */}
+
+        {topPhone && criteria.length > 0 && (
+          <div className="sd-criteria-grid">
+
+            {criteria.map((criterion) => (
+              <div
+                className="sd-criterion-item"
+                key={criterion.code}
+              >
+
+                <div className="sd-criterion-code">
+                  {criterion.code}
+                </div>
+
+                <div className="sd-criterion-name">
+                  {criterion.name}
+                </div>
+
+                <div className="sd-criterion-value">
+                  {formatCriterionValue(
+                    criterion.field,
+                    topPhone.smartphone[criterion.field]
+                  )}
+                </div>
+
+              </div>
+            ))}
+
           </div>
         )}
-      </div>
 
-      {/* Akses Cepat */}
-      <div className="mt-3.5 grid grid-cols-1 gap-2.5 sm:grid-cols-2 xl:grid-cols-4">
-        <Link
-          to="/bandingkan"
-          className="group rounded-sm border border-slate-200 bg-white p-3.5 transition hover:border-emerald-300 hover:shadow-xs"
-        >
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-slate-900">Bandingkan HP</h3>
-            <ArrowRight className="h-4 w-4 text-slate-400 transition group-hover:translate-x-0.5 group-hover:text-emerald-600" />
-          </div>
-          <p className="mt-1 text-xs text-slate-600">
-            Bandingkan 2 sampai 4 HP pilihanmu secara berdampingan dan lihat skor SAW-nya.
-          </p>
-        </Link>
+      </section>
 
-        <Link
-          to="/kriteria"
-          className="group rounded-sm border border-slate-200 bg-white p-3.5 transition hover:border-emerald-300 hover:shadow-xs"
-        >
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-slate-900">Kriteria & Bobot</h3>
-            <ArrowRight className="h-4 w-4 text-slate-400 transition group-hover:translate-x-0.5 group-hover:text-emerald-600" />
-          </div>
-          <p className="mt-1 text-xs text-slate-600">
-            {isAdmin
-              ? 'Lihat dan kelola bobot C1–C6 beserta jenis Cost/Benefit.'
-              : 'Lihat rincian bobot C1–C6 berdasarkan gabungan 2 jurnal referensi.'}
-          </p>
-        </Link>
 
-        <Link
-          to="/alternatif"
-          className="group rounded-sm border border-slate-200 bg-white p-3.5 transition hover:border-emerald-300 hover:shadow-xs"
-        >
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-slate-900">Data Alternatif</h3>
-            <ArrowRight className="h-4 w-4 text-slate-400 transition group-hover:translate-x-0.5 group-hover:text-emerald-600" />
-          </div>
-          <p className="mt-1 text-xs text-slate-600">
-            Kelola daftar smartphone dan lengkapi spesifikasi alternatif yang tersedia.
-          </p>
-        </Link>
+      {/* AKSES CEPAT DAN SEDO AI */}
 
-        <Link
-          to="/riwayat"
-          className="group rounded-sm border border-slate-200 bg-white p-3.5 transition hover:border-emerald-300 hover:shadow-xs"
-        >
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-slate-900">Riwayat Perhitungan</h3>
-            <ArrowRight className="h-4 w-4 text-slate-400 transition group-hover:translate-x-0.5 group-hover:text-emerald-600" />
+      <section className="sd-lower-grid">
+
+        <div className="sd-panel">
+
+          <SectionHeading
+            icon={ListChecks}
+            title="Akses cepat"
+            description="Lanjutkan ke bagian aplikasi yang ingin kamu gunakan."
+          />
+
+          <div className="sd-quick-list">
+
+            <Link
+              to="/alternatif"
+              className="sd-quick-link"
+            >
+              <span className="sd-quick-icon">
+                <Smartphone size={17} />
+              </span>
+
+              <span className="sd-quick-copy">
+                <span className="sd-quick-title">
+                  Data alternatif smartphone
+                </span>
+
+                <span className="sd-quick-description">
+                  Lihat dan kelola daftar smartphone.
+                </span>
+              </span>
+
+              <ArrowRight className="sd-quick-arrow" />
+            </Link>
+
+
+            <Link
+              to="/kriteria"
+              className="sd-quick-link"
+            >
+              <span className="sd-quick-icon">
+                <Settings2 size={17} />
+              </span>
+
+              <span className="sd-quick-copy">
+                <span className="sd-quick-title">
+                  Kriteria dan bobot
+                </span>
+
+                <span className="sd-quick-description">
+                  Tinjau enam kriteria dan pembobotan SAW.
+                </span>
+              </span>
+
+              <ArrowRight className="sd-quick-arrow" />
+            </Link>
+
+
+            <Link
+              to="/penilaian"
+              className="sd-quick-link"
+            >
+              <span className="sd-quick-icon">
+                <ClipboardList size={17} />
+              </span>
+
+              <span className="sd-quick-copy">
+                <span className="sd-quick-title">
+                  Data penilaian
+                </span>
+
+                <span className="sd-quick-description">
+                  Periksa kelengkapan spesifikasi alternatif.
+                </span>
+              </span>
+
+              <ArrowRight className="sd-quick-arrow" />
+            </Link>
+
+
+            <Link
+              to="/riwayat"
+              className="sd-quick-link"
+            >
+              <span className="sd-quick-icon">
+                <Clock3 size={17} />
+              </span>
+
+              <span className="sd-quick-copy">
+                <span className="sd-quick-title">
+                  Riwayat perhitungan
+                </span>
+
+                <span className="sd-quick-description">
+                  Buka snapshot rekomendasi sebelumnya.
+                </span>
+              </span>
+
+              <ArrowRight className="sd-quick-arrow" />
+            </Link>
+
           </div>
-          <p className="mt-1 text-xs text-slate-600">
-            Buka kembali snapshot hasil perhitungan dan rekomendasi sebelumnya.
-          </p>
-        </Link>
-      </div>
+        </div>
+
+
+        {/* PANEL SEDO AI */}
+
+        <div className="sd-ai-panel">
+
+          <div className="sd-ai-content">
+
+            <div className="sd-ai-icon">
+              <Bot size={21} />
+            </div>
+
+            <h2 className="sd-ai-title">
+              Butuh bantuan memilih HP?
+            </h2>
+
+            <p className="sd-ai-description">
+              Ceritakan kebutuhan dan pilihan smartphone-mu.
+              SEDO AI membantu menyiapkan perbandingan
+              dan proses rekomendasi.
+            </p>
+
+          </div>
+
+          <Link
+            to="/sedo-ai"
+            className="sd-primary-button"
+          >
+            Coba SEDO AI
+            <ArrowUpRight size={16} />
+          </Link>
+
+        </div>
+
+      </section>
+
+
+      {/* ALUR PENGAMBILAN KEPUTUSAN */}
+
+      <section className="sd-panel">
+
+        <SectionHeading
+          icon={Calculator}
+          title="Alur pengambilan keputusan"
+          description="Gambaran singkat proses yang digunakan SesuaiDompet."
+        />
+
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+
+          {[
+            {
+              number: '01',
+              title: 'Data alternatif',
+              text: 'Daftar smartphone yang akan dinilai.',
+              icon: Smartphone,
+            },
+            {
+              number: '02',
+              title: 'Kriteria & bobot',
+              text: 'Tentukan prioritas penilaian.',
+              icon: Settings2,
+            },
+            {
+              number: '03',
+              title: 'Perhitungan SAW',
+              text: 'Normalisasi dan hitung nilai preferensi.',
+              icon: Calculator,
+            },
+            {
+              number: '04',
+              title: 'Hasil rekomendasi',
+              text: 'Lihat urutan smartphone terbaik.',
+              icon: Trophy,
+            },
+          ].map((step) => {
+            const Icon = step.icon;
+
+            return (
+              <div
+                key={step.number}
+                className="flex items-start gap-3 rounded-2xl border border-[#e6eee7] bg-[#f8fbf8] p-3.5"
+              >
+
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#e5f4e8] text-[#28834a]">
+                  <Icon size={18} />
+                </div>
+
+                <div className="min-w-0">
+
+                  <div className="text-[9px] font-extrabold tracking-[0.12em] text-[#89a092]">
+                    LANGKAH {step.number}
+                  </div>
+
+                  <div className="mt-1 text-[12px] font-extrabold text-[#254632]">
+                    {step.title}
+                  </div>
+
+                  <div className="mt-1 text-[10px] leading-relaxed text-[#86938a]">
+                    {step.text}
+                  </div>
+
+                </div>
+
+              </div>
+            );
+          })}
+
+        </div>
+
+      </section>
+
     </div>
   );
 }

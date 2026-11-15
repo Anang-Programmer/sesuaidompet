@@ -21,7 +21,7 @@ function renderMath(mathStr, displayMode = false) {
         dangerouslySetInnerHTML={{ __html: html }}
       />
     );
-  } catch (err) {
+  } catch {
     return <code className="font-mono text-xs text-rose-600">{mathStr}</code>;
   }
 }
@@ -40,7 +40,7 @@ function renderInlineFormatted(text) {
   // 5. Inline LaTeX: \(text\)
   // 6. Math: $text$
   const regex =
-    /(\*\*.*?\*\*|\*(?!\*).*?\*|`.*?`|\\\[.*?\\\]|\\\(.*?\\\)|\$[^\$\n]+?\$)/g;
+    /(\*\*.*?\*\*|\*(?!\*).*?\*|`.*?`|\\\[.*?\\\]|\\\(.*?\\\)|\$[^$\n]+?\$)/g;
   const tokens = text.split(regex);
 
   return tokens.map((token, i) => {

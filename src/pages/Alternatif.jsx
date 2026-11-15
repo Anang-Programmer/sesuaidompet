@@ -67,11 +67,6 @@ export default function Alternatif() {
     };
   }, []);
 
-  // Reset ke halaman 1 jika user mencari atau mengganti filter
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [search, sourceFilter]);
-
   const hasMyPhones = useMemo(
     () => smartphones.some((p) => p.user_id && p.user_id === user?.id),
     [smartphones, user?.id]
@@ -162,7 +157,10 @@ export default function Alternatif() {
           <input
             type="text"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setCurrentPage(1);
+            }}
             placeholder="Cari nama smartphone..."
             className="w-full rounded-sm border border-slate-300 bg-white py-1.5 pl-8 pr-3 text-sm text-slate-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
           />
@@ -177,7 +175,10 @@ export default function Alternatif() {
               <button
                 key={tab.id}
                 type="button"
-                onClick={() => setSourceFilter(tab.id)}
+                onClick={() => {
+                  setSourceFilter(tab.id);
+                  setCurrentPage(1);
+                }}
                 className={`rounded-xs px-2.5 py-1 text-xs font-semibold transition ${
                   sourceFilter === tab.id
                     ? 'bg-emerald-600 text-white'
