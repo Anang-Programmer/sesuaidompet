@@ -3,30 +3,32 @@ export function SourceBadge({ ownerId, currentUserId }) {
     return null;
   }
 
-  if (ownerId === currentUserId) {
-    return (
-      <span className="inline-flex items-center rounded-xs bg-emerald-100 px-2 py-0.5 text-[11px] font-medium text-emerald-800">
-        Input Saya
-      </span>
-    );
-  }
+  const isMine = ownerId === currentUserId;
 
   return (
-    <span className="inline-flex items-center rounded-xs bg-sky-100 px-2 py-0.5 text-[11px] font-medium text-sky-800">
-      Input User
+    <span
+      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[9px] font-extrabold ${
+        isMine
+          ? 'border border-[#d1ead6] bg-[#eaf6ec] text-[#287744]'
+          : 'border border-[#dbe8f3] bg-[#eef5fb] text-[#47749a]'
+      }`}
+    >
+      {isMine ? 'Input Saya' : 'Input User'}
     </span>
   );
 }
 
+
 export function SpecStatusBadge({ complete }) {
   return complete ? (
-    <span className="inline-flex items-center rounded-xs bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 ring-1 ring-emerald-200">
+    <span className="inline-flex items-center gap-1 rounded-full border border-[#d1ead6] bg-[#eaf6ec] px-2.5 py-1 text-[9px] font-extrabold text-[#287744]">
+      <span className="h-1.5 w-1.5 rounded-full bg-[#43a963]" />
       Lengkap
     </span>
   ) : (
-    <span className="inline-flex items-center rounded-xs bg-amber-50 px-2 py-0.5 text-[11px] font-semibold text-amber-700 ring-1 ring-amber-200">
+    <span className="inline-flex items-center gap-1 rounded-full border border-[#f0e2c5] bg-[#fff8e9] px-2.5 py-1 text-[9px] font-extrabold text-[#a47732]">
+      <span className="h-1.5 w-1.5 rounded-full bg-[#d7a348]" />
       Belum Dinilai
     </span>
   );
 }
-

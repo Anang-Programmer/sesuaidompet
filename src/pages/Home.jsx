@@ -254,7 +254,7 @@ export default function Home() {
 
                 <Link
                   to="/register"
-                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#27894c] to-[#3eaf62] px-3.5 py-2.5 text-xs font-bold text-white shadow-[0_7px_18px_rgba(39,137,76,0.20)] transition hover:-translate-y-0.5 hover:shadow-lg sm:px-5 sm:text-sm"
+                  className="sd-button-light inline-flex items-center gap-2 rounded-xl px-3.5 py-2.5 text-xs font-bold transition hover:-translate-y-0.5 sm:px-5 sm:text-sm"
                 >
                   <UserPlus size={15} />
                   Daftar Akun
@@ -327,7 +327,7 @@ export default function Home() {
                   <>
                     <Link
                       to="/register"
-                      className="inline-flex min-h-[48px] items-center gap-2 rounded-xl bg-gradient-to-r from-[#26884b] to-[#3caf62] px-6 py-3 text-sm font-extrabold text-white shadow-[0_9px_22px_rgba(38,136,75,0.22)] transition hover:-translate-y-0.5 hover:shadow-lg"
+                      className="sd-button-dark inline-flex min-h-[48px] items-center gap-2 rounded-xl px-6 py-3 text-sm font-extrabold transition hover:-translate-y-0.5"
                     >
                       Mulai Pilih HP
                       <ArrowUpRight size={17} />

@@ -1362,3 +1362,104 @@ a {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* =========================================
+   GLOBAL BUTTON CONTRAST
+   Tombol gelap = teks putih
+   Tombol terang = teks hijau gelap
+========================================= */
+
+/* Tombol utama aplikasi */
+.sd-primary-button {
+  color: #ffffff !important;
+  background: linear-gradient(110deg, #1d7540, #288c4c);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.sd-primary-button:hover {
+  color: #ffffff !important;
+  background: linear-gradient(110deg, #185f35, #207a41);
+}
+
+/* Tombol Tailwind dengan latar hijau gelap */
+:where(button, a)[class~="bg-emerald-600"],
+:where(button, a)[class~="bg-emerald-700"],
+:where(button, a)[class~="bg-green-600"],
+:where(button, a)[class~="bg-green-700"],
+:where(button, a)[class~="bg-slate-900"] {
+  color: #ffffff !important;
+}
+
+/* Tombol utama dengan gradasi hijau */
+:where(button, a)[class*="from-[#27884a"],
+:where(button, a)[class*="from-[#26884b"],
+:where(button, a)[class*="from-[#278a4c"] {
+  color: #ffffff !important;
+}
+
+/* SESUAIDOMPET - GLOBAL BUTTON COLOR */
+
+/* Tombol utama: latar hijau gelap, teks putih */
+.sd-button-dark,
+.sd-button-dark:hover,
+.sd-primary-button,
+.sd-primary-button:hover {
+  color: #ffffff !important;
+  text-decoration: none;
+}
+
+/* Tombol sekunder: latar putih, teks hijau */
+.sd-button-light,
+.sd-button-light:hover {
+  color: #245b36 !important;
+  background: #ffffff !important;
+  border: 1px solid #d5e5d8;
+  text-decoration: none;
+}
+
+/* Memastikan tombol hijau Tailwind memakai tulisan putih */
+:where(button, a)[class~="bg-emerald-600"],
+:where(button, a)[class~="bg-emerald-700"],
+:where(button, a)[class~="bg-green-600"],
+:where(button, a)[class~="bg-green-700"],
+:where(button, a)[class~="bg-[#267f45]"],
+:where(button, a)[class~="bg-[#27884a]"],
+:where(button, a)[class~="bg-[#278a4c]"],
+:where(button, a)[class~="bg-[#1e7540]"],
+:where(button, a)[class*="from-[#1e7540]"],
+:where(button, a)[class*="from-[#1d7540]"] {
+  color: #ffffff !important;
+}
+
+/* Tombol utama global lebih kalem */
+.sd-button-dark {
+  background: linear-gradient(110deg, #1e693a, #287e46);
+  border: 1px solid rgba(255,255,255,0.15);
+  box-shadow: 0 6px 16px rgba(30,105,58,0.16);
+  transition: all 180ms ease;
+}
+
+.sd-button-dark:hover {
+  background: linear-gradient(110deg, #18582f, #216d3c);
+  box-shadow: 0 9px 20px rgba(30,105,58,0.2);
+}
+
+/* Tombol putih tidak terlalu menyilaukan */
+.sd-button-light {
+  background: #ffffff !important;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(25,65,37,0.05);
+  transition: all 180ms ease;
+}
+
+.sd-button-light:hover {
+  background: #f4f9f5 !important;
+  border-color: #bcdcc3;
+}
+
+/* Menjaga teks tombol tetap jelas ketika nonaktif */
+.sd-button-dark:disabled,
+.sd-button-light:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
