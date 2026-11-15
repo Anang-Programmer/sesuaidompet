@@ -183,7 +183,7 @@ export function SmartphoneModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="smartphone-modal-title"
-        className="flex max-h-[94vh] w-full max-w-[760px] flex-col overflow-hidden rounded-[25px] border border-white/80 bg-white shadow-[0_25px_80px_rgba(10,42,22,0.28)]"
+        className="flex max-h-[94dvh] w-full max-w-[760px] flex-col overflow-hidden rounded-[25px] border border-white/80 bg-white shadow-[0_25px_80px_rgba(10,42,22,0.28)]"
       >
 
         {/* HEADER */}

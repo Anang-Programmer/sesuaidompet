@@ -1147,7 +1147,7 @@ export default function SedoAI() {
   ========================================= */
 
   return (
-    <section className="flex h-[calc(100vh-6.75rem)] min-h-[560px] max-h-[1050px] flex-col overflow-hidden rounded-[24px] border border-[#dfe9e0] bg-white shadow-[0_12px_32px_rgba(26,67,37,0.055)]">
+    <section className="flex h-[calc(100dvh-6.75rem)] min-h-[420px] max-h-[1050px] flex-col overflow-hidden rounded-[24px] border border-[#dfe9e0] bg-white shadow-[0_12px_32px_rgba(26,67,37,0.055)]">
       {/* =====================================
           HEADER SEDO AI
       ===================================== */}

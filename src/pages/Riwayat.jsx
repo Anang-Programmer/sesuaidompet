@@ -464,7 +464,7 @@ function HistoryDetailModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="history-detail-title"
-        className="my-auto flex max-h-[94vh] w-full max-w-6xl flex-col overflow-hidden rounded-[22px] border border-[#dce8dd] bg-[#f8fbf8] shadow-[0_25px_80px_rgba(15,40,23,0.25)] sm:rounded-[26px]"
+        className="my-auto flex max-h-[94dvh] w-full max-w-6xl flex-col overflow-hidden rounded-[22px] border border-[#dce8dd] bg-[#f8fbf8] shadow-[0_25px_80px_rgba(15,40,23,0.25)] sm:rounded-[26px]"
       >
         {/* Header modal */}
         <div className="relative shrink-0 overflow-hidden border-b border-[#e2ebe3] bg-white px-4 py-4 sm:px-6">
