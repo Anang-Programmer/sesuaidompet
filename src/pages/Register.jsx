@@ -1,22 +1,84 @@
+
 import { useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Loader2, UserPlus } from 'lucide-react';
+import {
+  ArrowLeft,
+  ArrowRight,
+  CheckCircle2,
+  Eye,
+  EyeOff,
+  LoaderCircle,
+  LockKeyhole,
+  Mail,
+  ShieldCheck,
+  Smartphone,
+  Sparkles,
+  UserPlus,
+  UserRound,
+} from 'lucide-react';
+
 import { useAuth } from '../hooks/useAuth';
 import { GoogleAuthButton } from '../components/GoogleAuthButton';
 
 function mapRegisterError(message = '') {
   const lower = message.toLowerCase();
+
   if (lower.includes('already registered')) {
     return 'Email ini sudah terdaftar. Silakan masuk melalui halaman Login.';
   }
+
   if (lower.includes('password')) {
     return 'Password minimal harus 6 karakter.';
   }
+
   return message || 'Gagal mendaftarkan akun.';
 }
 
+function FeatureItem({ icon: Icon, title, description }) {
+  return (
+    <div className="flex items-start gap-3">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/15 bg-white/10 text-[#c5edcd]">
+        <Icon size={17} />
+      </span>
+
+      <div>
+        <p className="text-xs font-extrabold text-white">
+          {title}
+        </p>
+
+        <p className="mt-1 text-[10px] leading-5 text-white/65">
+          {description}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function BrandLogo({ compact = false }) {
+  return (
+    <Link
+      to="/"
+      aria-label="Kembali ke halaman utama SesuaiDompet"
+      className={`inline-flex items-center justify-center rounded-2xl bg-white p-2.5 shadow-[0_8px_24px_rgba(10,40,20,0.12)] ${
+        compact ? 'w-[174px]' : 'w-[205px]'
+      }`}
+    >
+      <img
+        src="/images/logo_nobg.png"
+        alt="Logo SesuaiDompet"
+        className="h-auto w-full object-contain"
+      />
+    </Link>
+  );
+}
+
 export default function Register() {
-  const { user, loading: authLoading, signUp } = useAuth();
+  const {
+    user,
+    loading: authLoading,
+    signUp,
+  } = useAuth();
+
   const navigate = useNavigate();
 
   const [name, setName] = useState('');
@@ -32,8 +94,9 @@ export default function Register() {
     return <Navigate to="/dashboard" replace />;
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault();
+  async function handleSubmit(event) {
+    event.preventDefault();
+
     setError('');
     setInfoMessage('');
 
@@ -53,11 +116,13 @@ export default function Register() {
     }
 
     setSubmitting(true);
+
     const { data, error: signUpError } = await signUp(
       name.trim(),
       email.trim(),
       password
     );
+
     setSubmitting(false);
 
     if (signUpError) {
@@ -73,149 +138,374 @@ export default function Register() {
     setInfoMessage(
       'Pendaftaran berhasil! Silakan cek kotak masuk email kamu untuk verifikasi sebelum login.'
     );
+
     setPassword('');
     setConfirmPassword('');
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-3 py-5">
-      <div className="w-full max-w-md rounded-sm border border-slate-200 bg-white p-5 shadow-sm">
-        <div className="mb-4 flex flex-col items-center text-center">
-          <Link to="/">
-            <img
-              src="/images/logo_nobg.png"
-              alt="Logo SesuaiDompet"
-              className="h-16 w-auto object-contain"
-            />
-          </Link>
-          <h1 className="mt-2 text-lg font-bold text-slate-900">Daftar Akun Baru</h1>
-          <p className="mt-0.5 text-xs text-slate-500">Buat akun untuk mencari rekomendasi smartphone terbaik</p>
-        </div>
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#f2f8f3] px-3 py-6 sm:px-6 sm:py-10">
+      {/* Dekorasi latar */}
+      <div className="pointer-events-none absolute -left-32 -top-36 h-80 w-80 rounded-full bg-[#dcefe0]/70 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-36 -right-28 h-96 w-96 rounded-full bg-[#e0f0e2]/70 blur-3xl" />
 
-        {error && (
-          <div className="mb-3 rounded-sm border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
-            {error}
-          </div>
-        )}
+      <div className="relative z-10 grid w-full max-w-[1050px] overflow-hidden rounded-[28px] border border-[#dfe9e0] bg-white shadow-[0_24px_70px_rgba(31,75,42,0.10)] md:grid-cols-[0.92fr_1.08fr]">
+        {/* =================================
+            PANEL IDENTITAS
+        ================================= */}
+        <aside className="relative hidden min-h-[730px] flex-col justify-between overflow-hidden bg-gradient-to-br from-[#174d2e] via-[#216c3b] to-[#2e874a] p-8 lg:p-10 md:flex">
+          <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full border-[38px] border-white/[0.06]" />
+          <div className="pointer-events-none absolute -bottom-24 -left-20 h-72 w-72 rounded-full bg-[#7fd18b]/10 blur-3xl" />
 
-        {infoMessage && (
-          <div className="mb-3 rounded-sm border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
-            {infoMessage}
-          </div>
-        )}
+          <div className="relative z-10">
+            <BrandLogo />
 
-        <form onSubmit={handleSubmit} className="space-y-3">
-          <div>
-            <label htmlFor="name" className="mb-1 block text-sm font-medium text-slate-700">
-              Nama Lengkap
-            </label>
-            <input
-              id="name"
-              type="text"
-              autoComplete="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Contoh: Jaka Perdana"
-              required
-              className="w-full rounded-sm border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
-            />
-          </div>
+            <div className="mt-12 max-w-sm">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-[9px] font-extrabold uppercase tracking-[0.13em] text-[#d8f0dd]">
+                <Sparkles size={12} />
+                Mulai perjalananmu
+              </span>
 
-          <div>
-            <label htmlFor="email" className="mb-1 block text-sm font-medium text-slate-700">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="nama@email.com"
-              required
-              className="w-full rounded-sm border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
-            />
-          </div>
+              <h1 className="mt-5 text-3xl font-extrabold leading-[1.2] tracking-tight text-white xl:text-[36px]">
+                Buat akun dan pilih smartphone dengan lebih percaya diri.
+              </h1>
 
-          <div>
-            <label htmlFor="password" className="mb-1 block text-sm font-medium text-slate-700">
-              Password
-            </label>
-            <div className="relative">
-              <input
-                id="password"
-                type={showPassword ? 'text' : 'password'}
-                autoComplete="new-password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Minimal 6 karakter"
-                required
-                className="w-full rounded-sm border border-slate-300 py-2 pl-3 pr-10 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+              <p className="mt-4 text-xs leading-7 text-white/70">
+                Daftarkan akun SesuaiDompet untuk menggunakan fitur
+                perbandingan, mendapatkan rekomendasi SAW, dan menyimpan
+                hasil analisis.
+              </p>
+            </div>
+
+            <div className="mt-10 space-y-5">
+              <FeatureItem
+                icon={Smartphone}
+                title="Temukan pilihan yang tepat"
+                description="Bandingkan berbagai smartphone berdasarkan kebutuhan dan budget."
               />
-              <button
-                type="button"
-                onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute inset-y-0 right-0 flex items-center px-3 text-slate-400 hover:text-slate-600"
-                aria-label={showPassword ? 'Sembunyikan password' : 'Lihat password'}
-              >
-                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </button>
+
+              <FeatureItem
+                icon={CheckCircle2}
+                title="Analisis lebih terarah"
+                description="Gunakan kriteria dan bobot untuk mendapatkan rekomendasi."
+              />
+
+              <FeatureItem
+                icon={ShieldCheck}
+                title="Akun pribadi"
+                description="Simpan hasil perhitungan dan akses kembali saat dibutuhkan."
+              />
             </div>
           </div>
 
-          <div>
-            <label
-              htmlFor="confirmPassword"
-              className="mb-1 block text-sm font-medium text-slate-700"
-            >
-              Konfirmasi Password
-            </label>
-            <input
-              id="confirmPassword"
-              type={showPassword ? 'text' : 'password'}
-              autoComplete="new-password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Ulangi password"
-              required
-              className="w-full rounded-sm border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
-            />
+          <div className="relative z-10 border-t border-white/15 pt-5">
+            <p className="text-[9px] leading-5 text-white/50">
+              SesuaiDompet · Sistem Pendukung Keputusan Pemilihan Smartphone
+            </p>
+          </div>
+        </aside>
+
+        {/* =================================
+            FORM REGISTER
+        ================================= */}
+        <section className="min-w-0 p-5 sm:p-8 lg:p-10">
+          {/* Logo khusus mobile */}
+          <div className="mb-7 flex flex-col items-center text-center md:hidden">
+            <BrandLogo compact />
+
+            <p className="mt-3 text-[9px] font-semibold uppercase tracking-[0.13em] text-[#729078]">
+              Sistem Pendukung Keputusan Smartphone
+            </p>
           </div>
 
-          <button
-            type="submit"
-            disabled={submitting}
-            className="flex w-full items-center justify-center gap-2 rounded-sm bg-emerald-600 px-3.5 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {submitting ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                <span>Mendaftarkan...</span>
-              </>
-            ) : (
-              <>
-                <UserPlus className="h-4 w-4" />
-                <span>Daftar</span>
-              </>
+          <div className="mx-auto w-full max-w-[410px]">
+            <Link
+              to="/"
+              className="mb-6 inline-flex items-center gap-1.5 text-[10px] font-bold text-[#849188] transition hover:text-[#347c49] md:mb-8"
+            >
+              <ArrowLeft size={13} />
+              Kembali ke halaman utama
+            </Link>
+
+            <div className="mb-5">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-[#dceade] bg-[#f0f8f1] px-3 py-1.5 text-[9px] font-extrabold uppercase tracking-[0.1em] text-[#397b4b]">
+                <UserPlus size={11} />
+                Pendaftaran akun
+              </span>
+
+              <h2 className="mt-4 text-2xl font-extrabold tracking-tight text-[#294d34] sm:text-[28px]">
+                Buat akun baru
+              </h2>
+
+              <p className="mt-2 text-[11px] leading-6 text-[#849188]">
+                Isi data berikut untuk mulai menggunakan SesuaiDompet.
+              </p>
+            </div>
+
+            {/* ERROR */}
+            {error && (
+              <div
+                role="alert"
+                aria-live="polite"
+                className="mb-4 flex items-start gap-2.5 rounded-xl border border-[#f0d9d6] bg-[#fff7f6] px-3.5 py-3 text-[10px] leading-5 text-[#a54a42]"
+              >
+                <ShieldCheck
+                  size={15}
+                  className="mt-0.5 shrink-0"
+                />
+
+                <span>{error}</span>
+              </div>
             )}
-          </button>
-        </form>
 
-        <div className="my-3.5 flex items-center gap-2.5">
-          <div className="h-px flex-1 bg-slate-200" />
-          <span className="text-xs font-medium text-slate-400">atau</span>
-          <div className="h-px flex-1 bg-slate-200" />
-        </div>
+            {/* INFORMASI VERIFIKASI */}
+            {infoMessage && (
+              <div
+                role="status"
+                aria-live="polite"
+                className="mb-4 flex items-start gap-2.5 rounded-xl border border-[#cfe4d3] bg-[#eff8f1] px-3.5 py-3 text-[10px] leading-5 text-[#347849]"
+              >
+                <CheckCircle2
+                  size={16}
+                  className="mt-0.5 shrink-0"
+                />
 
-        <GoogleAuthButton label="Daftar / Masuk dengan Google" onError={setError} />
+                <span>{infoMessage}</span>
+              </div>
+            )}
 
-        <p className="mt-4 text-center text-sm text-slate-600">
-          Sudah punya akun?{' '}
-          <Link to="/login" className="font-semibold text-emerald-600 hover:underline">
-            Masuk di sini
-          </Link>
-        </p>
+            <form onSubmit={handleSubmit} className="space-y-3.5">
+              {/* NAMA LENGKAP */}
+              <div>
+                <label
+                  htmlFor="name"
+                  className="mb-2 block text-[10px] font-extrabold text-[#526b57]"
+                >
+                  Nama Lengkap
+                </label>
+
+                <div className="relative">
+                  <UserRound
+                    size={15}
+                    className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#91a093]"
+                  />
+
+                  <input
+                    id="name"
+                    type="text"
+                    autoComplete="name"
+                    value={name}
+                    onChange={(event) =>
+                      setName(event.target.value)
+                    }
+                    placeholder="Masukkan nama lengkap"
+                    required
+                    className="min-h-[44px] w-full rounded-xl border border-[#dfe9e0] bg-[#fbfdfb] py-2.5 pl-10 pr-3.5 text-[11px] font-medium text-[#36543d] outline-none transition placeholder:font-normal placeholder:text-[#a0aba2] hover:border-[#cadfcd] focus:border-[#80b78b] focus:bg-white focus:ring-4 focus:ring-[#e7f3e9]"
+                  />
+                </div>
+              </div>
+
+              {/* EMAIL */}
+              <div>
+                <label
+                  htmlFor="email"
+                  className="mb-2 block text-[10px] font-extrabold text-[#526b57]"
+                >
+                  Alamat Email
+                </label>
+
+                <div className="relative">
+                  <Mail
+                    size={15}
+                    className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#91a093]"
+                  />
+
+                  <input
+                    id="email"
+                    type="email"
+                    autoComplete="email"
+                    value={email}
+                    onChange={(event) =>
+                      setEmail(event.target.value)
+                    }
+                    placeholder="nama@email.com"
+                    required
+                    className="min-h-[44px] w-full rounded-xl border border-[#dfe9e0] bg-[#fbfdfb] py-2.5 pl-10 pr-3.5 text-[11px] font-medium text-[#36543d] outline-none transition placeholder:font-normal placeholder:text-[#a0aba2] hover:border-[#cadfcd] focus:border-[#80b78b] focus:bg-white focus:ring-4 focus:ring-[#e7f3e9]"
+                  />
+                </div>
+              </div>
+
+              {/* PASSWORD */}
+              <div>
+                <label
+                  htmlFor="password"
+                  className="mb-2 block text-[10px] font-extrabold text-[#526b57]"
+                >
+                  Password
+                </label>
+
+                <div className="relative">
+                  <LockKeyhole
+                    size={15}
+                    className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#91a093]"
+                  />
+
+                  <input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    autoComplete="new-password"
+                    value={password}
+                    onChange={(event) =>
+                      setPassword(event.target.value)
+                    }
+                    placeholder="Minimal 6 karakter"
+                    minLength={6}
+                    required
+                    className="min-h-[44px] w-full rounded-xl border border-[#dfe9e0] bg-[#fbfdfb] py-2.5 pl-10 pr-11 text-[11px] font-medium text-[#36543d] outline-none transition placeholder:font-normal placeholder:text-[#a0aba2] hover:border-[#cadfcd] focus:border-[#80b78b] focus:bg-white focus:ring-4 focus:ring-[#e7f3e9]"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setShowPassword((previous) => !previous)
+                    }
+                    aria-label={
+                      showPassword
+                        ? 'Sembunyikan password'
+                        : 'Lihat password'
+                    }
+                    className="absolute inset-y-0 right-0 flex w-11 items-center justify-center rounded-r-xl text-[#8d9b90] transition hover:bg-[#f0f7f1] hover:text-[#347c49]"
+                  >
+                    {showPassword ? (
+                      <EyeOff size={16} />
+                    ) : (
+                      <Eye size={16} />
+                    )}
+                  </button>
+                </div>
+
+                <p className="mt-1.5 text-[9px] text-[#929e94]">
+                  Gunakan minimal 6 karakter.
+                </p>
+              </div>
+
+              {/* KONFIRMASI PASSWORD */}
+              <div>
+                <label
+                  htmlFor="confirmPassword"
+                  className="mb-2 block text-[10px] font-extrabold text-[#526b57]"
+                >
+                  Konfirmasi Password
+                </label>
+
+                <div className="relative">
+                  <LockKeyhole
+                    size={15}
+                    className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#91a093]"
+                  />
+
+                  <input
+                    id="confirmPassword"
+                    type={showPassword ? 'text' : 'password'}
+                    autoComplete="new-password"
+                    value={confirmPassword}
+                    onChange={(event) =>
+                      setConfirmPassword(event.target.value)
+                    }
+                    placeholder="Ulangi password"
+                    minLength={6}
+                    required
+                    className="min-h-[44px] w-full rounded-xl border border-[#dfe9e0] bg-[#fbfdfb] py-2.5 pl-10 pr-11 text-[11px] font-medium text-[#36543d] outline-none transition placeholder:font-normal placeholder:text-[#a0aba2] hover:border-[#cadfcd] focus:border-[#80b78b] focus:bg-white focus:ring-4 focus:ring-[#e7f3e9]"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setShowPassword((previous) => !previous)
+                    }
+                    aria-label={
+                      showPassword
+                        ? 'Sembunyikan password'
+                        : 'Lihat password'
+                    }
+                    title={
+                      showPassword
+                        ? 'Sembunyikan password'
+                        : 'Lihat password'
+                    }
+                    className="absolute inset-y-0 right-0 flex w-11 items-center justify-center rounded-r-xl text-[#8d9b90] transition hover:bg-[#f0f7f1] hover:text-[#347c49]"
+                  >
+                    {showPassword ? (
+                      <EyeOff size={16} />
+                    ) : (
+                      <Eye size={16} />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* TOMBOL DAFTAR */}
+              <button
+                type="submit"
+                disabled={submitting}
+                className="sd-button-dark mt-2 inline-flex min-h-[45px] w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-[11px] font-extrabold transition disabled:cursor-not-allowed disabled:opacity-55"
+              >
+                {submitting ? (
+                  <>
+                    <LoaderCircle
+                      size={16}
+                      className="animate-spin"
+                    />
+                    Mendaftarkan...
+                  </>
+                ) : (
+                  <>
+                    <UserPlus size={16} />
+                    Daftar Akun
+                    <ArrowRight size={14} />
+                  </>
+                )}
+              </button>
+            </form>
+
+            {/* PEMISAH */}
+            <div className="my-4 flex items-center gap-3">
+              <span className="h-px flex-1 bg-[#e6ece6]" />
+
+              <span className="text-[9px] font-semibold text-[#9aa59c]">
+                atau daftar menggunakan
+              </span>
+
+              <span className="h-px flex-1 bg-[#e6ece6]" />
+            </div>
+
+            <GoogleAuthButton
+              label="Daftar / Masuk dengan Google"
+              onError={setError}
+            />
+
+            {/* LOGIN */}
+            <div className="mt-5 rounded-xl border border-[#e5eee6] bg-[#f8fbf8] p-4 text-center">
+              <p className="text-[10px] font-medium text-[#758579]">
+                Sudah punya akun?
+              </p>
+
+              <Link
+                to="/login"
+                className="mt-1 inline-flex items-center gap-1 text-[11px] font-extrabold text-[#347c49] transition hover:text-[#1e6337] hover:underline"
+              >
+                Masuk ke akun
+                <ArrowRight size={13} />
+              </Link>
+            </div>
+
+            <p className="mt-5 text-center text-[8px] leading-5 text-[#a0aaa2]">
+              Dengan mendaftar, akun baru akan menggunakan hak akses
+              pengguna biasa sesuai pengaturan aplikasi.
+            </p>
+          </div>
+        </section>
       </div>
-    </div>
+    </main>
   );
 }
