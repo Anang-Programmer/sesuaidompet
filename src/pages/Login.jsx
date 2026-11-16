@@ -117,16 +117,16 @@ export default function Login() {
   }
 
   return (
-    <main className="relative flex h-screen w-full overflow-hidden bg-white">
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#f2f8f3] px-3 py-6 sm:px-6 sm:py-10">
       {/* Dekorasi latar */}
       <div className="pointer-events-none absolute -left-32 -top-36 h-80 w-80 rounded-full bg-[#dcefe0]/70 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-36 -right-28 h-96 w-96 rounded-full bg-[#e0f0e2]/70 blur-3xl" />
 
-<div className="relative z-10 flex w-full h-screen overflow-hidden bg-white">
+      <div className="relative z-10 grid w-full max-w-[1050px] overflow-hidden rounded-[28px] border border-[#dfe9e0] bg-white shadow-[0_24px_70px_rgba(31,75,42,0.10)] md:grid-cols-[0.92fr_1.08fr]">
         {/* =================================
             PANEL IDENTITAS
         ================================= */}
-<aside className="relative hidden h-full w-[45%] flex-col justify-between overflow-hidden bg-gradient-to-br from-[#174d2e] via-[#216c3b] to-[#2e874a] p-8 lg:p-10 md:flex">
+        <aside className="relative hidden min-h-[650px] flex-col justify-between overflow-hidden bg-gradient-to-br from-[#174d2e] via-[#216c3b] to-[#2e874a] p-8 lg:p-10 md:flex">
           <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full border-[38px] border-white/[0.06]" />
           <div className="pointer-events-none absolute -bottom-24 -left-20 h-72 w-72 rounded-full bg-[#7fd18b]/10 blur-3xl" />
 
@@ -181,7 +181,7 @@ export default function Login() {
         {/* =================================
             FORM LOGIN
         ================================= */}
-        <section className="flex flex-1 flex-col items-center justify-center overflow-y-auto p-5 sm:p-8 lg:p-10">
+        <section className="min-w-0 p-5 sm:p-8 lg:p-10">
           {/* Logo khusus mobile */}
           <div className="mb-7 flex flex-col items-center text-center md:hidden">
             <BrandLogo compact />
