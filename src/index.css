@@ -1463,3 +1463,60 @@ a {
   opacity: 0.5;
   cursor: not-allowed;
 }
+/* =========================================
+   PENYESUAIAN GLOBAL: TIPOGRAFI & KONTRAS
+   (Berlaku untuk semua halaman)
+========================================= */
+
+/* 1. Perbesar ukuran font dasar agar semua teks lebih mudah dibaca */
+body {
+  font-size: 16px; /* Ukuran standar yang lebih nyaman */
+  color: #1f2937; /* Warna teks dasar abu-abu gelap (kontras dengan background putih) */
+}
+
+/* 2. Perbesar judul halaman (PageHeader) di semua halaman */
+h1, .sd-page-title, .page-title {
+  font-size: 2rem !important;
+  font-weight: 800 !important;
+  color: #111827 !important; /* Hitam pekat */
+}
+
+/* 3. Perbesar sub-judul (section title) */
+h2, h3, .sd-section-title {
+  font-size: 1.35rem !important;
+  font-weight: 700 !important;
+  color: #1f2937 !important;
+}
+
+/* 4. Perbesar teks paragraf/deskripsi agar lebih jelas */
+p, .sd-section-description, .sd-welcome-description {
+  font-size: 1rem !important; /* Standar 16px */
+  line-height: 1.6 !important; /* Jarak antar baris lebih lega */
+  color: #4b5563 !important; /* Abu-abu sedang yang kontras */
+}
+
+/* 5. Khusus di dalam area berwarna gelap (seperti banner Dashboard), teks harus putih terang */
+.sd-welcome-banner h2,
+.sd-welcome-banner p,
+.sd-welcome-banner .sd-welcome-kicker {
+  color: #ffffff !important;
+}
+
+/* 6. Tombol (Button) dibuat lebih besar dan teksnya tebal */
+button, .sd-primary-button, .sd-outline-button {
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+}
+
+/* 7. Label pada Form (Login/Register) dan Tabel */
+label, th {
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
+  color: #374151 !important;
+}
+
+/* 8. Teks di dalam tabel (td) */
+td {
+  font-size: 0.9rem !important;
+  color: #4b5563 !important;
+}

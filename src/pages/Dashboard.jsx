@@ -327,44 +327,38 @@ export default function Dashboard() {
 
       {/* BANNER UTAMA */}
 
-      <section className="sd-welcome-banner">
-
-        <div className="sd-welcome-copy">
+            {/* BANNER UTAMA */}
+      <section className="sd-welcome-banner relative overflow-hidden">
+        
+        {/* Teks Kiri */}
+        <div className="sd-welcome-copy relative z-10">
           <div className="sd-welcome-kicker">
             <Sparkles size={14} />
-            Pilih smartphone dengan lebih yakin
+            Rekomendasi Berbasis Data
           </div>
 
           <h2 className="sd-welcome-title">
-            Pilihan yang tepat, sesuai kebutuhan dan isi dompet.
+            Lebih Yakin Memilih HP, <br className="hidden sm:block" />
+            Sesuai Kebutuhan & Budget.
           </h2>
 
           <p className="sd-welcome-description">
-            Bandingkan spesifikasi, tentukan prioritas,
-            dan lihat rekomendasi berdasarkan metode
-            Simple Additive Weighting (SAW).
+            Bandingkan spesifikasi secara objektif dengan metode Simple Additive Weighting (SAW) untuk menemukan smartphone yang paling pas untukmu.
           </p>
 
-          <Link
-            to="/bandingkan"
-            className="sd-primary-button"
-          >
-            Mulai perbandingan
+          <Link to="/bandingkan" className="sd-primary-button">
+            Mulai Cari Rekomendasi
             <ArrowUpRight size={16} />
           </Link>
         </div>
 
-        <div
-          className="sd-welcome-visual"
-          aria-hidden="true"
-        >
-          <div className="sd-phone-orbit" />
-
-          <div className="sd-phone-illustration">
-            <Smartphone />
-          </div>
+        {/* Visual Kanan: Abstrak Minimalis */}
+        <div className="absolute top-0 right-0 h-full w-[400px] overflow-hidden pointer-events-none" aria-hidden="true">
+          {/* Bentuk Abstrak Halus (Tanpa Titik-titik) */}
+          <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full border-[40px] border-white/[0.03]" />
+          <div className="absolute -bottom-32 -right-10 h-80 w-80 rounded-full bg-emerald-400/10 blur-3xl" />
+          <div className="absolute top-1/2 right-20 h-40 w-40 rounded-full border border-white/[0.05]" />
         </div>
-
       </section>
 
 
