@@ -1520,3 +1520,26 @@ td {
   font-size: 0.9rem !important;
   color: #4b5563 !important;
 }
+/* =========================================
+   PERBAIKAN: PAKSA TEKS PUTIH DI AREA GELAP
+========================================= */
+
+/* Khusus untuk panel hijau di halaman Login/Register */
+aside h1, 
+aside h2, 
+aside p, 
+aside span {
+  color: #ffffff !important;
+}
+
+/* Khusus untuk banner hijau di Dashboard */
+.sd-welcome-banner h2,
+.sd-welcome-banner p,
+.sd-welcome-banner .sd-welcome-kicker {
+  color: #ffffff !important;
+}
+
+/* Pastikan teks di dalam tombol tetap putih */
+button, .sd-primary-button {
+  color: #ffffff !important;
+}
