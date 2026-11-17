@@ -441,10 +441,25 @@ Ekstrak seluruh model smartphone yang disebutkan pengguna. Pertahankan urutan pe
         });
 
       if (phoneCandidates.length < 2) {
+        let greetingMsg = 'Silakan sebutkan minimal dua nama smartphone yang ingin dibandingkan agar SEDO AI dapat membantu melakukan perangkingan.';
+
+        if (phoneCandidates.length === 1) {
+          greetingMsg = `Saya mendeteksi smartphone **${phoneCandidates[0].name}**. Untuk melakukan perangkingan metode SAW, sebutkan minimal satu smartphone pesaingnya lagi (misalnya: "${phoneCandidates[0].name} vs Poco X6 Pro").`;
+        } else {
+          const cleanMsg = message.toLowerCase().trim();
+          if (/\b(thank\s*you|thanks|thank\s*u|thx|ty|tq|terima\s*kasih|terimakasih|makasih|makasi|mksih)\b/i.test(cleanMsg)) {
+            greetingMsg = 'Sama-sama! Senang banget bisa bantu kamu menemukan smartphone terbaik. Ada smartphone lain yang ingin dibandingkan?';
+          } else if (/^(halo|hai|hello|hi|hey|hei|selamat\s*(pagi|siang|sore|malam))\b/i.test(cleanMsg)) {
+            greetingMsg = 'Halo! Saya SEDO AI, asisten pintar SesuaiDompet. Sebutkan minimal dua smartphone yang ingin dibandingkan ya!';
+          } else if (/^(keren|mantap|bagus|hebat|oke|ok|sip|siap)\b/i.test(cleanMsg)) {
+            greetingMsg = 'Terima kasih! Senang kamu puas dengan analisisnya. Mau coba bandingkan HP lainnya?';
+          }
+        }
+
         return new Response(JSON.stringify({
           success: true,
           data: {
-            greeting: 'Silakan sebutkan minimal dua nama smartphone yang ingin dibandingkan agar SEDO AI dapat membantu melakukan perangkingan.',
+            greeting: greetingMsg,
             smartphones: [],
             grounding: {
               provider: 'Tavily',

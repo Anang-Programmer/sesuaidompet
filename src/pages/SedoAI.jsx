@@ -1,5 +1,5 @@
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import {
   ArrowRight,
@@ -17,6 +17,7 @@ import {
   Mic,
   MicOff,
   Plus,
+  Radio,
   RefreshCw,
   Send,
   Smartphone,
@@ -24,13 +25,18 @@ import {
   Trash2,
   Trophy,
   UserRound,
+  Volume2,
+  VolumeX,
   Wallet,
   X,
 } from 'lucide-react';
 
 import { useAuth } from '../hooks/useAuth';
 import { useSawSession } from '../hooks/useSawSession';
+import { useVoiceHandler } from '../hooks/useVoiceHandler';
 import { MarkdownRenderer } from '../components/MarkdownRenderer';
+import { VoiceVisualizer, TTSWaveIndicator } from '../components/VoiceVisualizer';
+import { GeminiLiveVoice } from '../components/GeminiLiveVoice';
 import {
   fetchCriteria,
   fetchSmartphones,
@@ -45,6 +51,10 @@ import {
   formatDecimal,
   formatRupiah,
 } from '../utils/formatters';
+import {
+  detectConversationalResponse,
+  formatFriendlyFallback,
+} from '../utils/conversationalAi';
 
 /* =========================================
    KONFIGURASI
@@ -423,13 +433,22 @@ export default function SedoAI() {
   });
 
   /* -----------------------------------------
-     State antarmuka
+     State antarmuka & Gemini Live Mode
   ----------------------------------------- */
 
   const [inputMessage, setInputMessage] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
-  const [isListening, setIsListening] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [isLiveModeOpen, setIsLiveModeOpen] = useState(false);
+  const [liveStatus, setLiveStatus] = useState('listening');
+  const [liveAiText, setLiveAiText] = useState('');
+  const [isLiveMicMuted, setIsLiveMicMuted] = useState(false);
+  const isLiveModeRef = useRef(false);
+  const isProcessingRef = useRef(false);
+
+  useEffect(() => {
+    isLiveModeRef.current = isLiveModeOpen;
+  }, [isLiveModeOpen]);
 
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
@@ -747,78 +766,127 @@ export default function SedoAI() {
   }
 
   /* =========================================
-     SPEECH TO TEXT
+     SPEECH TO TEXT & VOICE (STT Template)
   ========================================= */
 
-  function toggleSpeechRecognition() {
-    const SpeechRecognition =
-      window.SpeechRecognition ||
-      window.webkitSpeechRecognition;
+  const {
+    isListening,
+    isSpeaking,
+    speakingMessageId,
+    liveTranscript,
+    audioLevel,
+    startListening,
+    stopListening,
+    abortListening,
+    toggleListening,
+    speakText,
+    stopSpeaking,
+  } = useVoiceHandler({
+    lang: 'id-ID',
+    silenceTimeoutMs: 1800,
+    onTranscript: (spokenText) => {
+      // Menampilkan teks yang sedang diucapkan secara real-time ke input form
+      setInputMessage(spokenText);
+    },
+    onFinalTranscript: (finalText) => {
+      // Kalimat final selesai diucapkan
+      setInputMessage(finalText);
+    },
+    onSilence: (spokenText) => {
+      // Pada Gemini Live Mode: kirim otomatis jika pengguna selesai bicara (jeda hening)
+      if (isLiveModeRef.current && !isProcessingRef.current && spokenText?.trim()) {
+        stopListening();
+        setLiveStatus('processing');
+        handleSendMessage(spokenText.trim(), { fromLive: true });
+      }
+    },
+    onError: (errorMessage) => {
+      window.alert(errorMessage);
+    },
+  });
 
-    if (!SpeechRecognition) {
-      window.alert(
-        'Browser kamu belum mendukung Speech-to-Text bawaan. Kamu bisa mengetikkan pesan secara manual.'
-      );
+  const handleVoiceSubmit = useCallback(
+    (textToSend) => {
+      stopListening();
+      const content = (textToSend || liveTranscript || inputMessage).trim();
+      if (content) {
+        handleSendMessage(content);
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [stopListening, liveTranscript, inputMessage]
+  );
 
-      return;
-    }
+  const handleVoiceCancel = useCallback(() => {
+    abortListening();
+    setInputMessage('');
+  }, [abortListening]);
 
+  /* =========================================
+     GEMINI LIVE TWO-WAY VOICE MODE
+  ========================================= */
+
+  const handleOpenLiveMode = useCallback(() => {
+    setIsLiveModeOpen(true);
+    setLiveStatus('listening');
+    setIsLiveMicMuted(false);
+    setLiveAiText('');
+    stopSpeaking();
+    setTimeout(() => {
+      startListening();
+    }, 150);
+  }, [startListening, stopSpeaking]);
+
+  const handleCloseLiveMode = useCallback(() => {
+    setIsLiveModeOpen(false);
+    stopListening();
+    stopSpeaking();
+    setLiveStatus('idle');
+    setLiveAiText('');
+  }, [stopListening, stopSpeaking]);
+
+  const handleToggleLiveMic = useCallback(() => {
     if (isListening) {
-      setIsListening(false);
-      return;
+      stopListening();
+      setIsLiveMicMuted(true);
+      setLiveStatus('idle');
+    } else {
+      setIsLiveMicMuted(false);
+      setLiveStatus('listening');
+      startListening();
     }
+  }, [isListening, stopListening, startListening]);
 
-    try {
-      const recognition = new SpeechRecognition();
-
-      recognition.lang = 'id-ID';
-      recognition.continuous = false;
-      recognition.interimResults = false;
-
-      recognition.onstart = () => {
-        setIsListening(true);
-      };
-
-      recognition.onend = () => {
-        setIsListening(false);
-      };
-
-      recognition.onerror = () => {
-        setIsListening(false);
-      };
-
-      recognition.onresult = (event) => {
-        const transcript =
-          event.results[0][0].transcript;
-
-        setInputMessage((previous) =>
-          previous
-            ? `${previous} ${transcript}`
-            : transcript
-        );
-      };
-
-      recognition.start();
-    } catch (error) {
-      console.warn(
-        'Speech recognition error:',
-        error
-      );
-
-      setIsListening(false);
+  const handleLiveInterrupt = useCallback(() => {
+    stopSpeaking();
+    if (isLiveModeRef.current) {
+      setTimeout(() => {
+        if (isLiveModeRef.current) {
+          setLiveStatus('listening');
+          startListening();
+        }
+      }, 250);
     }
-  }
+  }, [stopSpeaking, startListening]);
 
   /* =========================================
      KIRIM PESAN KE AI
   ========================================= */
 
-  async function handleSendMessage(customText) {
+  async function handleSendMessage(customText, options = {}) {
+    if (isListening) {
+      stopListening();
+    }
+    if (isSpeaking) {
+      stopSpeaking();
+    }
+
     const textToSend = (
       customText || inputMessage
     ).trim();
 
-    if (!textToSend || isProcessing) return;
+    if (!textToSend || isProcessing || isProcessingRef.current) return;
+    isProcessingRef.current = true;
 
     setInputMessage('');
 
@@ -837,24 +905,67 @@ export default function SedoAI() {
     setMessages(newMessages);
     setIsProcessing(true);
 
+    // 1. Cek respon percakapan kasual (terima kasih, salam, pujian, identitas) secara instan & alami
+    const conversationalReply = detectConversationalResponse(textToSend);
+    if (conversationalReply) {
+      setMessages((previous) => [
+        ...previous,
+        {
+          id: `sedo-${Date.now()}`,
+          sender: 'sedo',
+          text: conversationalReply,
+          type: 'text',
+        },
+      ]);
+
+      if (isLiveModeRef.current) {
+        setLiveAiText(conversationalReply);
+        setLiveStatus('speaking');
+        speakText(conversationalReply, {
+          onEnd: () => {
+            if (isLiveModeRef.current) {
+              setTimeout(() => {
+                if (isLiveModeRef.current) {
+                  setLiveStatus('listening');
+                  startListening();
+                }
+              }, 400);
+            }
+          },
+        });
+      }
+
+      setIsProcessing(false);
+      isProcessingRef.current = false;
+      return;
+    }
+
+    const isFromLive = options.fromLive || isLiveModeRef.current;
+    if (isFromLive) {
+      setLiveStatus('processing');
+    }
+
     try {
       const result = await extractAndLookupPhones(
         textToSend,
         smartphones
       );
 
+      let spokenAiResponse = '';
+
       if (
         !result.smartphones ||
         result.smartphones.length === 0
       ) {
+        const textMsg = formatFriendlyFallback(result.greeting, textToSend);
+        spokenAiResponse = textMsg;
+
         setMessages((previous) => [
           ...previous,
           {
             id: `sedo-${Date.now()}`,
             sender: 'sedo',
-            text:
-              result.greeting ||
-              'Saya belum menemukan nama smartphone spesifik di pesanmu. Coba sebutkan minimal dua nama smartphone, misalnya: "Bantu pilihkan Poco X6 Pro atau Infinix Note 40".',
+            text: textMsg,
             type: 'text',
           },
         ]);
@@ -871,32 +982,85 @@ export default function SedoAI() {
           })
         );
 
+        const textMsg =
+          result.greeting ||
+          `Saya menemukan ${phonesWithTempId.length} smartphone yang kamu sebutkan. Berikut spesifikasi enam kriterianya. Kamu bisa mengecek atau mengubah angkanya sebelum dihitung!`;
+        spokenAiResponse = textMsg;
+
         setMessages((previous) => [
           ...previous,
           {
             id: `sedo-${Date.now()}`,
             sender: 'sedo',
-            text:
-              result.greeting ||
-              `Saya menemukan ${phonesWithTempId.length} smartphone yang kamu sebutkan. Berikut spesifikasi enam kriterianya. Kamu bisa mengecek atau mengubah angkanya sebelum dihitung!`,
+            text: textMsg,
             type: 'spec_card',
             phones: phonesWithTempId,
           },
         ]);
       }
+
+      const isSpecCard = Boolean(result.smartphones && result.smartphones.length > 0);
+
+      // Gemini Live Voice Turn-Taking Loop:
+      if (isLiveModeRef.current && spokenAiResponse) {
+        setLiveAiText(spokenAiResponse);
+        setLiveStatus('speaking');
+        speakText(spokenAiResponse, {
+          onEnd: () => {
+            if (isLiveModeRef.current) {
+              if (isSpecCard) {
+                // Sesuai permintaan user:
+                // Pas form perbandingan spesifikasi muncul, mic otomatis di-disable / mute.
+                // Pengguna bisa memeriksa atau mengubah angka dengan tenang.
+                // Mic baru akan dibuka lagi saat tombol Hitung SAW ditekan & dijawab.
+                stopListening();
+                setLiveStatus('idle');
+              } else {
+                // Percakapan biasa tanpa form: buka mic lagi untuk giliran user
+                setTimeout(() => {
+                  if (isLiveModeRef.current) {
+                    setLiveStatus('listening');
+                    startListening();
+                  }
+                }, 400);
+              }
+            }
+          },
+        });
+      }
     } catch (error) {
+      const errorMsg = `Maaf, terjadi kendala saat memproses: ${error.message}. Pastikan koneksi dan API Key Edge Function sudah aktif.`;
+
       setMessages((previous) => [
         ...previous,
         {
           id: `sedo-err-${Date.now()}`,
           sender: 'sedo',
-          text: `Maaf, terjadi kendala saat memproses: ${error.message}. Pastikan koneksi dan API Key Edge Function sudah aktif.`,
+          text: errorMsg,
           type: 'text',
           isError: true,
         },
       ]);
+
+      if (isLiveModeRef.current) {
+        setLiveAiText(errorMsg);
+        setLiveStatus('speaking');
+        speakText(errorMsg, {
+          onEnd: () => {
+            if (isLiveModeRef.current) {
+              setTimeout(() => {
+                if (isLiveModeRef.current) {
+                  setLiveStatus('listening');
+                  startListening();
+                }
+              }, 400);
+            }
+          },
+        });
+      }
     } finally {
       setIsProcessing(false);
+      isProcessingRef.current = false;
     }
   }
 
@@ -1006,6 +1170,8 @@ export default function SedoAI() {
   ========================================= */
 
   async function handleExecuteSaw(phones) {
+    if (isProcessingRef.current) return;
+
     if (!phones || phones.length < 2) {
       window.alert(
         'Pilih minimal dua smartphone untuk menghitung perbandingan SAW.'
@@ -1014,7 +1180,11 @@ export default function SedoAI() {
       return;
     }
 
+    isProcessingRef.current = true;
     setIsProcessing(true);
+    if (isLiveModeRef.current) {
+      setLiveStatus('processing');
+    }
 
     try {
       // 1. Perhitungan SAW dilakukan di browser.
@@ -1049,7 +1219,7 @@ export default function SedoAI() {
 
       // Gabungkan: gunakan data savedPhones yang punya ID DB,
       // fallback ke data phones asli agar tidak ada HP yang hilang.
-      const activePhones = phones.map((originalPhone, index) => {
+      const activePhones = phones.map((originalPhone) => {
         // Cari padanan di savedPhones berdasarkan nama (case-insensitive)
         const saved = savedPhones.find(
           (sp) =>
@@ -1091,6 +1261,25 @@ export default function SedoAI() {
           savedCount: savedPhones.length,
         },
       ]);
+
+      // Jika dalam Gemini Live Mode, bacakan juara rekomendasi
+      if (isLiveModeRef.current && sawResult.rekomendasiTerbaik?.smartphone?.name) {
+        const winnerSummary = `Perhitungan SAW selesai! Juara rekomendasi terbaik adalah ${sawResult.rekomendasiTerbaik.smartphone.name} dengan nilai preferensi ${formatDecimal(sawResult.rekomendasiTerbaik.totalScore, 4)}.`;
+        setLiveAiText(winnerSummary);
+        setLiveStatus('speaking');
+        speakText(winnerSummary, {
+          onEnd: () => {
+            if (isLiveModeRef.current) {
+              setTimeout(() => {
+                if (isLiveModeRef.current) {
+                  setLiveStatus('listening');
+                  startListening();
+                }
+              }, 400);
+            }
+          },
+        });
+      }
     } catch (error) {
       window.alert(
         error.message ||
@@ -1098,6 +1287,7 @@ export default function SedoAI() {
       );
     } finally {
       setIsProcessing(false);
+      isProcessingRef.current = false;
     }
   }
 
@@ -1175,6 +1365,10 @@ export default function SedoAI() {
   /* =========================================
      TAMPILAN HALAMAN
   ========================================= */
+
+  const latestCardMessage = [...messages].reverse().find(
+    (m) => m.type === 'spec_card' || m.type === 'saw_result'
+  );
 
   return (
     <section className="flex h-full w-full flex-1 flex-col overflow-hidden bg-white">
@@ -1264,6 +1458,20 @@ export default function SedoAI() {
               Obrolan Baru
             </span>
           </button>
+
+          <button
+            type="button"
+            onClick={handleOpenLiveMode}
+            className="inline-flex min-h-[38px] items-center justify-center gap-1.5 rounded-xl border border-emerald-500/40 bg-gradient-to-r from-[#216d3a] to-[#2d884c] px-3.5 py-2 text-xs font-black text-white shadow-[0_4px_14px_rgba(33,109,58,0.25)] transition hover:from-[#1a572e] hover:to-[#236e3c]"
+            title="Buka Mode Percakapan Suara Live (seperti Gemini Live)"
+          >
+            <Radio size={14} className="animate-pulse" />
+            <span className="hidden sm:inline">Live Suara</span>
+            <span className="flex h-2 w-2 relative">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+            </span>
+          </button>
         </div>
       </header>
 
@@ -1298,7 +1506,13 @@ export default function SedoAI() {
                 >
                   {/* AVATAR AI */}
                   {!isUser && (
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-[#d9e9dc] bg-white text-[#347c49] shadow-[0_3px_9px_rgba(25,68,39,0.05)] sm:h-9 sm:w-9">
+                    <div
+                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border bg-white shadow-[0_3px_9px_rgba(25,68,39,0.05)] sm:h-9 sm:w-9 transition-all ${
+                        isSpeaking && speakingMessageId === message.id
+                          ? 'border-[#3ba258] text-[#22723c] ring-4 ring-[#b3e5c0]/60 animate-pulse'
+                          : 'border-[#d9e9dc] text-[#347c49]'
+                      }`}
+                    >
                       <Bot size={17} />
                     </div>
                   )}
@@ -1320,18 +1534,55 @@ export default function SedoAI() {
                             : 'rounded-bl-md border border-[#e3ebe4] bg-white p-3.5 text-[#405a46] shadow-[0_4px_14px_rgba(25,68,39,0.035)] sm:p-4'
                       }`}
                     >
-                      {/* LABEL PENGIRIM */}
+                      {/* LABEL PENGIRIM & SUARA */}
                       {!isUser && (
-                        <div className="mb-2 flex items-center gap-2">
-                          <span className="text-xs font-extrabold text-[#397b4b]">
-                            SEDO AI
-                          </span>
+                        <div className="mb-2 flex items-center justify-between gap-2">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-extrabold text-[#397b4b]">
+                              SEDO AI
+                            </span>
 
-                          <span className="h-1 w-1 rounded-full bg-[#a9b8aa]" />
+                            <span className="h-1 w-1 rounded-full bg-[#a9b8aa]" />
 
-                          <span className="text-sm font-medium text-[#9aa69c]">
-                            Asisten SesuaiDompet
-                          </span>
+                            <span className="text-sm font-medium text-[#9aa69c]">
+                              Asisten SesuaiDompet
+                            </span>
+                          </div>
+
+                          {/* Tombol Dengarkan Suara (TTS) */}
+                          {message.text && !message.isError && (
+                            <button
+                              type="button"
+                              onClick={() => speakText(message.text, message.id)}
+                              className={`inline-flex items-center gap-1.5 rounded-lg px-2 py-0.5 text-xs font-bold transition ${
+                                isSpeaking && speakingMessageId === message.id
+                                  ? 'bg-[#e7f5ea] text-[#1e6a37] ring-1 ring-[#a3d9af]'
+                                  : 'text-[#7e9083] hover:bg-[#edf6f0] hover:text-[#287b44]'
+                              }`}
+                              title={
+                                isSpeaking && speakingMessageId === message.id
+                                  ? 'Hentikan suara'
+                                  : 'Dengarkan pesan ini'
+                              }
+                            >
+                              {isSpeaking && speakingMessageId === message.id ? (
+                                <>
+                                  <TTSWaveIndicator />
+                                  <VolumeX size={13} className="text-[#bf4b40]" />
+                                  <span className="text-sm font-extrabold text-[#1f6837]">
+                                    Berhenti
+                                  </span>
+                                </>
+                              ) : (
+                                <>
+                                  <Volume2 size={13} />
+                                  <span className="text-sm font-semibold">
+                                    Dengarkan
+                                  </span>
+                                </>
+                              )}
+                            </button>
+                          )}
                         </div>
                       )}
 
@@ -1730,37 +1981,66 @@ export default function SedoAI() {
               ))}
             </div>
 
+            {/* VOICE VISUALIZER BANNER SAAT SEDANG BICARA */}
+            <VoiceVisualizer
+              isListening={isListening}
+              liveTranscript={liveTranscript || inputMessage}
+              audioLevel={audioLevel}
+              onStop={stopListening}
+              onCancel={handleVoiceCancel}
+              onSubmit={handleVoiceSubmit}
+            />
+
             <form
               onSubmit={(event) => {
                 event.preventDefault();
+                if (isListening) {
+                  stopListening();
+                }
                 handleSendMessage();
               }}
               className="flex items-center gap-2 rounded-[17px] border border-[#dfe9e0] bg-[#fbfdfb] p-1.5 transition focus-within:border-[#94c39c] focus-within:ring-4 focus-within:ring-[#eaf5ec]"
             >
+              <div className="relative">
+                {isListening && (
+                  <span className="pointer-events-none absolute -inset-1 rounded-2xl bg-emerald-500/25 animate-voice-ring" />
+                )}
+                <button
+                  type="button"
+                  onClick={toggleListening}
+                  title={
+                    isListening
+                      ? 'Hentikan merekam suara'
+                      : 'Bicara lewat suara'
+                  }
+                  aria-label={
+                    isListening
+                      ? 'Hentikan rekaman suara'
+                      : 'Gunakan input suara'
+                  }
+                  className={`relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-all ${
+                    isListening
+                      ? 'border-[#2d8149] bg-gradient-to-br from-[#287d46] to-[#1c6435] text-white shadow-[0_4px_14px_rgba(35,112,59,0.3)] animate-voice-ring'
+                      : 'border-[#e1e9e2] bg-white text-[#6e8272] hover:border-[#c6ddca] hover:bg-[#f0f8f1] hover:text-[#347c49]'
+                  }`}
+                >
+                  {isListening ? (
+                    <MicOff size={16} />
+                  ) : (
+                    <Mic size={16} />
+                  )}
+                </button>
+              </div>
+
+              {/* Tombol Cepat Gemini Live */}
               <button
                 type="button"
-                onClick={toggleSpeechRecognition}
-                title={
-                  isListening
-                    ? 'Hentikan merekam suara'
-                    : 'Bicara lewat suara'
-                }
-                aria-label={
-                  isListening
-                    ? 'Hentikan rekaman suara'
-                    : 'Gunakan input suara'
-                }
-                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition ${
-                  isListening
-                    ? 'animate-pulse border-[#efc7c2] bg-[#fff0ee] text-[#bd6259]'
-                    : 'border-[#e1e9e2] bg-white text-[#6e8272] hover:border-[#c6ddca] hover:bg-[#f0f8f1] hover:text-[#347c49]'
-                }`}
+                onClick={handleOpenLiveMode}
+                title="Buka Mode Suara Live Interaktif (seperti Gemini Live)"
+                className="flex h-9 items-center gap-1.5 rounded-xl border border-emerald-500/30 bg-[#edf7f0] px-2.5 text-xs font-black text-[#236e3b] transition hover:bg-[#def0e2] shrink-0"
               >
-                {isListening ? (
-                  <MicOff size={16} />
-                ) : (
-                  <Mic size={16} />
-                )}
+                <Radio size={13} className="animate-pulse text-[#288447]" />
+                <span className="hidden sm:inline">Live</span>
               </button>
 
               <input
@@ -1773,7 +2053,7 @@ export default function SedoAI() {
                 disabled={isProcessing}
                 placeholder={
                   isListening
-                    ? 'Mendengarkan suara kamu...'
+                    ? 'Mendengarkan suara kamu... (Bicara sekarang)'
                     : 'Tulis nama smartphone yang ingin dibandingkan...'
                 }
                 aria-label="Tulis pesan untuk SEDO AI"
@@ -1908,6 +2188,29 @@ export default function SedoAI() {
           </aside>
         )}
       </div>
+
+      {/* =====================================
+          GEMINI LIVE TWO-WAY VOICE OVERLAY
+      ===================================== */}
+      <GeminiLiveVoice
+        isOpen={isLiveModeOpen}
+        onClose={handleCloseLiveMode}
+        liveStatus={liveStatus}
+        liveTranscript={liveTranscript}
+        aiResponseText={liveAiText}
+        audioLevel={audioLevel}
+        onToggleMic={handleToggleLiveMic}
+        isMicMuted={isLiveMicMuted}
+        onInterrupt={handleLiveInterrupt}
+        activeCard={latestCardMessage}
+        specFields={SPEC_FIELDS}
+        onUpdatePhoneSpec={handleUpdatePhoneSpec}
+        onAddManualPhone={handleAddManualPhoneToCard}
+        onRemovePhone={handleRemovePhoneFromCard}
+        onExecuteSaw={handleExecuteSaw}
+        onOpenComparison={handleOpenComparison}
+        isProcessing={isProcessing}
+      />
     </section>
   );
 }
