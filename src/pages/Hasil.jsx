@@ -64,7 +64,7 @@ function SummaryCard({
           <Icon size={17} />
         </span>
 
-        <span className="text-[10px] font-bold text-[#819084]">
+        <span className="text-xs font-bold text-[#819084]">
           {label}
         </span>
       </div>
@@ -73,7 +73,7 @@ function SummaryCard({
         {value}
       </p>
 
-      <p className="mt-1 text-[9px] leading-4 text-[#8b988e]">
+      <p className="mt-1 text-xs leading-4 text-[#8b988e]">
         {description}
       </p>
     </div>
@@ -87,11 +87,11 @@ function SpecificationCard({ criterion, smartphone }) {
   return (
     <div className="min-w-0 rounded-2xl border border-[#e3ece4] bg-white p-3 transition hover:border-[#c7ddca] hover:bg-[#fbfdfb]">
       <div className="flex items-center gap-1.5">
-        <span className="rounded-md bg-[#edf5ee] px-1.5 py-1 text-[8px] font-extrabold text-[#598064]">
+        <span className="rounded-md bg-[#edf5ee] px-1.5 py-1 text-sm font-extrabold text-[#598064]">
           {criterion.code}
         </span>
 
-        <span className="min-w-0 truncate text-[9px] font-bold text-[#849188]">
+        <span className="min-w-0 truncate text-xs font-bold text-[#849188]">
           {criterion.name}
         </span>
       </div>
@@ -111,7 +111,7 @@ function SpecificationCard({ criterion, smartphone }) {
 ========================================= */
 function ParameterBadge({ children, icon: Icon }) {
   return (
-    <span className="inline-flex min-h-[28px] items-center gap-1.5 rounded-full border border-[#e0e9e1] bg-white px-3 py-1.5 text-[9px] font-bold text-[#64786a]">
+    <span className="inline-flex min-h-[28px] items-center gap-1.5 rounded-full border border-[#e0e9e1] bg-white px-3 py-1.5 text-xs font-bold text-[#64786a]">
       {Icon && <Icon size={11} className="text-[#52805c]" />}
       {children}
     </span>
@@ -259,14 +259,14 @@ export default function Hasil() {
         title="Hasil Rekomendasi & Perankingan"
         description="Lihat smartphone dengan nilai preferensi tertinggi dan urutan ranking seluruh alternatif berdasarkan perhitungan metode SAW."
         badge={
-          <span className="rounded-full border border-[#d9e9dc] bg-[#eef7ef] px-2.5 py-1 text-[9px] font-extrabold text-[#367b49]">
+          <span className="rounded-full border border-[#d9e9dc] bg-[#eef7ef] px-2.5 py-1 text-xs font-extrabold text-[#367b49]">
             Tahap 7 & 8 SAW
           </span>
         }
         action={
           <Link
             to="/perhitungan"
-            className="sd-button-light inline-flex min-h-[38px] items-center justify-center gap-2 rounded-xl px-3.5 py-2 text-[10px] font-extrabold transition sm:text-xs"
+            className="sd-button-light inline-flex min-h-[38px] items-center justify-center gap-2 rounded-xl px-3.5 py-2 text-xs font-extrabold transition sm:text-sm"
           >
             <Calculator size={14} />
             Detail perhitungan
@@ -355,7 +355,7 @@ export default function Hasil() {
                   </div>
 
                   <div className="min-w-0">
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-[#d3e7d6] bg-white/90 px-2.5 py-1 text-[9px] font-extrabold text-[#397b4b]">
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-[#d3e7d6] bg-white/90 px-2.5 py-1 text-xs font-extrabold text-[#397b4b]">
                       <Crown size={11} />
                       REKOMENDASI TERBAIK · PERINGKAT #1
                     </span>
@@ -368,14 +368,14 @@ export default function Hasil() {
                       {formatRupiah(top.smartphone.price)}
                     </p>
 
-                    <p className="mt-1 text-[9px] text-[#7e9081]">
+                    <p className="mt-1 text-xs text-[#7e9081]">
                       Kode alternatif {top.code}
                     </p>
                   </div>
                 </div>
 
                 <div className="rounded-2xl border border-[#dceade] bg-white/90 p-4 shadow-[0_5px_16px_rgba(38,86,45,0.04)] sm:min-w-[190px] sm:text-right">
-                  <p className="text-[9px] font-bold text-[#819084]">
+                  <p className="text-xs font-bold text-[#819084]">
                     Nilai preferensi tertinggi (Vᵢ)
                   </p>
 
@@ -383,7 +383,7 @@ export default function Hasil() {
                     {formatDecimal(top.totalScore, 4)}
                   </p>
 
-                  <div className="mt-2 inline-flex items-center gap-1 rounded-full bg-[#edf7ef] px-2.5 py-1 text-[8px] font-extrabold text-[#397b4b]">
+                  <div className="mt-2 inline-flex items-center gap-1 rounded-full bg-[#edf7ef] px-2.5 py-1 text-sm font-extrabold text-[#397b4b]">
                     <CheckCircle2 size={10} />
                     Skor tertinggi
                   </div>
@@ -395,7 +395,7 @@ export default function Hasil() {
                 <div className="mb-2 flex items-center gap-2">
                   <Smartphone size={14} className="text-[#52805c]" />
 
-                  <h3 className="text-[10px] font-extrabold text-[#49674f]">
+                  <h3 className="text-xs font-extrabold text-[#49674f]">
                     Spesifikasi smartphone terpilih
                   </h3>
                 </div>
@@ -419,12 +419,12 @@ export default function Hasil() {
                     className="text-[#438653]"
                   />
 
-                  <h3 className="text-[10px] font-extrabold text-[#31583b]">
+                  <h3 className="text-xs font-extrabold text-[#31583b]">
                     Kesimpulan hasil perhitungan
                   </h3>
                 </div>
 
-                <p className="mt-2 text-[10px] leading-6 text-[#63796a] sm:text-xs">
+                <p className="mt-2 text-xs leading-6 text-[#63796a] sm:text-sm">
                   Berdasarkan perhitungan metode Simple Additive
                   Weighting (SAW) terhadap{' '}
                   <strong className="text-[#36583e]">
@@ -481,14 +481,14 @@ export default function Hasil() {
                     Hasil Perankingan
                   </h2>
 
-                  <p className="mt-1 text-[9px] leading-5 text-[#849188]">
+                  <p className="mt-1 text-xs leading-5 text-[#849188]">
                     Seluruh alternatif diurutkan berdasarkan nilai
                     preferensi (Vᵢ), dari skor tertinggi ke terendah.
                   </p>
                 </div>
               </div>
 
-              <span className="self-start rounded-full border border-[#dceade] bg-[#f0f8f1] px-3 py-1.5 text-[9px] font-extrabold text-[#397b4b]">
+              <span className="self-start rounded-full border border-[#dceade] bg-[#f0f8f1] px-3 py-1.5 text-xs font-extrabold text-[#397b4b]">
                 Urutan descending
               </span>
             </div>
@@ -512,7 +512,7 @@ export default function Hasil() {
                   Simpan Hasil ke Riwayat
                 </h2>
 
-                <p className="mt-1 text-[9px] leading-5 text-[#849188]">
+                <p className="mt-1 text-xs leading-5 text-[#849188]">
                   Simpan snapshot bobot, matriks, dan hasil ranking
                   agar dapat dibuka kembali kapan saja.
                 </p>
@@ -523,7 +523,7 @@ export default function Hasil() {
               {saveError && (
                 <div
                   role="alert"
-                  className="mb-3 flex items-start gap-2.5 rounded-xl border border-[#f0d9d6] bg-[#fff7f6] px-3.5 py-3 text-[10px] text-[#a54a42]"
+                  className="mb-3 flex items-start gap-2.5 rounded-xl border border-[#f0d9d6] bg-[#fff7f6] px-3.5 py-3 text-xs text-[#a54a42]"
                 >
                   <AlertCircle
                     size={15}
@@ -542,14 +542,14 @@ export default function Hasil() {
                       className="shrink-0 text-[#347c49]"
                     />
 
-                    <p className="text-[10px] font-extrabold text-[#347c49]">
+                    <p className="text-xs font-extrabold text-[#347c49]">
                       Riwayat perhitungan berhasil disimpan!
                     </p>
                   </div>
 
                   <Link
                     to="/riwayat"
-                    className="text-[10px] font-extrabold text-[#347c49] underline underline-offset-2"
+                    className="text-xs font-extrabold text-[#347c49] underline underline-offset-2"
                   >
                     Buka Riwayat
                   </Link>
@@ -576,13 +576,13 @@ export default function Hasil() {
                   }
                   placeholder="Judul riwayat (kosongkan untuk judul otomatis)"
                   maxLength={120}
-                  className="min-h-[43px] min-w-0 flex-1 rounded-xl border border-[#dfe9e0] bg-[#fbfdfb] px-3.5 py-2.5 text-[10px] font-semibold text-[#36543d] outline-none transition placeholder:font-normal placeholder:text-[#a0aba2] focus:border-[#80b78b] focus:ring-4 focus:ring-[#e7f3e9]"
+                  className="min-h-[43px] min-w-0 flex-1 rounded-xl border border-[#dfe9e0] bg-[#fbfdfb] px-3.5 py-2.5 text-xs font-semibold text-[#36543d] outline-none transition placeholder:font-normal placeholder:text-[#a0aba2] focus:border-[#80b78b] focus:ring-4 focus:ring-[#e7f3e9]"
                 />
 
                 <button
                   type="submit"
                   disabled={saving}
-                  className="sd-button-dark inline-flex min-h-[43px] shrink-0 items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-[10px] font-extrabold transition disabled:cursor-not-allowed disabled:opacity-50"
+                  className="sd-button-dark inline-flex min-h-[43px] shrink-0 items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-xs font-extrabold transition disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {saving ? (
                     <LoaderCircle
@@ -605,7 +605,7 @@ export default function Hasil() {
                   className="mt-0.5 shrink-0 text-[#87968a]"
                 />
 
-                <p className="text-[9px] leading-5 text-[#87958a]">
+                <p className="text-xs leading-5 text-[#87958a]">
                   Data yang disimpan merupakan snapshot hasil pada saat
                   tombol ditekan. Perubahan data smartphone atau bobot
                   di kemudian hari tidak mengubah riwayat tersebut.
@@ -623,7 +623,7 @@ export default function Hasil() {
                 Ingin memeriksa proses di balik hasil ini?
               </h3>
 
-              <p className="mt-1 text-[9px] leading-5 text-[#758879]">
+              <p className="mt-1 text-xs leading-5 text-[#758879]">
                 Buka matriks keputusan, normalisasi, dan kontribusi
                 bobot setiap kriteria.
               </p>
@@ -631,7 +631,7 @@ export default function Hasil() {
 
             <Link
               to="/perhitungan"
-              className="sd-button-dark inline-flex min-h-[40px] shrink-0 items-center justify-center gap-2 rounded-xl px-4 py-2 text-[10px] font-extrabold"
+              className="sd-button-dark inline-flex min-h-[40px] shrink-0 items-center justify-center gap-2 rounded-xl px-4 py-2 text-xs font-extrabold"
             >
               <Calculator size={14} />
               Detail Perhitungan SAW
@@ -652,7 +652,7 @@ export default function Hasil() {
             Belum ada hasil rekomendasi
           </h2>
 
-          <p className="mx-auto mt-2 max-w-lg text-[10px] leading-6 text-[#87958a]">
+          <p className="mx-auto mt-2 max-w-lg text-xs leading-6 text-[#87958a]">
             Belum terdapat alternatif yang dapat dihitung dengan
             konfigurasi saat ini. Periksa budget, pilihan smartphone,
             serta kelengkapan spesifikasinya pada halaman proses
@@ -661,7 +661,7 @@ export default function Hasil() {
 
           <Link
             to="/perhitungan"
-            className="sd-button-dark mt-4 inline-flex min-h-[40px] items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-[10px] font-extrabold"
+            className="sd-button-dark mt-4 inline-flex min-h-[40px] items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-xs font-extrabold"
           >
             <Calculator size={14} />
             Buka Proses Perhitungan

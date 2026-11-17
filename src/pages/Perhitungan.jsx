@@ -76,12 +76,12 @@ function SummaryCard({ icon: Icon, label, value, detail }) {
         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#edf6ef] text-[#347c49]">
           <Icon size={17} />
         </span>
-        <span className="text-[10px] font-bold text-[#819084]">{label}</span>
+        <span className="text-xs font-bold text-[#819084]">{label}</span>
       </div>
       <p className="mt-3 text-xl font-extrabold tracking-tight text-[#294d34]">
         {value}
       </p>
-      <p className="mt-1 text-[10px] leading-4 text-[#8b988e]">{detail}</p>
+      <p className="mt-1 text-xs leading-4 text-[#8b988e]">{detail}</p>
     </div>
   );
 }
@@ -95,7 +95,7 @@ function PanelHeading({ icon: Icon, eyebrow, title, description, trailing }) {
         </span>
         <div className="min-w-0">
           {eyebrow && (
-            <p className="text-[9px] font-extrabold uppercase tracking-[0.13em] text-[#6b9675]">
+            <p className="text-xs font-extrabold uppercase tracking-[0.13em] text-[#6b9675]">
               {eyebrow}
             </p>
           )}
@@ -103,7 +103,7 @@ function PanelHeading({ icon: Icon, eyebrow, title, description, trailing }) {
             {title}
           </h2>
           {description && (
-            <p className="mt-1 max-w-2xl text-[10px] leading-5 text-[#819084]">
+            <p className="mt-1 max-w-2xl text-xs leading-5 text-[#819084]">
               {description}
             </p>
           )}
@@ -186,7 +186,7 @@ export default function Perhitungan() {
         description="Atur alternatif dan bobot, lalu telusuri setiap tahapan perhitungan untuk memahami hasil rekomendasi smartphone."
         kicker="ANALISIS DAN PERHITUNGAN"
         badge={
-          <span className="rounded-full border border-[#d9e9dc] bg-[#eef7ef] px-2.5 py-1 text-[9px] font-extrabold text-[#367b49]">
+          <span className="rounded-full border border-[#d9e9dc] bg-[#eef7ef] px-2.5 py-1 text-xs font-extrabold text-[#367b49]">
             Metode SAW
           </span>
         }
@@ -194,7 +194,7 @@ export default function Perhitungan() {
           <button
             type="button"
             onClick={() => resetSession(criteria)}
-            className="sd-button-light inline-flex min-h-[38px] items-center justify-center gap-2 rounded-xl px-3.5 py-2 text-[10px] font-extrabold transition sm:text-xs"
+            className="sd-button-light inline-flex min-h-[38px] items-center justify-center gap-2 rounded-xl px-3.5 py-2 text-xs font-extrabold transition sm:text-sm"
           >
             <RotateCcw size={14} />
             Reset pengaturan
@@ -206,14 +206,14 @@ export default function Perhitungan() {
       <section className="relative overflow-hidden rounded-[26px] border border-[#dceade] bg-gradient-to-br from-[#eef7ef] via-white to-[#eaf4ec] p-5 shadow-[0_10px_28px_rgba(30,80,43,0.045)] sm:p-6">
         <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="max-w-2xl">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#d8e9db] bg-white/80 px-3 py-1.5 text-[9px] font-extrabold uppercase tracking-[0.12em] text-[#438154]">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#d8e9db] bg-white/80 px-3 py-1.5 text-xs font-extrabold uppercase tracking-[0.12em] text-[#438154]">
               <Calculator size={12} />
               Ruang perhitungan
             </span>
             <h2 className="mt-3 text-lg font-extrabold leading-snug tracking-tight text-[#244832] sm:text-xl">
               Kenali proses di balik rekomendasi HP.
             </h2>
-            <p className="mt-2 max-w-xl text-[11px] leading-6 text-[#718477] sm:text-xs">
+            <p className="mt-2 max-w-xl text-sm leading-6 text-[#718477] sm:text-xs">
               Tentukan batas harga dan alternatif yang ingin dibandingkan.
               Sistem kemudian menyusun matriks, melakukan normalisasi, dan
               menghitung nilai preferensi menggunakan data yang tersedia.
@@ -281,7 +281,7 @@ export default function Perhitungan() {
           <div>
             <div className="mb-2 flex items-center gap-2">
               <Wallet size={14} className="text-[#488357]" />
-              <h3 className="text-[11px] font-extrabold text-[#3d5b43]">
+              <h3 className="text-sm font-extrabold text-[#3d5b43]">
                 Budget maksimal
               </h3>
             </div>
@@ -292,7 +292,7 @@ export default function Perhitungan() {
                   type="button"
                   onClick={() => setMaxBudget(preset.value)}
                   aria-pressed={maxBudget === preset.value}
-                  className={`shrink-0 rounded-full border px-3 py-2 text-[10px] font-extrabold transition ${
+                  className={`shrink-0 rounded-full border px-3 py-2 text-xs font-extrabold transition ${
                     maxBudget === preset.value
                       ? 'border-[#216e3c] bg-[#216e3c] text-white shadow-[0_4px_12px_rgba(33,110,60,0.16)]'
                       : 'border-[#e1ebe2] bg-[#fbfdfb] text-[#64766a] hover:border-[#bfd9c4] hover:bg-[#f3f8f3]'
@@ -305,7 +305,7 @@ export default function Perhitungan() {
 
             <label
               htmlFor="budget-custom"
-              className="mb-1.5 mt-2 block text-[10px] font-bold text-[#718477]"
+              className="mb-1.5 mt-2 block text-xs font-bold text-[#718477]"
             >
               Atau masukkan budget sendiri (Rupiah)
             </label>
@@ -331,7 +331,7 @@ export default function Perhitungan() {
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
                   <SlidersHorizontal size={14} className="text-[#488357]" />
-                  <h3 className="text-[11px] font-extrabold text-[#3d5b43]">
+                  <h3 className="text-sm font-extrabold text-[#3d5b43]">
                     Mode bobot kriteria
                   </h3>
                 </div>
@@ -339,7 +339,7 @@ export default function Perhitungan() {
                   <button
                     type="button"
                     onClick={() => applyCriteriaAsCustom(criteria)}
-                    className="text-[10px] font-extrabold text-[#397b4b] hover:underline"
+                    className="text-xs font-extrabold text-[#397b4b] hover:underline"
                   >
                     Samakan ke standar
                   </button>
@@ -351,7 +351,7 @@ export default function Perhitungan() {
                   type="button"
                   onClick={() => setWeightMode('default')}
                   aria-pressed={weightMode === 'default'}
-                  className={`min-h-[39px] rounded-xl border px-3 py-2 text-[10px] font-extrabold transition ${
+                  className={`min-h-[39px] rounded-xl border px-3 py-2 text-xs font-extrabold transition ${
                     weightMode === 'default'
                       ? 'border-[#b9d9bf] bg-[#edf7ef] text-[#2f7443]'
                       : 'border-[#e3ebe4] bg-white text-[#7b897e] hover:bg-[#f8fbf8]'
@@ -363,7 +363,7 @@ export default function Perhitungan() {
                   type="button"
                   onClick={() => setWeightMode('custom')}
                   aria-pressed={weightMode === 'custom'}
-                  className={`min-h-[39px] rounded-xl border px-3 py-2 text-[10px] font-extrabold transition ${
+                  className={`min-h-[39px] rounded-xl border px-3 py-2 text-xs font-extrabold transition ${
                     weightMode === 'custom'
                       ? 'border-[#b9d9bf] bg-[#edf7ef] text-[#2f7443]'
                       : 'border-[#e3ebe4] bg-white text-[#7b897e] hover:bg-[#f8fbf8]'
@@ -377,7 +377,7 @@ export default function Perhitungan() {
                 <div className="mt-3 rounded-2xl border border-[#e6eee7] bg-[#f8fbf8] p-3.5">
                   <div className="flex items-start gap-2 rounded-xl border border-[#e1ece2] bg-white px-3 py-2.5">
                     <Info size={14} className="mt-0.5 shrink-0 text-[#6f9678]" />
-                    <p className="text-[9px] leading-5 text-[#7c8b7f]">
+                    <p className="text-xs leading-5 text-[#7c8b7f]">
                       Masukkan bobot dalam bentuk desimal atau skala 0–100.
                       Jika totalnya bukan 1, sistem akan menormalisasi bobot
                       dengan rumus Wⱼ = wⱼ / Σwⱼ. Bobot standar di database
@@ -390,7 +390,7 @@ export default function Perhitungan() {
                       <div key={criterion.code}>
                         <label
                           htmlFor={`cw-${criterion.code}`}
-                          className="mb-1 block text-[9px] font-extrabold text-[#657a69]"
+                          className="mb-1 block text-xs font-extrabold text-[#657a69]"
                         >
                           {criterion.code} · {criterion.name}
                         </label>
@@ -410,7 +410,7 @@ export default function Perhitungan() {
                   </div>
 
                   <div className="mt-3 flex flex-wrap items-center justify-between gap-2 rounded-xl bg-white px-3 py-2.5">
-                    <span className="text-[10px] font-bold text-[#718477]">
+                    <span className="text-xs font-bold text-[#718477]">
                       Total input bobot
                     </span>
                     <span
@@ -422,7 +422,7 @@ export default function Perhitungan() {
                     </span>
                   </div>
                   {customWeightSum <= 0 && (
-                    <p className="mt-2 text-[9px] font-semibold text-[#b94e45]">
+                    <p className="mt-2 text-xs font-semibold text-[#b94e45]">
                       Minimal satu kriteria harus memiliki bobot lebih dari nol.
                     </p>
                   )}
@@ -432,7 +432,7 @@ export default function Perhitungan() {
           ) : (
             <div className="mt-5 flex items-start gap-2 rounded-xl border border-[#e5eee6] bg-[#f7faf7] px-3 py-2.5">
               <Info size={14} className="mt-0.5 shrink-0 text-[#719078]" />
-              <p className="text-[9px] leading-5 text-[#7b897e]">
+              <p className="text-xs leading-5 text-[#7b897e]">
                 Perhitungan menggunakan bobot standar yang telah ditetapkan
                 pada data kriteria.
               </p>
@@ -448,14 +448,14 @@ export default function Perhitungan() {
             title="Alternatif yang dihitung"
             description="Pilih smartphone dengan spesifikasi lengkap yang ingin disertakan dalam perhitungan SAW."
             trailing={
-              <span className="rounded-full border border-[#dceade] bg-[#f0f8f1] px-2.5 py-1 text-[9px] font-extrabold text-[#347c49]">
+              <span className="rounded-full border border-[#dceade] bg-[#f0f8f1] px-2.5 py-1 text-xs font-extrabold text-[#347c49]">
                 {selectedPhones.length} dipilih
               </span>
             }
           />
 
           <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-[9px] leading-5 text-[#88958a]">
+            <p className="text-xs leading-5 text-[#88958a]">
               {parsedBudget
                 ? `Daftar dibatasi pada harga maksimal ${formatRupiah(parsedBudget)}.`
                 : `Menampilkan ${completePhones.length} smartphone dengan spesifikasi lengkap.`}
@@ -465,7 +465,7 @@ export default function Perhitungan() {
                 type="button"
                 onClick={selectAllIds}
                 disabled={eligiblePhones.length === 0}
-                className="text-[10px] font-extrabold text-[#347c49] transition hover:underline disabled:opacity-40"
+                className="text-xs font-extrabold text-[#347c49] transition hover:underline disabled:opacity-40"
               >
                 Pilih semua
               </button>
@@ -474,7 +474,7 @@ export default function Perhitungan() {
                 type="button"
                 onClick={() => deselectIds(eligiblePhones.map((phone) => phone.id))}
                 disabled={eligiblePhones.length === 0 || selectedPhones.length === 0}
-                className="text-[10px] font-extrabold text-[#89958b] transition hover:text-[#b45b52] disabled:opacity-40"
+                className="text-xs font-extrabold text-[#89958b] transition hover:text-[#b45b52] disabled:opacity-40"
               >
                 Kosongkan
               </button>
@@ -492,7 +492,7 @@ export default function Perhitungan() {
               onChange={(event) => setSearchTerm(event.target.value)}
               placeholder="Cari nama smartphone..."
               aria-label="Cari nama smartphone"
-              className="min-h-[40px] w-full rounded-xl border border-[#e1ebe2] bg-[#fbfdfb] py-2 pl-9 pr-10 text-[11px] font-medium text-[#36543d] outline-none transition placeholder:text-[#a0aba2] focus:border-[#80b78b] focus:ring-4 focus:ring-[#e7f3e9]"
+              className="min-h-[40px] w-full rounded-xl border border-[#e1ebe2] bg-[#fbfdfb] py-2 pl-9 pr-10 text-sm font-medium text-[#36543d] outline-none transition placeholder:text-[#a0aba2] focus:border-[#80b78b] focus:ring-4 focus:ring-[#e7f3e9]"
             />
             {searchTerm && (
               <button
@@ -507,10 +507,10 @@ export default function Perhitungan() {
           </div>
 
           <div className="mb-2 flex items-center justify-between">
-            <span className="text-[9px] font-bold text-[#87958a]">
+            <span className="text-xs font-bold text-[#87958a]">
               {filteredPhones.length} dari {eligiblePhones.length} smartphone
             </span>
-            <span className="text-[9px] font-semibold text-[#9aa59c]">
+            <span className="text-xs font-semibold text-[#9aa59c]">
               Tekan kartu untuk memilih
             </span>
           </div>
@@ -519,7 +519,7 @@ export default function Perhitungan() {
             {filteredPhones.length === 0 ? (
               <div className="col-span-full rounded-2xl border border-dashed border-[#dce7dd] bg-[#fafcfa] px-4 py-8 text-center">
                 <Search size={20} className="mx-auto text-[#a0b0a3]" />
-                <p className="mt-2 text-[10px] font-bold text-[#718477]">
+                <p className="mt-2 text-xs font-bold text-[#718477]">
                   {eligiblePhones.length === 0
                     ? 'Tidak ada smartphone yang memenuhi filter budget.'
                     : 'Nama smartphone tidak ditemukan.'}
@@ -528,7 +528,7 @@ export default function Perhitungan() {
                   <button
                     type="button"
                     onClick={() => setSearchTerm('')}
-                    className="mt-2 text-[9px] font-extrabold text-[#347c49] hover:underline"
+                    className="mt-2 text-xs font-extrabold text-[#347c49] hover:underline"
                   >
                     Hapus pencarian
                   </button>
@@ -560,11 +560,11 @@ export default function Perhitungan() {
                       {checked ? <CheckSquare size={16} /> : <Square size={16} />}
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-[10px] font-extrabold text-[#36543d]">
+                      <span className="block truncate text-xs font-extrabold text-[#36543d]">
                         {phone.name}
                       </span>
                       <span className="mt-1 flex min-w-0 flex-wrap items-center gap-1.5">
-                        <span className="text-[9px] font-bold text-[#78877b]">
+                        <span className="text-xs font-bold text-[#78877b]">
                           {formatRupiah(phone.price)}
                         </span>
                         <SourceBadge
@@ -585,7 +585,7 @@ export default function Perhitungan() {
           {incompleteCount > 0 && (
             <div className="mt-3 flex items-start gap-2 rounded-xl border border-[#f0e5cf] bg-[#fffaf0] px-3 py-2.5">
               <Info size={14} className="mt-0.5 shrink-0 text-[#a57d3d]" />
-              <p className="text-[9px] leading-5 text-[#92784d]">
+              <p className="text-xs leading-5 text-[#92784d]">
                 {incompleteCount} smartphone belum memiliki seluruh spesifikasi
                 yang dibutuhkan sehingga tidak ditampilkan dalam daftar ini.{' '}
                 <Link
@@ -601,7 +601,7 @@ export default function Perhitungan() {
       </section>
 
       {selectedPhones.length === 1 && (
-        <div className="flex items-start gap-3 rounded-2xl border border-[#f0e5cf] bg-[#fffaf0] px-4 py-3 text-[10px] text-[#92784d]">
+        <div className="flex items-start gap-3 rounded-2xl border border-[#f0e5cf] bg-[#fffaf0] px-4 py-3 text-xs text-[#92784d]">
           <AlertTriangle size={16} className="mt-0.5 shrink-0" />
           <p className="leading-5">
             Saat ini baru satu alternatif yang dipilih. Perhitungan tetap dapat
@@ -621,20 +621,20 @@ export default function Perhitungan() {
                     <Trophy size={20} />
                   </span>
                   <div className="min-w-0">
-                    <p className="text-[9px] font-extrabold uppercase tracking-[0.12em] text-[#54835e]">
+                    <p className="text-xs font-extrabold uppercase tracking-[0.12em] text-[#54835e]">
                       Nilai preferensi tertinggi saat ini
                     </p>
                     <h2 className="mt-1 break-words text-base font-extrabold leading-snug text-[#294d34] sm:text-lg">
                       {bestPhone.name}
                     </h2>
-                    <p className="mt-1 text-[10px] text-[#7d8c80]">
+                    <p className="mt-1 text-xs text-[#7d8c80]">
                       {formatRupiah(bestPhone.price)} · Dari {selectedPhones.length}{' '}
                       alternatif terpilih
                     </p>
                   </div>
                 </div>
                 <div className="rounded-2xl border border-[#e1ece2] bg-white/90 px-4 py-3 sm:min-w-[150px] sm:text-right">
-                  <p className="text-[9px] font-bold text-[#819084]">
+                  <p className="text-xs font-bold text-[#819084]">
                     Skor preferensi (Vᵢ)
                   </p>
                   <p className="mt-1 font-mono text-xl font-extrabold text-[#287b44]">
@@ -661,7 +661,7 @@ export default function Perhitungan() {
                   className="group min-w-[205px] max-w-[235px] flex-1 snap-start rounded-2xl border border-[#e4ece5] bg-[#fbfdfb] p-3.5 transition hover:border-[#bcd9c2] hover:bg-[#f2f8f3]"
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <span className="rounded-lg bg-[#eaf4ec] px-2 py-1 text-[9px] font-extrabold text-[#397b4b]">
+                    <span className="rounded-lg bg-[#eaf4ec] px-2 py-1 text-xs font-extrabold text-[#397b4b]">
                       {step.number}
                     </span>
                     <ChevronRight
@@ -669,14 +669,14 @@ export default function Perhitungan() {
                       className="text-[#9aab9d] transition group-hover:translate-x-0.5 group-hover:text-[#397b4b]"
                     />
                   </div>
-                  <p className="mt-3 text-[10px] font-extrabold leading-snug text-[#36543d]">
+                  <p className="mt-3 text-xs font-extrabold leading-snug text-[#36543d]">
                     {step.title}
                   </p>
-                  <p className="mt-1.5 text-[9px] leading-5 text-[#849188]">
+                  <p className="mt-1.5 text-xs leading-5 text-[#849188]">
                     {step.description}
                   </p>
                   {index === 0 && (
-                    <p className="mt-2 text-[8px] font-extrabold text-[#4a8758]">
+                    <p className="mt-2 text-sm font-extrabold text-[#4a8758]">
                       Awal proses
                     </p>
                   )}
@@ -696,7 +696,7 @@ export default function Perhitungan() {
                 <h3 className="text-xs font-extrabold text-[#315b3b]">
                   Rincian perhitungan berhasil disusun
                 </h3>
-                <p className="mt-1 max-w-2xl text-[10px] leading-5 text-[#758879]">
+                <p className="mt-1 max-w-2xl text-xs leading-5 text-[#758879]">
                   Matriks keputusan, acuan normalisasi, nilai R, dan nilai
                   preferensi dapat diperiksa pada bagian di atas. Buka halaman
                   hasil untuk melihat urutan peringkat seluruh alternatif.
@@ -705,7 +705,7 @@ export default function Perhitungan() {
             </div>
             <Link
               to="/hasil"
-              className="sd-button-dark inline-flex min-h-[42px] shrink-0 items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-[10px] font-extrabold transition sm:text-xs"
+              className="sd-button-dark inline-flex min-h-[42px] shrink-0 items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-xs font-extrabold transition sm:text-sm"
             >
               Lihat hasil dan ranking
               <ArrowRight size={15} />
@@ -720,7 +720,7 @@ export default function Perhitungan() {
           <h2 className="mt-4 text-sm font-extrabold text-[#31513a]">
             {emptyTitle}
           </h2>
-          <p className="mx-auto mt-2 max-w-lg text-[10px] leading-6 text-[#87958a]">
+          <p className="mx-auto mt-2 max-w-lg text-xs leading-6 text-[#87958a]">
             {emptyDescription}
           </p>
 
@@ -728,7 +728,7 @@ export default function Perhitungan() {
             <button
               type="button"
               onClick={selectAllIds}
-              className="sd-button-dark mt-4 inline-flex min-h-[38px] items-center justify-center gap-2 rounded-xl px-4 py-2 text-[10px] font-extrabold"
+              className="sd-button-dark mt-4 inline-flex min-h-[38px] items-center justify-center gap-2 rounded-xl px-4 py-2 text-xs font-extrabold"
             >
               Pilih semua alternatif
               <ArrowRight size={14} />
@@ -738,7 +738,7 @@ export default function Perhitungan() {
           {completePhones.length === 0 && incompleteCount > 0 && (
             <Link
               to="/penilaian"
-              className="sd-button-dark mt-4 inline-flex min-h-[38px] items-center justify-center gap-2 rounded-xl px-4 py-2 text-[10px] font-extrabold"
+              className="sd-button-dark mt-4 inline-flex min-h-[38px] items-center justify-center gap-2 rounded-xl px-4 py-2 text-xs font-extrabold"
             >
               Buka Data Penilaian
               <ArrowRight size={14} />

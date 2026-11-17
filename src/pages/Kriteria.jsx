@@ -82,7 +82,7 @@ function CriterionCard({
 
           <div className="min-w-0">
 
-            <span className="inline-flex rounded-md bg-[#f0f5f0] px-2 py-1 text-[9px] font-extrabold tracking-wide text-[#728477]">
+            <span className="inline-flex rounded-md bg-[#f0f5f0] px-2 py-1 text-xs font-extrabold tracking-wide text-[#728477]">
               {row.code}
             </span>
 
@@ -96,7 +96,7 @@ function CriterionCard({
 
 
         <span
-          className={`shrink-0 rounded-full border px-2.5 py-1 text-[9px] font-extrabold ${
+          className={`shrink-0 rounded-full border px-2.5 py-1 text-xs font-extrabold ${
             isCost
               ? 'border-[#f0dfc3] bg-[#fff7e9] text-[#a9782e]'
               : 'border-[#d2e9d6] bg-[#eaf6ec] text-[#2c7944]'
@@ -112,11 +112,11 @@ function CriterionCard({
 
       <div className="mt-4 flex items-center justify-between gap-2 rounded-xl bg-[#f8fbf8] px-3 py-2.5">
 
-        <span className="text-[10px] font-semibold text-[#89968c]">
+        <span className="text-xs font-semibold text-[#89968c]">
           Satuan penilaian
         </span>
 
-        <span className="text-[10px] font-extrabold text-[#526b58]">
+        <span className="text-xs font-extrabold text-[#526b58]">
           {row.unit || '-'}
         </span>
 
@@ -130,7 +130,7 @@ function CriterionCard({
         <div className="flex items-end justify-between gap-3">
 
           <div>
-            <p className="text-[10px] font-bold text-[#8a988d]">
+            <p className="text-xs font-bold text-[#8a988d]">
               Bobot kepentingan
             </p>
 
@@ -140,7 +140,7 @@ function CriterionCard({
           </div>
 
           <div className="text-right">
-            <p className="text-[9px] font-semibold text-[#9ba69d]">
+            <p className="text-xs font-semibold text-[#9ba69d]">
               Desimal
             </p>
 
@@ -183,7 +183,7 @@ function CriterionCard({
 
             <label
               htmlFor={`type-${row.id}`}
-              className="mb-1.5 block text-[10px] font-bold text-[#66786b]"
+              className="mb-1.5 block text-xs font-bold text-[#66786b]"
             >
               Jenis kriteria
             </label>
@@ -213,7 +213,7 @@ function CriterionCard({
 
             <label
               htmlFor={`weight-${row.id}`}
-              className="mb-1.5 block text-[10px] font-bold text-[#66786b]"
+              className="mb-1.5 block text-xs font-bold text-[#66786b]"
             >
               Bobot desimal
             </label>
@@ -232,7 +232,7 @@ function CriterionCard({
               className="min-h-[40px] w-full rounded-xl border border-[#dfe9e0] bg-[#fbfdfb] px-3 text-xs font-semibold text-[#34523b] outline-none focus:border-[#82c792] focus:bg-white focus:ring-4 focus:ring-[#e2f2e5] disabled:opacity-60"
             />
 
-            <p className="mt-1.5 text-[9px] text-[#8c998f]">
+            <p className="mt-1.5 text-xs text-[#8c998f]">
               Masukkan nilai desimal antara 0 sampai 1.
             </p>
 
@@ -541,7 +541,7 @@ export default function Kriteria() {
             </div>
 
             <div>
-              <p className="text-[10px] font-bold text-[#849389]">
+              <p className="text-xs font-bold text-[#849389]">
                 Total bobot kriteria
               </p>
 
@@ -549,7 +549,7 @@ export default function Kriteria() {
                 {totalPercentage.toFixed(1).replace('.', ',')}%
               </h2>
 
-              <p className="mt-1 text-[10px] text-[#869589]">
+              <p className="mt-1 text-xs text-[#869589]">
                 Target keseluruhan adalah 100%.
               </p>
             </div>
@@ -561,12 +561,12 @@ export default function Kriteria() {
 
             <div className="mb-2 flex items-center justify-between gap-3">
 
-              <span className="text-[10px] font-semibold text-[#718176]">
+              <span className="text-xs font-semibold text-[#718176]">
                 {criteria.length} kriteria aktif
               </span>
 
               <span
-                className={`text-[10px] font-extrabold ${
+                className={`text-xs font-extrabold ${
                   isWeightValid
                     ? 'text-[#32824b]'
                     : 'text-[#b47a2d]'
@@ -600,7 +600,7 @@ export default function Kriteria() {
 
 
         {editing && (
-          <div className="mt-4 flex items-start gap-2 rounded-xl border border-[#dcebdc] bg-white/80 px-3 py-2.5 text-[10px] leading-5 text-[#68806d]">
+          <div className="mt-4 flex items-start gap-2 rounded-xl border border-[#dcebdc] bg-white/80 px-3 py-2.5 text-xs leading-5 text-[#68806d]">
             <Pencil size={14} className="mt-0.5 shrink-0 text-[#398451]" />
             Perubahan belum disimpan. Pastikan total seluruh bobot tepat 100% sebelum menekan tombol simpan.
           </div>
@@ -623,12 +623,12 @@ export default function Kriteria() {
               Daftar kriteria penilaian
             </h2>
 
-            <p className="mt-1 text-[10px] text-[#86948a]">
+            <p className="mt-1 text-xs text-[#86948a]">
               Setiap kriteria memiliki jenis dan bobot masing-masing.
             </p>
           </div>
 
-          <span className="rounded-full border border-[#dce9de] bg-white px-3 py-1.5 text-[9px] font-bold text-[#708174]">
+          <span className="rounded-full border border-[#dce9de] bg-white px-3 py-1.5 text-xs font-bold text-[#708174]">
             {editing ? 'Mode pengeditan' : 'Mode tampilan'}
           </span>
 
@@ -721,7 +721,7 @@ export default function Kriteria() {
               Dasar Penentuan Bobot Referensi
             </h2>
 
-            <p className="mt-1 text-[10px] text-[#89968c]">
+            <p className="mt-1 text-xs text-[#89968c]">
               Penjelasan dasar pembobotan yang digunakan pada sistem.
             </p>
 

@@ -94,7 +94,7 @@ function HistoryStat({ icon: Icon, label, value, description }) {
           <Icon size={17} />
         </span>
 
-        <span className="text-[10px] font-bold text-[#819084]">
+        <span className="text-xs font-bold text-[#819084]">
           {label}
         </span>
       </div>
@@ -103,7 +103,7 @@ function HistoryStat({ icon: Icon, label, value, description }) {
         {value}
       </p>
 
-      <p className="mt-1 text-[9px] leading-4 text-[#8b988e]">
+      <p className="mt-1 text-xs leading-4 text-[#8b988e]">
         {description}
       </p>
     </div>
@@ -118,7 +118,7 @@ function BudgetBadge({ budget }) {
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[9px] font-extrabold ${
+      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-extrabold ${
         hasBudget
           ? 'border-[#e6e2d3] bg-[#fffaf0] text-[#94733b]'
           : 'border-[#dfe9e0] bg-[#f5f8f5] text-[#77887a]'
@@ -170,12 +170,12 @@ function HistoryCard({
               </h3>
 
               <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1">
-                <span className="inline-flex items-center gap-1 text-[9px] text-[#849188]">
+                <span className="inline-flex items-center gap-1 text-xs text-[#849188]">
                   <CalendarDays size={11} />
                   {formatDateOnly(item.created_at)}
                 </span>
 
-                <span className="inline-flex items-center gap-1 text-[9px] text-[#849188]">
+                <span className="inline-flex items-center gap-1 text-xs text-[#849188]">
                   <Clock3 size={11} />
                   {new Date(item.created_at).toLocaleTimeString(
                     'id-ID',
@@ -189,7 +189,7 @@ function HistoryCard({
             </div>
           </div>
 
-          <span className="hidden shrink-0 rounded-lg bg-[#f0f7f1] px-2 py-1 text-[9px] font-extrabold text-[#52805c] sm:inline-flex">
+          <span className="hidden shrink-0 rounded-lg bg-[#f0f7f1] px-2 py-1 text-xs font-extrabold text-[#52805c] sm:inline-flex">
             SAW
           </span>
         </div>
@@ -198,7 +198,7 @@ function HistoryCard({
           <div className="mt-3 flex items-center gap-2 rounded-xl border border-[#e7eee7] bg-[#fafcfa] px-3 py-2">
             <UserRound size={13} className="shrink-0 text-[#839488]" />
 
-            <span className="truncate text-[9px] font-semibold text-[#728176]">
+            <span className="truncate text-xs font-semibold text-[#728176]">
               {item.users?.name ||
                 item.users?.email ||
                 'Pengguna'}
@@ -208,7 +208,7 @@ function HistoryCard({
 
         <div className="mt-4 grid grid-cols-2 gap-2">
           <div className="rounded-xl border border-[#e6eee6] bg-[#fbfdfb] p-3">
-            <p className="text-[9px] font-semibold text-[#87958a]">
+            <p className="text-xs font-semibold text-[#87958a]">
               Alternatif dihitung
             </p>
 
@@ -219,14 +219,14 @@ function HistoryCard({
                 {alternativeCount}
               </span>
 
-              <span className="text-[9px] text-[#8b988e]">
+              <span className="text-xs text-[#8b988e]">
                 smartphone
               </span>
             </div>
           </div>
 
           <div className="rounded-xl border border-[#e6eee6] bg-[#fbfdfb] p-3">
-            <p className="text-[9px] font-semibold text-[#87958a]">
+            <p className="text-xs font-semibold text-[#87958a]">
               Nilai preferensi
             </p>
 
@@ -240,7 +240,7 @@ function HistoryCard({
           <div className="flex items-center gap-2">
             <Trophy size={14} className="shrink-0 text-[#438653]" />
 
-            <span className="text-[9px] font-bold text-[#66816b]">
+            <span className="text-xs font-bold text-[#66816b]">
               Rekomendasi terbaik
             </span>
           </div>
@@ -257,7 +257,7 @@ function HistoryCard({
             <button
               type="button"
               onClick={() => onDetail(item)}
-              className="sd-button-light inline-flex min-h-[36px] items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-[10px] font-extrabold transition"
+              className="sd-button-light inline-flex min-h-[36px] items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-xs font-extrabold transition"
             >
               <Eye size={13} />
               Detail
@@ -268,7 +268,7 @@ function HistoryCard({
               onClick={() => onDelete(item)}
               disabled={deleting}
               aria-label={`Hapus riwayat ${item.title}`}
-              className="inline-flex min-h-[36px] items-center justify-center gap-1.5 rounded-xl border border-[#f0deda] bg-white px-3 py-2 text-[10px] font-extrabold text-[#b65b52] transition hover:bg-[#fff5f3] disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex min-h-[36px] items-center justify-center gap-1.5 rounded-xl border border-[#f0deda] bg-white px-3 py-2 text-xs font-extrabold text-[#b65b52] transition hover:bg-[#fff5f3] disabled:cursor-not-allowed disabled:opacity-50"
             >
               {deleting ? (
                 <LoaderCircle size={13} className="animate-spin" />
@@ -293,7 +293,7 @@ function HistoryRankingTable({ rows = [] }) {
       <div className="rounded-2xl border border-dashed border-[#dce7dd] bg-[#fbfdfb] p-6 text-center">
         <Trophy size={22} className="mx-auto text-[#a0b0a3]" />
 
-        <p className="mt-2 text-[10px] font-bold text-[#718477]">
+        <p className="mt-2 text-xs font-bold text-[#718477]">
           Belum ada data perankingan pada snapshot ini.
         </p>
       </div>
@@ -311,27 +311,27 @@ function HistoryRankingTable({ rows = [] }) {
         <table className="w-full min-w-[650px] border-collapse text-left">
           <thead>
             <tr>
-              <th className="bg-[#f2f8f3] px-3 py-3 text-[9px] font-extrabold uppercase tracking-wide text-[#637a68]">
+              <th className="bg-[#f2f8f3] px-3 py-3 text-xs font-extrabold uppercase tracking-wide text-[#637a68]">
                 Peringkat
               </th>
 
-              <th className="bg-[#f2f8f3] px-3 py-3 text-[9px] font-extrabold uppercase tracking-wide text-[#637a68]">
+              <th className="bg-[#f2f8f3] px-3 py-3 text-xs font-extrabold uppercase tracking-wide text-[#637a68]">
                 Kode
               </th>
 
-              <th className="bg-[#f2f8f3] px-3 py-3 text-[9px] font-extrabold uppercase tracking-wide text-[#637a68]">
+              <th className="bg-[#f2f8f3] px-3 py-3 text-xs font-extrabold uppercase tracking-wide text-[#637a68]">
                 Alternatif Smartphone
               </th>
 
-              <th className="bg-[#f2f8f3] px-3 py-3 text-right text-[9px] font-extrabold uppercase tracking-wide text-[#637a68]">
+              <th className="bg-[#f2f8f3] px-3 py-3 text-right text-xs font-extrabold uppercase tracking-wide text-[#637a68]">
                 Harga
               </th>
 
-              <th className="min-w-[125px] bg-[#f2f8f3] px-3 py-3 text-[9px] font-extrabold uppercase tracking-wide text-[#637a68]">
+              <th className="min-w-[125px] bg-[#f2f8f3] px-3 py-3 text-xs font-extrabold uppercase tracking-wide text-[#637a68]">
                 Visual Skor
               </th>
 
-              <th className="bg-[#f2f8f3] px-3 py-3 text-right text-[9px] font-extrabold uppercase tracking-wide text-[#637a68]">
+              <th className="bg-[#f2f8f3] px-3 py-3 text-right text-xs font-extrabold uppercase tracking-wide text-[#637a68]">
                 Nilai V
               </th>
             </tr>
@@ -358,7 +358,7 @@ function HistoryRankingTable({ rows = [] }) {
                 >
                   <td className="px-3 py-3">
                     <span
-                      className={`inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[9px] font-extrabold ${
+                      className={`inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-extrabold ${
                         isFirst
                           ? 'bg-[#287b44] text-white'
                           : 'bg-[#eef3ee] text-[#66796a]'
@@ -369,15 +369,15 @@ function HistoryRankingTable({ rows = [] }) {
                     </span>
                   </td>
 
-                  <td className="px-3 py-3 text-[10px] font-extrabold text-[#66806b]">
+                  <td className="px-3 py-3 text-xs font-extrabold text-[#66806b]">
                     {row.code || '-'}
                   </td>
 
-                  <td className="px-3 py-3 text-[10px] font-bold text-[#36543d]">
+                  <td className="px-3 py-3 text-xs font-bold text-[#36543d]">
                     {name}
                   </td>
 
-                  <td className="whitespace-nowrap px-3 py-3 text-right text-[10px] text-[#718075]">
+                  <td className="whitespace-nowrap px-3 py-3 text-right text-xs text-[#718075]">
                     {formatRupiah(price)}
                   </td>
 
@@ -392,7 +392,7 @@ function HistoryRankingTable({ rows = [] }) {
                     </div>
                   </td>
 
-                  <td className="whitespace-nowrap px-3 py-3 text-right font-mono text-[10px] font-extrabold text-[#287b44]">
+                  <td className="whitespace-nowrap px-3 py-3 text-right font-mono text-xs font-extrabold text-[#287b44]">
                     {formatDecimal(score, 4)}
                   </td>
                 </tr>
@@ -472,7 +472,7 @@ function HistoryDetailModal({
 
           <div className="relative flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-[#dceade] bg-[#f0f8f1] px-2.5 py-1 text-[9px] font-extrabold uppercase tracking-[0.1em] text-[#397b4b]">
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-[#dceade] bg-[#f0f8f1] px-2.5 py-1 text-xs font-extrabold uppercase tracking-[0.1em] text-[#397b4b]">
                 <History size={11} />
                 Snapshot perhitungan SAW
               </div>
@@ -484,7 +484,7 @@ function HistoryDetailModal({
                 {item.title || 'Detail perhitungan'}
               </h2>
 
-              <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[9px] text-[#849188]">
+              <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#849188]">
                 <span className="inline-flex items-center gap-1">
                   <CalendarDays size={11} />
                   {formatDateTime(item.created_at)}
@@ -523,7 +523,7 @@ function HistoryDetailModal({
                 </span>
 
                 <div className="min-w-0">
-                  <p className="text-[9px] font-extrabold uppercase tracking-[0.1em] text-[#588161]">
+                  <p className="text-xs font-extrabold uppercase tracking-[0.1em] text-[#588161]">
                     Rekomendasi terbaik saat disimpan
                   </p>
 
@@ -539,7 +539,7 @@ function HistoryDetailModal({
             </div>
 
             <div className="rounded-2xl border border-[#e3ece4] bg-white p-4">
-              <p className="text-[9px] font-bold text-[#87958a]">
+              <p className="text-xs font-bold text-[#87958a]">
                 Nilai preferensi tertinggi
               </p>
 
@@ -547,7 +547,7 @@ function HistoryDetailModal({
                 {formatDecimal(item.top_score, 4)}
               </p>
 
-              <p className="mt-1 text-[9px] text-[#8a978d]">
+              <p className="mt-1 text-xs text-[#8a978d]">
                 Skor Vᵢ peringkat pertama
               </p>
             </div>
@@ -559,7 +559,7 @@ function HistoryDetailModal({
               type="button"
               onClick={() => setDetailTab('ranking')}
               aria-pressed={detailTab === 'ranking'}
-              className={`min-h-[38px] rounded-xl border px-3.5 py-2 text-[10px] font-extrabold transition ${
+              className={`min-h-[38px] rounded-xl border px-3.5 py-2 text-xs font-extrabold transition ${
                 detailTab === 'ranking'
                   ? 'border-[#267840] bg-[#287b44] text-white shadow-[0_4px_12px_rgba(40,123,68,0.15)]'
                   : 'border-[#e0e9e1] bg-white text-[#718176] hover:bg-[#f0f7f1]'
@@ -576,7 +576,7 @@ function HistoryDetailModal({
                 type="button"
                 onClick={() => setDetailTab('steps')}
                 aria-pressed={detailTab === 'steps'}
-                className={`min-h-[38px] rounded-xl border px-3.5 py-2 text-[10px] font-extrabold transition ${
+                className={`min-h-[38px] rounded-xl border px-3.5 py-2 text-xs font-extrabold transition ${
                   detailTab === 'steps'
                     ? 'border-[#267840] bg-[#287b44] text-white shadow-[0_4px_12px_rgba(40,123,68,0.15)]'
                     : 'border-[#e0e9e1] bg-white text-[#718176] hover:bg-[#f0f7f1]'
@@ -600,7 +600,7 @@ function HistoryDetailModal({
                       Bobot Kriteria yang Digunakan
                     </h3>
 
-                    <p className="mt-1 text-[9px] text-[#87958a]">
+                    <p className="mt-1 text-xs text-[#87958a]">
                       Snapshot bobot pada saat perhitungan disimpan.
                     </p>
                   </div>
@@ -612,7 +612,7 @@ function HistoryDetailModal({
                 </div>
 
                 {weights.length === 0 ? (
-                  <p className="rounded-xl bg-[#f8fbf8] px-3 py-4 text-center text-[10px] text-[#87958a]">
+                  <p className="rounded-xl bg-[#f8fbf8] px-3 py-4 text-center text-xs text-[#87958a]">
                     Data bobot tidak tersedia pada snapshot.
                   </p>
                 ) : (
@@ -624,17 +624,17 @@ function HistoryDetailModal({
                       >
                         <div className="flex items-start justify-between gap-2">
                           <div className="min-w-0">
-                            <span className="text-[9px] font-extrabold text-[#829086]">
+                            <span className="text-xs font-extrabold text-[#829086]">
                               {weight.code}
                             </span>
 
-                            <p className="mt-1 break-words text-[10px] font-extrabold text-[#36543d]">
+                            <p className="mt-1 break-words text-xs font-extrabold text-[#36543d]">
                               {weight.name}
                             </p>
                           </div>
 
                           <span
-                            className={`rounded-full px-2 py-1 text-[8px] font-extrabold ${
+                            className={`rounded-full px-2 py-1 text-sm font-extrabold ${
                               String(weight.type).toLowerCase() === 'cost'
                                 ? 'bg-[#fff5e7] text-[#9c743b]'
                                 : 'bg-[#eaf5ec] text-[#347c49]'
@@ -649,7 +649,7 @@ function HistoryDetailModal({
                         </p>
 
                         {weight.rawWeight !== undefined && (
-                          <p className="mt-1 text-[9px] text-[#8b988e]">
+                          <p className="mt-1 text-xs text-[#8b988e]">
                             Bobot input: {formatDecimal(weight.rawWeight, 3)}
                           </p>
                         )}
@@ -667,7 +667,7 @@ function HistoryDetailModal({
                       Snapshot Perankingan
                     </h3>
 
-                    <p className="mt-1 text-[9px] text-[#87958a]">
+                    <p className="mt-1 text-xs text-[#87958a]">
                       Urutan alternatif berdasarkan skor preferensi saat disimpan.
                     </p>
                   </div>
@@ -689,7 +689,7 @@ function HistoryDetailModal({
                   className="mt-0.5 shrink-0 text-[#438653]"
                 />
 
-                <p className="text-[9px] leading-5 text-[#718477]">
+                <p className="text-xs leading-5 text-[#718477]">
                   Berikut adalah rincian perhitungan yang tersimpan pada saat
                   riwayat dibuat. Data ini merupakan snapshot, sehingga tidak
                   berubah ketika data smartphone atau bobot master diperbarui.
@@ -712,7 +712,7 @@ function HistoryDetailModal({
                 className="mt-0.5 shrink-0 text-[#a17a38]"
               />
 
-              <p className="text-[9px] leading-5 text-[#8d784f]">
+              <p className="text-xs leading-5 text-[#8d784f]">
                 Riwayat ini tidak memiliki data seluruh tahapan SAW.
                 Ringkasan bobot dan ranking tetap dapat dilihat jika tersedia.
               </p>
@@ -722,14 +722,14 @@ function HistoryDetailModal({
 
         {/* Footer modal */}
         <div className="flex shrink-0 items-center justify-between gap-3 border-t border-[#e2ebe3] bg-white px-4 py-3 sm:px-6">
-          <span className="text-[9px] text-[#8b988e]">
+          <span className="text-xs text-[#8b988e]">
             Data riwayat tersimpan secara permanen di database.
           </span>
 
           <button
             type="button"
             onClick={onClose}
-            className="sd-button-dark inline-flex min-h-[36px] items-center justify-center rounded-xl px-4 py-2 text-[10px] font-extrabold"
+            className="sd-button-dark inline-flex min-h-[36px] items-center justify-center rounded-xl px-4 py-2 text-xs font-extrabold"
           >
             Tutup detail
           </button>
@@ -998,7 +998,7 @@ export default function Riwayat() {
             : 'Temukan kembali hasil perhitungan dan rekomendasi smartphone yang pernah kamu simpan.'
         }
         badge={
-          <span className="rounded-full border border-[#d9e9dc] bg-[#eef7ef] px-2.5 py-1 text-[9px] font-extrabold text-[#367b49]">
+          <span className="rounded-full border border-[#d9e9dc] bg-[#eef7ef] px-2.5 py-1 text-xs font-extrabold text-[#367b49]">
             {histories.length} tersimpan
           </span>
         }
@@ -1007,7 +1007,7 @@ export default function Riwayat() {
             type="button"
             onClick={() => loadHistories(true)}
             disabled={refreshing}
-            className="sd-button-light inline-flex min-h-[38px] items-center justify-center gap-2 rounded-xl px-3.5 py-2 text-[10px] font-extrabold transition disabled:opacity-50 sm:text-xs"
+            className="sd-button-light inline-flex min-h-[38px] items-center justify-center gap-2 rounded-xl px-3.5 py-2 text-xs font-extrabold transition disabled:opacity-50 sm:text-sm"
           >
             <RotateCw
               size={14}
@@ -1022,7 +1022,7 @@ export default function Riwayat() {
       <section className="relative overflow-hidden rounded-[24px] border border-[#dceade] bg-gradient-to-br from-[#eef7ef] via-white to-[#eaf4ec] p-5 shadow-[0_10px_28px_rgba(30,80,43,0.04)] sm:p-6">
         <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="max-w-2xl">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#d8e9db] bg-white/80 px-3 py-1.5 text-[9px] font-extrabold uppercase tracking-[0.12em] text-[#438154]">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#d8e9db] bg-white/80 px-3 py-1.5 text-xs font-extrabold uppercase tracking-[0.12em] text-[#438154]">
               <History size={12} />
               Arsip rekomendasi
             </span>
@@ -1031,7 +1031,7 @@ export default function Riwayat() {
               Semua hasil perhitungan tersimpan di satu tempat.
             </h2>
 
-            <p className="mt-2 max-w-xl text-[11px] leading-6 text-[#718477] sm:text-xs">
+            <p className="mt-2 max-w-xl text-sm leading-6 text-[#718477] sm:text-xs">
               Buka kembali hasil SAW yang pernah disimpan, lihat urutan
               rekomendasi, dan telusuri perhitungan tanpa harus
               menjalankannya dari awal.
@@ -1126,12 +1126,12 @@ export default function Riwayat() {
               </h2>
             </div>
 
-            <p className="mt-1 text-[9px] text-[#87958a]">
+            <p className="mt-1 text-xs text-[#87958a]">
               Gunakan judul, nama pemenang, atau pengguna untuk menemukan data.
             </p>
           </div>
 
-          <span className="text-[9px] font-bold text-[#718477]">
+          <span className="text-xs font-bold text-[#718477]">
             {filteredHistories.length} hasil ditemukan
           </span>
         </div>
@@ -1152,7 +1152,7 @@ export default function Riwayat() {
               }}
               placeholder="Cari judul, smartphone terbaik, atau pengguna..."
               aria-label="Cari riwayat perhitungan"
-              className="min-h-[42px] w-full rounded-xl border border-[#e1ebe2] bg-[#fbfdfb] py-2 pl-9 pr-10 text-[10px] font-medium text-[#36543d] outline-none transition placeholder:text-[#a0aba2] focus:border-[#80b78b] focus:ring-4 focus:ring-[#e7f3e9]"
+              className="min-h-[42px] w-full rounded-xl border border-[#e1ebe2] bg-[#fbfdfb] py-2 pl-9 pr-10 text-xs font-medium text-[#36543d] outline-none transition placeholder:text-[#a0aba2] focus:border-[#80b78b] focus:ring-4 focus:ring-[#e7f3e9]"
             />
 
             {searchTerm && (
@@ -1178,7 +1178,7 @@ export default function Riwayat() {
                 setCurrentPage(1);
               }}
               aria-label="Filter waktu riwayat"
-              className="min-h-[42px] w-full rounded-xl border border-[#e1ebe2] bg-[#fbfdfb] px-3 py-2 text-[10px] font-semibold text-[#536b58] outline-none focus:border-[#80b78b] focus:ring-4 focus:ring-[#e7f3e9]"
+              className="min-h-[42px] w-full rounded-xl border border-[#e1ebe2] bg-[#fbfdfb] px-3 py-2 text-xs font-semibold text-[#536b58] outline-none focus:border-[#80b78b] focus:ring-4 focus:ring-[#e7f3e9]"
             >
               {DATE_FILTERS.map((filter) => (
                 <option
@@ -1197,7 +1197,7 @@ export default function Riwayat() {
                 setCurrentPage(1);
               }}
               aria-label="Filter budget riwayat"
-              className="min-h-[42px] w-full rounded-xl border border-[#e1ebe2] bg-[#fbfdfb] px-3 py-2 text-[10px] font-semibold text-[#536b58] outline-none focus:border-[#80b78b] focus:ring-4 focus:ring-[#e7f3e9]"
+              className="min-h-[42px] w-full rounded-xl border border-[#e1ebe2] bg-[#fbfdfb] px-3 py-2 text-xs font-semibold text-[#536b58] outline-none focus:border-[#80b78b] focus:ring-4 focus:ring-[#e7f3e9]"
             >
               {BUDGET_FILTERS.map((filter) => (
                 <option
@@ -1215,7 +1215,7 @@ export default function Riwayat() {
           dateFilter !== 'all' ||
           budgetFilter !== 'all') && (
           <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-            <p className="text-[9px] text-[#849188]">
+            <p className="text-xs text-[#849188]">
               Filter sedang diterapkan.
             </p>
 
@@ -1227,7 +1227,7 @@ export default function Riwayat() {
                 setBudgetFilter('all');
                 setCurrentPage(1);
               }}
-              className="text-[9px] font-extrabold text-[#397b4b] hover:underline"
+              className="text-xs font-extrabold text-[#397b4b] hover:underline"
             >
               Reset semua filter
             </button>
@@ -1243,13 +1243,13 @@ export default function Riwayat() {
               Daftar riwayat
             </h2>
 
-            <p className="mt-1 text-[9px] text-[#87958a]">
+            <p className="mt-1 text-xs text-[#87958a]">
               Diurutkan dari penyimpanan terbaru.
             </p>
           </div>
 
           {filteredHistories.length > 0 && (
-            <span className="rounded-full border border-[#dceade] bg-[#f0f8f1] px-2.5 py-1 text-[9px] font-extrabold text-[#397b4b]">
+            <span className="rounded-full border border-[#dceade] bg-[#f0f8f1] px-2.5 py-1 text-xs font-extrabold text-[#397b4b]">
               {filteredHistories.length} data
             </span>
           )}
@@ -1265,14 +1265,14 @@ export default function Riwayat() {
               Belum ada riwayat perhitungan
             </h3>
 
-            <p className="mx-auto mt-2 max-w-md text-[10px] leading-6 text-[#87958a]">
+            <p className="mx-auto mt-2 max-w-md text-xs leading-6 text-[#87958a]">
               Hasil perhitungan yang disimpan akan muncul di sini.
               Jalankan analisis SAW terlebih dahulu, kemudian simpan hasilnya.
             </p>
 
             <Link
               to="/hasil"
-              className="sd-button-dark mt-4 inline-flex min-h-[39px] items-center justify-center gap-2 rounded-xl px-4 py-2 text-[10px] font-extrabold"
+              className="sd-button-dark mt-4 inline-flex min-h-[39px] items-center justify-center gap-2 rounded-xl px-4 py-2 text-xs font-extrabold"
             >
               Buka hasil rekomendasi
               <ArrowRight size={14} />
@@ -1286,7 +1286,7 @@ export default function Riwayat() {
               Riwayat tidak ditemukan
             </h3>
 
-            <p className="mt-1 text-[10px] text-[#87958a]">
+            <p className="mt-1 text-xs text-[#87958a]">
               Coba ubah kata kunci atau filter pencarian.
             </p>
 
@@ -1298,7 +1298,7 @@ export default function Riwayat() {
                 setBudgetFilter('all');
                 setCurrentPage(1);
               }}
-              className="sd-button-light mt-4 inline-flex min-h-[36px] items-center justify-center rounded-xl px-3.5 py-2 text-[10px] font-extrabold"
+              className="sd-button-light mt-4 inline-flex min-h-[36px] items-center justify-center rounded-xl px-3.5 py-2 text-xs font-extrabold"
             >
               Tampilkan semua riwayat
             </button>
@@ -1320,7 +1320,7 @@ export default function Riwayat() {
 
             {filteredHistories.length > ITEMS_PER_PAGE && (
               <div className="mt-4 flex flex-col gap-3 rounded-2xl border border-[#e3ece4] bg-white px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-                <p className="text-center text-[9px] text-[#849188] sm:text-left">
+                <p className="text-center text-xs text-[#849188] sm:text-left">
                   Menampilkan{' '}
                   <strong className="text-[#46624b]">
                     {(safePage - 1) * ITEMS_PER_PAGE + 1}
@@ -1348,13 +1348,13 @@ export default function Riwayat() {
                       )
                     }
                     disabled={safePage === 1}
-                    className="sd-button-light inline-flex min-h-[34px] items-center gap-1 rounded-xl px-3 py-1.5 text-[10px] font-bold disabled:cursor-not-allowed disabled:opacity-40"
+                    className="sd-button-light inline-flex min-h-[34px] items-center gap-1 rounded-xl px-3 py-1.5 text-xs font-bold disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     <ChevronLeft size={13} />
                     Sebelumnya
                   </button>
 
-                  <span className="min-w-[52px] text-center text-[10px] font-extrabold text-[#52705a]">
+                  <span className="min-w-[52px] text-center text-xs font-extrabold text-[#52705a]">
                     {safePage} / {totalPages}
                   </span>
 
@@ -1366,7 +1366,7 @@ export default function Riwayat() {
                       )
                     }
                     disabled={safePage >= totalPages}
-                    className="sd-button-light inline-flex min-h-[34px] items-center gap-1 rounded-xl px-3 py-1.5 text-[10px] font-bold disabled:cursor-not-allowed disabled:opacity-40"
+                    className="sd-button-light inline-flex min-h-[34px] items-center gap-1 rounded-xl px-3 py-1.5 text-xs font-bold disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     Selanjutnya
                     <ChevronRight size={13} />

@@ -74,7 +74,7 @@ function SummaryCard({
 
       <div className="min-w-0">
 
-        <p className="text-[10px] font-bold text-[#849188]">
+        <p className="text-xs font-bold text-[#849188]">
           {label}
         </p>
 
@@ -82,7 +82,7 @@ function SummaryCard({
           {value}
         </p>
 
-        <p className="mt-1 truncate text-[9px] text-[#93a097]">
+        <p className="mt-1 truncate text-xs text-[#93a097]">
           {description}
         </p>
 
@@ -109,7 +109,7 @@ function CriterionValue({ criterion, value }) {
 
       <div className="min-w-0">
 
-        <p className="truncate text-[9px] font-semibold text-[#8a978d]">
+        <p className="truncate text-xs font-semibold text-[#8a978d]">
           {criterion.code} · {criterion.name}
         </p>
 
@@ -155,7 +155,7 @@ function AssessmentCard({
 
             <div className="flex flex-wrap items-center gap-1.5">
 
-              <span className="rounded-md bg-[#f0f5f0] px-2 py-1 text-[9px] font-extrabold text-[#728477]">
+              <span className="rounded-md bg-[#f0f5f0] px-2 py-1 text-xs font-extrabold text-[#728477]">
                 A{index + 1}
               </span>
 
@@ -183,7 +183,7 @@ function AssessmentCard({
             <button
               type="button"
               onClick={onEdit}
-              className="inline-flex min-h-[35px] items-center justify-center gap-1.5 rounded-xl border border-[#cfe5d3] bg-[#eaf6ec] px-3 py-2 text-[10px] font-extrabold text-[#287744] transition hover:bg-[#dff0e2]"
+              className="inline-flex min-h-[35px] items-center justify-center gap-1.5 rounded-xl border border-[#cfe5d3] bg-[#eaf6ec] px-3 py-2 text-xs font-extrabold text-[#287744] transition hover:bg-[#dff0e2]"
             >
               <Pencil size={13} />
               {complete ? 'Edit Nilai' : 'Isi Nilai'}
@@ -204,12 +204,12 @@ function AssessmentCard({
           <div className="flex items-center gap-2">
             <ClipboardCheck size={15} className="text-[#398653]" />
 
-            <h4 className="text-[10px] font-extrabold uppercase tracking-[0.1em] text-[#748478]">
+            <h4 className="text-xs font-extrabold uppercase tracking-[0.1em] text-[#748478]">
               Rincian nilai kriteria
             </h4>
           </div>
 
-          <span className="text-[9px] text-[#9aa69d]">
+          <span className="text-xs text-[#9aa69d]">
             {criteria.length} kriteria
           </span>
 
@@ -235,19 +235,19 @@ function AssessmentCard({
 
       <div className="flex items-center justify-between gap-3 border-t border-[#edf1ed] bg-[#fbfdfb] px-5 py-3">
 
-        <span className="text-[9px] text-[#849188]">
+        <span className="text-xs text-[#849188]">
           {complete
             ? 'Seluruh nilai spesifikasi sudah tersedia.'
             : 'Masih ada spesifikasi yang belum diisi.'}
         </span>
 
         {complete ? (
-          <span className="inline-flex shrink-0 items-center gap-1 text-[9px] font-bold text-[#38814e]">
+          <span className="inline-flex shrink-0 items-center gap-1 text-xs font-bold text-[#38814e]">
             <CheckCircle2 size={13} />
             Siap SAW
           </span>
         ) : (
-          <span className="inline-flex shrink-0 items-center gap-1 text-[9px] font-bold text-[#a57934]">
+          <span className="inline-flex shrink-0 items-center gap-1 text-xs font-bold text-[#a57934]">
             <AlertCircle size={13} />
             Perlu dilengkapi
           </span>
@@ -470,11 +470,11 @@ export default function Penilaian() {
 
         <div className="min-w-0">
 
-          <p className="text-[11px] font-extrabold text-[#356547]">
+          <p className="text-sm font-extrabold text-[#356547]">
             Gunakan nilai asli spesifikasi
           </p>
 
-          <p className="mt-1 text-[10px] leading-5 text-[#6e8273]">
+          <p className="mt-1 text-xs leading-5 text-[#6e8273]">
             Semua nilai menggunakan angka asli (&gt; 0), tanpa konversi
             skala 1–5. Alternatif yang masih memiliki nilai kosong
             otomatis dilewati pada proses perhitungan SAW sampai
@@ -538,7 +538,7 @@ export default function Penilaian() {
               Daftar penilaian
             </h2>
 
-            <p className="mt-1 text-[10px] text-[#89968c]">
+            <p className="mt-1 text-xs text-[#89968c]">
               Cari smartphone atau saring berdasarkan kelengkapan nilai.
             </p>
           </div>
@@ -602,7 +602,7 @@ export default function Penilaian() {
                     setStatusFilter(tab.id);
                     setCurrentPage(1);
                   }}
-                  className={`min-h-[34px] rounded-lg px-3 py-1.5 text-[10px] font-bold transition ${
+                  className={`min-h-[34px] rounded-lg px-3 py-1.5 text-xs font-bold transition ${
                     statusFilter === tab.id
                       ? 'bg-[#267f45] text-white shadow-sm'
                       : 'text-[#718176] hover:bg-white hover:text-[#287a43]'
@@ -620,7 +620,7 @@ export default function Penilaian() {
         </div>
 
 
-        <div className="mt-4 border-t border-[#edf1ed] pt-3 text-[10px] text-[#859288]">
+        <div className="mt-4 border-t border-[#edf1ed] pt-3 text-xs text-[#859288]">
           Menampilkan{' '}
           <strong className="text-[#45634c]">
             {filteredPhones.length}
@@ -649,7 +649,7 @@ export default function Penilaian() {
             Tidak ada data penilaian
           </h3>
 
-          <p className="mt-2 max-w-md text-[10px] leading-6 text-[#849188]">
+          <p className="mt-2 max-w-md text-xs leading-6 text-[#849188]">
             Tidak ditemukan smartphone pada pencarian atau filter ini.
             Coba ubah kata kunci atau pilih status lainnya.
           </p>
@@ -661,7 +661,7 @@ export default function Penilaian() {
               setStatusFilter('all');
               setCurrentPage(1);
             }}
-            className="mt-4 inline-flex min-h-[38px] items-center gap-2 rounded-xl border border-[#cfe5d3] bg-[#eaf6ec] px-4 py-2 text-[10px] font-bold text-[#287744] transition hover:bg-[#dff0e2]"
+            className="mt-4 inline-flex min-h-[38px] items-center gap-2 rounded-xl border border-[#cfe5d3] bg-[#eaf6ec] px-4 py-2 text-xs font-bold text-[#287744] transition hover:bg-[#dff0e2]"
           >
             <X size={14} />
             Reset pencarian
@@ -698,7 +698,7 @@ export default function Penilaian() {
 
             <div className="flex flex-col gap-3 rounded-2xl border border-[#e2ebe3] bg-white px-4 py-3.5 shadow-[0_4px_16px_rgba(24,67,38,0.03)] sm:flex-row sm:items-center sm:justify-between">
 
-              <p className="text-center text-[10px] text-[#839087] sm:text-left">
+              <p className="text-center text-xs text-[#839087] sm:text-left">
 
                 Menampilkan{' '}
 
@@ -734,14 +734,14 @@ export default function Penilaian() {
                     setCurrentPage((page) => Math.max(page - 1, 1))
                   }
                   disabled={safeCurrentPage === 1}
-                  className="inline-flex min-h-[36px] items-center gap-1.5 rounded-xl border border-[#e0e9e1] bg-white px-3 py-2 text-[10px] font-bold text-[#607365] transition hover:bg-[#f0f7f1] disabled:cursor-not-allowed disabled:opacity-40"
+                  className="inline-flex min-h-[36px] items-center gap-1.5 rounded-xl border border-[#e0e9e1] bg-white px-3 py-2 text-xs font-bold text-[#607365] transition hover:bg-[#f0f7f1] disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   <ChevronLeft size={14} />
                   Sebelumnya
                 </button>
 
 
-                <span className="min-w-[80px] text-center text-[10px] font-extrabold text-[#48624d]">
+                <span className="min-w-[80px] text-center text-xs font-extrabold text-[#48624d]">
                   {safeCurrentPage} / {totalPages}
                 </span>
 
@@ -754,7 +754,7 @@ export default function Penilaian() {
                     )
                   }
                   disabled={safeCurrentPage === totalPages}
-                  className="inline-flex min-h-[36px] items-center gap-1.5 rounded-xl border border-[#e0e9e1] bg-white px-3 py-2 text-[10px] font-bold text-[#607365] transition hover:bg-[#f0f7f1] disabled:cursor-not-allowed disabled:opacity-40"
+                  className="inline-flex min-h-[36px] items-center gap-1.5 rounded-xl border border-[#e0e9e1] bg-white px-3 py-2 text-xs font-bold text-[#607365] transition hover:bg-[#f0f7f1] disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   Selanjutnya
                   <ChevronRight size={14} />

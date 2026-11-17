@@ -68,7 +68,7 @@ function HeroPreview() {
 
         <div className="flex items-center justify-between gap-3">
           <div>
-            <div className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#398754]">
+            <div className="text-xs font-extrabold uppercase tracking-[0.14em] text-[#398754]">
               Preview sistem
             </div>
 
@@ -87,7 +87,7 @@ function HeroPreview() {
         <div className="mt-6 rounded-[22px] bg-gradient-to-br from-[#123c2a] via-[#185438] to-[#247b46] p-5 text-white shadow-lg shadow-green-950/10">
 
           <div className="flex items-center justify-between">
-            <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-[9px] font-bold tracking-wide text-[#dcf9e1]">
+            <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs font-bold tracking-wide text-[#dcf9e1]">
               METODE SAW
             </span>
 
@@ -100,7 +100,7 @@ function HeroPreview() {
             </div>
 
             <div className="min-w-0">
-              <div className="text-[10px] font-medium text-white/60">
+              <div className="text-xs font-medium text-white/60">
                 Sistem rekomendasi
               </div>
 
@@ -108,7 +108,7 @@ function HeroPreview() {
                 Temukan pilihan terbaik
               </div>
 
-              <div className="mt-1 text-[10px] text-white/70">
+              <div className="mt-1 text-xs text-white/70">
                 Sesuai kebutuhan dan anggaran
               </div>
             </div>
@@ -125,7 +125,7 @@ function HeroPreview() {
                 className="rounded-xl border border-white/10 bg-white/[0.08] p-3 text-center"
               >
                 <Icon size={19} className="mx-auto text-[#a9edb4]" />
-                <div className="mt-2 text-[9px] font-semibold text-white/85">
+                <div className="mt-2 text-xs font-semibold text-white/85">
                   {label}
                 </div>
               </div>
@@ -141,7 +141,7 @@ function HeroPreview() {
               Aspek penilaian
             </span>
 
-            <span className="text-[9px] font-semibold text-[#829187]">
+            <span className="text-xs font-semibold text-[#829187]">
               Sesuai kebutuhan
             </span>
           </div>
@@ -162,7 +162,7 @@ function HeroPreview() {
                   <Icon size={16} />
                 </span>
 
-                <span className="text-[10px] font-bold text-[#536b59]">
+                <span className="text-xs font-bold text-[#536b59]">
                   {label}
                 </span>
               </div>
@@ -173,7 +173,7 @@ function HeroPreview() {
 
         {/* Catatan preview */}
 
-        <div className="mt-5 flex items-center gap-2 rounded-xl bg-[#eaf6ed] px-3.5 py-3 text-[10px] font-semibold text-[#327448]">
+        <div className="mt-5 flex items-center gap-2 rounded-xl bg-[#eaf6ed] px-3.5 py-3 text-xs font-semibold text-[#327448]">
           <ShieldCheck size={16} className="shrink-0" />
           Proses perhitungan yang terstruktur dan transparan.
         </div>
@@ -189,7 +189,7 @@ function HeroPreview() {
       <div className="absolute -bottom-5 -left-4 hidden rounded-2xl border border-white bg-white/95 px-4 py-3 shadow-lg sm:block">
         <div className="flex items-center gap-2">
           <Sparkles size={16} className="text-[#3c9e5b]" />
-          <span className="text-[10px] font-extrabold text-[#31583c]">
+          <span className="text-xs font-extrabold text-[#31583c]">
             Pilih lebih cerdas
           </span>
         </div>
@@ -289,7 +289,7 @@ export default function Home() {
 
             <div className="relative z-10 max-w-[620px]">
 
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#cfe5d2] bg-white/75 px-3.5 py-2 text-[9px] font-extrabold tracking-[0.12em] text-[#35834d] shadow-sm backdrop-blur sm:text-[10px]">
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#cfe5d2] bg-white/75 px-3.5 py-2 text-xs font-extrabold tracking-[0.12em] text-[#35834d] shadow-sm backdrop-blur sm:text-sm">
                 <span className="h-2 w-2 rounded-full bg-[#3eae60] shadow-[0_0_9px_rgba(62,174,96,0.55)]" />
                 SISTEM PENDUKUNG KEPUTUSAN
               </div>
@@ -347,7 +347,7 @@ export default function Home() {
               </div>
 
 
-              <div className="mt-9 flex flex-wrap gap-x-6 gap-y-3 text-[10px] font-semibold text-[#6d8273] sm:text-[11px]">
+              <div className="mt-9 flex flex-wrap gap-x-6 gap-y-3 text-xs font-semibold text-[#6d8273] sm:text-sm">
 
                 <span className="inline-flex items-center gap-2">
                   <CheckCircle2 size={15} className="text-[#329957]" />
@@ -387,7 +387,7 @@ export default function Home() {
           <div className="mb-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
 
             <div className="max-w-2xl">
-              <div className="text-[10px] font-extrabold tracking-[0.15em] text-[#39945a]">
+              <div className="text-xs font-extrabold tracking-[0.15em] text-[#39945a]">
                 PROSES PENGAMBILAN KEPUTUSAN
               </div>
 
@@ -454,7 +454,7 @@ export default function Home() {
 
             <div className="mx-auto mb-12 max-w-2xl text-center">
 
-              <div className="text-[10px] font-extrabold tracking-[0.15em] text-[#39945a]">
+              <div className="text-xs font-extrabold tracking-[0.15em] text-[#39945a]">
                 TRANSPARANSI PERHITUNGAN
               </div>
 
@@ -487,7 +487,7 @@ export default function Home() {
                       1. Normalisasi
                     </h3>
 
-                    <p className="mt-1 text-[10px] text-[#829087]">
+                    <p className="mt-1 text-xs text-[#829087]">
                       Matriks keputusan
                     </p>
                   </div>
@@ -501,7 +501,7 @@ export default function Home() {
                 <div className="mt-5 space-y-3">
 
                   <div className="rounded-xl border border-[#deebdf] bg-white p-4">
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#33864d]">
+                    <span className="text-xs font-extrabold uppercase tracking-wider text-[#33864d]">
                       Benefit
                     </span>
 
@@ -509,13 +509,13 @@ export default function Home() {
                       r<sub>ij</sub> = X<sub>ij</sub> / Max(X<sub>ij</sub>)
                     </div>
 
-                    <p className="text-[10px] leading-5 text-[#829087]">
+                    <p className="text-xs leading-5 text-[#829087]">
                       Nilai yang lebih besar dianggap lebih baik.
                     </p>
                   </div>
 
                   <div className="rounded-xl border border-[#deebdf] bg-white p-4">
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#33864d]">
+                    <span className="text-xs font-extrabold uppercase tracking-wider text-[#33864d]">
                       Cost
                     </span>
 
@@ -523,7 +523,7 @@ export default function Home() {
                       r<sub>ij</sub> = Min(X<sub>ij</sub>) / X<sub>ij</sub>
                     </div>
 
-                    <p className="text-[10px] leading-5 text-[#829087]">
+                    <p className="text-xs leading-5 text-[#829087]">
                       Nilai yang lebih kecil dianggap lebih baik.
                     </p>
                   </div>
@@ -547,7 +547,7 @@ export default function Home() {
                       2. Nilai Preferensi
                     </h3>
 
-                    <p className="mt-1 text-[10px] text-[#829087]">
+                    <p className="mt-1 text-xs text-[#829087]">
                       Perhitungan nilai akhir
                     </p>
                   </div>
@@ -561,7 +561,7 @@ export default function Home() {
 
                 <div className="mt-5 rounded-2xl border border-[#dcebdd] bg-white p-5 text-center">
 
-                  <div className="text-[9px] font-extrabold uppercase tracking-[0.12em] text-[#819287]">
+                  <div className="text-xs font-extrabold uppercase tracking-[0.12em] text-[#819287]">
                     Rumus nilai preferensi
                   </div>
 
@@ -588,7 +588,7 @@ export default function Home() {
                   </p>
                 </div>
 
-                <div className="mt-6 flex items-start gap-2 rounded-xl bg-[#e7f4e9] p-3.5 text-[11px] font-semibold leading-5 text-[#317747]">
+                <div className="mt-6 flex items-start gap-2 rounded-xl bg-[#e7f4e9] p-3.5 text-sm font-semibold leading-5 text-[#317747]">
                   <CheckCircle2 size={16} className="mt-0.5 shrink-0" />
                   Nilai preferensi tertinggi menjadi peringkat terbaik.
                 </div>
@@ -612,7 +612,7 @@ export default function Home() {
           © {new Date().getFullYear()} SesuaiDompet
         </p>
 
-        <p className="mt-1 text-[10px] text-[#a0aaa3]">
+        <p className="mt-1 text-xs text-[#a0aaa3]">
           Sistem Pendukung Keputusan Pemilihan Smartphone
         </p>
 

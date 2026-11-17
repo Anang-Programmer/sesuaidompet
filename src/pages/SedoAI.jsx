@@ -1,6 +1,6 @@
 
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import {
   ArrowRight,
   BatteryCharging,
@@ -12,6 +12,7 @@ import {
   Database,
   HardDrive,
   History,
+  Menu,
   MessageSquare,
   Mic,
   MicOff,
@@ -183,14 +184,14 @@ function PhoneSpecInput({
   return (
     <label className="block min-w-0">
       <span className="mb-1.5 flex items-center justify-between gap-2">
-        <span className="flex min-w-0 items-center gap-1.5 text-[10px] font-bold text-[#65786a]">
+        <span className="flex min-w-0 items-center gap-1.5 text-xs font-bold text-[#65786a]">
           <Icon size={12} className="shrink-0 text-[#578363]" />
           <span className="truncate">
             {spec.criterion} · {spec.label}
           </span>
         </span>
 
-        <span className="shrink-0 text-[8px] font-semibold text-[#9aa59c]">
+        <span className="shrink-0 text-sm font-semibold text-[#9aa59c]">
           {spec.unit}
         </span>
       </span>
@@ -208,7 +209,7 @@ function PhoneSpecInput({
             Number(event.target.value)
           )
         }
-        className="min-h-[39px] w-full rounded-xl border border-[#dfe9e0] bg-white px-3 py-2 font-mono text-[11px] font-semibold text-[#36543d] outline-none transition focus:border-[#80b78b] focus:ring-4 focus:ring-[#e7f3e9]"
+        className="min-h-[39px] w-full rounded-xl border border-[#dfe9e0] bg-white px-3 py-2 font-mono text-sm font-semibold text-[#36543d] outline-none transition focus:border-[#80b78b] focus:ring-4 focus:ring-[#e7f3e9]"
       />
     </label>
   );
@@ -220,12 +221,12 @@ function PhoneSpecInput({
 
 function PhoneSourceBadge({ phone }) {
   return phone.isFromDb ? (
-    <span className="inline-flex items-center gap-1 rounded-full border border-[#dce9ed] bg-[#f0f8fa] px-2 py-1 text-[8px] font-extrabold text-[#467b8c]">
+    <span className="inline-flex items-center gap-1 rounded-full border border-[#dce9ed] bg-[#f0f8fa] px-2 py-1 text-sm font-extrabold text-[#467b8c]">
       <Database size={10} />
       Database
     </span>
   ) : (
-    <span className="inline-flex items-center gap-1 rounded-full border border-[#dceade] bg-[#eef7ef] px-2 py-1 text-[8px] font-extrabold text-[#397b4b]">
+    <span className="inline-flex items-center gap-1 rounded-full border border-[#dceade] bg-[#eef7ef] px-2 py-1 text-sm font-extrabold text-[#397b4b]">
       <Sparkles size={10} />
       AI Spec
     </span>
@@ -265,7 +266,7 @@ function SessionItem({
             />
 
             <span
-              className={`truncate text-[10px] font-extrabold ${
+              className={`truncate text-xs font-extrabold ${
                 isActive ? 'text-[#315b3b]' : 'text-[#526b57]'
               }`}
               title={session.title}
@@ -274,7 +275,7 @@ function SessionItem({
             </span>
           </span>
 
-          <span className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[8px] text-[#87958a]">
+          <span className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-[#87958a]">
             <span className="inline-flex items-center gap-1">
               <Clock3 size={10} />
               {formatSessionDate(session.updatedAt)}
@@ -286,7 +287,7 @@ function SessionItem({
           </span>
 
           {session.winnerName && (
-            <span className="mt-2 inline-flex max-w-full items-center gap-1 rounded-lg bg-[#e7f3e9] px-2 py-1 text-[8px] font-bold text-[#397b4b]">
+            <span className="mt-2 inline-flex max-w-full items-center gap-1 rounded-lg bg-[#e7f3e9] px-2 py-1 text-sm font-bold text-[#397b4b]">
               <Trophy size={10} className="shrink-0" />
               <span className="truncate">
                 Juara: {session.winnerName}
@@ -316,6 +317,8 @@ function SessionItem({
 export default function SedoAI() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const outletContext = useOutletContext();
+  const setSidebarOpen = outletContext?.setSidebarOpen;
 
   const {
     setCompareIds,
@@ -1044,9 +1047,18 @@ export default function SedoAI() {
         setSmartphones(refreshedSmartphones);
       }
 
-      const activePhones = savedPhones.length
-        ? savedPhones
-        : phones;
+      // Gabungkan: gunakan data savedPhones yang punya ID DB,
+      // fallback ke data phones asli agar tidak ada HP yang hilang.
+      const activePhones = phones.map((originalPhone, index) => {
+        // Cari padanan di savedPhones berdasarkan nama (case-insensitive)
+        const saved = savedPhones.find(
+          (sp) =>
+            String(sp.name).toLowerCase().trim() ===
+            String(originalPhone.name).toLowerCase().trim()
+        );
+        // Prioritaskan versi yang punya ID database
+        return saved || originalPhone;
+      });
 
       // 3. Minta AI membuat penjelasan rekomendasi.
       let aiExplanation = '';
@@ -1094,39 +1106,57 @@ export default function SedoAI() {
   ========================================= */
 
   async function handleOpenComparison(phones) {
-    let allPhones = smartphones;
-
-    if (!allPhones || allPhones.length === 0) {
+    // Selalu fetch data terbaru dari DB agar ID tidak stale
+    let allPhones;
+    try {
       allPhones = await fetchSmartphones();
       setSmartphones(allPhones);
+    } catch (err) {
+      console.warn('Gagal fetch smartphones terbaru:', err);
+      allPhones = smartphones;
+    }
+
+    if (!allPhones || allPhones.length === 0) {
+      console.warn('Tidak ada smartphone di database.');
+      navigate('/perhitungan');
+      return;
     }
 
     const targetIds = [];
 
     for (const phone of phones) {
+      // Prioritas 1: gunakan ID database yang sudah ada di phone object
       if (
         phone.id &&
         !String(phone.id).startsWith('temp-')
       ) {
-        targetIds.push(phone.id);
-      } else {
-        const found = allPhones.find(
-          (existingPhone) =>
-            String(existingPhone.name)
-              .toLowerCase()
-              .trim() ===
-            String(phone.name)
-              .toLowerCase()
-              .trim()
+        // Pastikan ID ini masih ada di allPhones
+        const stillExists = allPhones.some(
+          (dbPhone) => String(dbPhone.id) === String(phone.id)
         );
-
-        if (found?.id) {
-          targetIds.push(found.id);
+        if (stillExists) {
+          targetIds.push(phone.id);
+          continue;
         }
+      }
+
+      // Prioritas 2: cari berdasarkan nama di database
+      const found = allPhones.find(
+        (existingPhone) =>
+          String(existingPhone.name)
+            .toLowerCase()
+            .trim() ===
+          String(phone.name)
+            .toLowerCase()
+            .trim()
+      );
+
+      if (found?.id) {
+        targetIds.push(found.id);
       }
     }
 
-    const selectedTargetIds = targetIds.slice(0, 4);
+    const selectedTargetIds = targetIds;
     const targetSet = new Set(
       selectedTargetIds.map(String)
     );
@@ -1147,12 +1177,23 @@ export default function SedoAI() {
   ========================================= */
 
   return (
-    <section className="flex h-[calc(100dvh-6.75rem)] min-h-[420px] max-h-[1050px] flex-col overflow-hidden rounded-[24px] border border-[#dfe9e0] bg-white shadow-[0_12px_32px_rgba(26,67,37,0.055)]">
+    <section className="flex h-full w-full flex-1 flex-col overflow-hidden bg-white">
       {/* =====================================
           HEADER SEDO AI
       ===================================== */}
       <header className="relative z-10 flex shrink-0 items-center justify-between gap-3 border-b border-[#e4ece5] bg-white/95 px-3.5 py-3 backdrop-blur-xl sm:px-5">
-        <div className="flex min-w-0 items-center gap-3">
+        <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
+          {setSidebarOpen && (
+            <button
+              type="button"
+              onClick={() => setSidebarOpen(true)}
+              aria-label="Buka menu navigasi"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[#e2ebe3] bg-white text-[#1c5637] transition hover:bg-[#f2f8f3] md:hidden"
+            >
+              <Menu size={18} />
+            </button>
+          )}
+
           <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#2e8b4b] to-[#175d35] text-white shadow-[0_5px_14px_rgba(35,112,59,0.2)]">
             <Bot size={21} />
 
@@ -1165,12 +1206,12 @@ export default function SedoAI() {
                 SEDO AI
               </h1>
 
-              <span className="rounded-full border border-[#dceade] bg-[#eef7ef] px-2 py-0.5 text-[8px] font-extrabold text-[#397b4b]">
+              <span className="rounded-full border border-[#dceade] bg-[#eef7ef] px-2 py-0.5 text-sm font-extrabold text-[#397b4b]">
                 SPK ASSISTANT
               </span>
             </div>
 
-            <p className="mt-0.5 truncate text-[9px] text-[#87958a] sm:text-[10px]">
+            <p className="mt-0.5 truncate text-xs text-[#87958a] sm:text-sm">
               Asisten cerdas pemilihan smartphone dengan metode SAW
             </p>
           </div>
@@ -1178,11 +1219,11 @@ export default function SedoAI() {
 
         <div className="flex shrink-0 items-center gap-2">
           <div className="hidden rounded-xl border border-[#e2ebe3] bg-[#f8fbf8] px-3 py-2 text-right sm:block">
-            <p className="text-[8px] font-bold text-[#8b988e]">
+            <p className="text-sm font-bold text-[#8b988e]">
               Kriteria aktif
             </p>
 
-            <p className="mt-0.5 text-[10px] font-extrabold text-[#46744f]">
+            <p className="mt-0.5 text-xs font-extrabold text-[#46744f]">
               {criteria.length} kriteria
             </p>
           </div>
@@ -1191,7 +1232,7 @@ export default function SedoAI() {
             type="button"
             onClick={() => setIsHistoryOpen((previous) => !previous)}
             aria-pressed={isHistoryOpen}
-            className={`inline-flex min-h-[38px] items-center justify-center gap-1.5 rounded-xl border px-3 py-2 text-[10px] font-extrabold transition ${
+            className={`inline-flex min-h-[38px] items-center justify-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-extrabold transition ${
               isHistoryOpen
                 ? 'border-[#bcd9c2] bg-[#edf7ef] text-[#347c49]'
                 : 'border-[#e1e9e2] bg-white text-[#66796a] hover:border-[#bfd9c4] hover:bg-[#f5faf5]'
@@ -1205,7 +1246,7 @@ export default function SedoAI() {
             </span>
 
             {sessions.length > 0 && (
-              <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-[#e4f1e6] px-1 text-[8px] font-extrabold text-[#397b4b]">
+              <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-[#e4f1e6] px-1 text-sm font-extrabold text-[#397b4b]">
                 {sessions.length}
               </span>
             )}
@@ -1214,7 +1255,7 @@ export default function SedoAI() {
           <button
             type="button"
             onClick={handleStartNewChat}
-            className="sd-button-dark inline-flex min-h-[38px] items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-[10px] font-extrabold transition"
+            className="sd-button-dark inline-flex min-h-[38px] items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-xs font-extrabold transition"
             title="Mulai obrolan baru"
           >
             <Plus size={14} />
@@ -1238,7 +1279,7 @@ export default function SedoAI() {
             <div className="mx-auto flex max-w-3xl items-center justify-center gap-2">
               <span className="h-px flex-1 bg-[#e5eee6]" />
 
-              <span className="rounded-full border border-[#e2ebe3] bg-white px-3 py-1 text-[8px] font-extrabold uppercase tracking-[0.12em] text-[#89978d]">
+              <span className="rounded-full border border-[#e2ebe3] bg-white px-3 py-1 text-sm font-extrabold uppercase tracking-[0.12em] text-[#89978d]">
                 Percakapan SEDO AI
               </span>
 
@@ -1282,13 +1323,13 @@ export default function SedoAI() {
                       {/* LABEL PENGIRIM */}
                       {!isUser && (
                         <div className="mb-2 flex items-center gap-2">
-                          <span className="text-[9px] font-extrabold text-[#397b4b]">
+                          <span className="text-xs font-extrabold text-[#397b4b]">
                             SEDO AI
                           </span>
 
                           <span className="h-1 w-1 rounded-full bg-[#a9b8aa]" />
 
-                          <span className="text-[8px] font-medium text-[#9aa69c]">
+                          <span className="text-sm font-medium text-[#9aa69c]">
                             Asisten SesuaiDompet
                           </span>
                         </div>
@@ -1297,12 +1338,12 @@ export default function SedoAI() {
                       {/* PESAN TEKS */}
                       {message.text && (
                         isUser ? (
-                          <p className="whitespace-pre-line text-[11px] leading-6 text-white sm:text-xs">
+                          <p className="whitespace-pre-line text-sm leading-6 text-white sm:text-xs">
                             {message.text}
                           </p>
                         ) : (
                           <div
-                            className={`text-[11px] leading-6 sm:text-xs ${
+                            className={`text-sm leading-6 sm:text-xs ${
                               message.isError
                                 ? 'text-[#a54a42]'
                                 : 'text-[#536b58]'
@@ -1310,7 +1351,7 @@ export default function SedoAI() {
                           >
                             <MarkdownRenderer
                               content={message.text}
-                              className="text-[11px] sm:text-xs"
+                              className="text-sm sm:text-xs"
                             />
                           </div>
                         )
@@ -1328,13 +1369,13 @@ export default function SedoAI() {
                                   Periksa spesifikasi smartphone
                                 </h3>
 
-                                <p className="mt-1 text-[9px] leading-5 text-[#819084]">
+                                <p className="mt-1 text-xs leading-5 text-[#819084]">
                                   Pastikan semua nilai sesuai dengan varian
                                   smartphone yang ingin dibandingkan.
                                 </p>
                               </div>
 
-                              <span className="self-start rounded-full border border-[#dceade] bg-[#eef7ef] px-2.5 py-1 text-[9px] font-extrabold text-[#397b4b]">
+                              <span className="self-start rounded-full border border-[#dceade] bg-[#eef7ef] px-2.5 py-1 text-xs font-extrabold text-[#397b4b]">
                                 {message.phones.length} alternatif
                               </span>
                             </div>
@@ -1353,7 +1394,7 @@ export default function SedoAI() {
                                       </span>
 
                                       <div className="min-w-0 flex-1">
-                                        <label className="mb-1 block text-[8px] font-bold text-[#89968b]">
+                                        <label className="mb-1 block text-sm font-bold text-[#89968b]">
                                           NAMA SMARTPHONE
                                         </label>
 
@@ -1368,7 +1409,7 @@ export default function SedoAI() {
                                               event.target.value
                                             )
                                           }
-                                          className="min-h-[34px] w-full rounded-lg border border-[#dfe9e0] bg-[#fbfdfb] px-2.5 py-1.5 text-[10px] font-extrabold text-[#36543d] outline-none transition focus:border-[#80b78b] focus:ring-2 focus:ring-[#e7f3e9]"
+                                          className="min-h-[34px] w-full rounded-lg border border-[#dfe9e0] bg-[#fbfdfb] px-2.5 py-1.5 text-xs font-extrabold text-[#36543d] outline-none transition focus:border-[#80b78b] focus:ring-2 focus:ring-[#e7f3e9]"
                                           placeholder="Nama smartphone"
                                         />
                                       </div>
@@ -1419,7 +1460,7 @@ export default function SedoAI() {
                                 onClick={() =>
                                   handleAddManualPhoneToCard(message.id)
                                 }
-                                className="sd-button-light inline-flex min-h-[39px] items-center justify-center gap-1.5 rounded-xl px-3.5 py-2 text-[10px] font-extrabold"
+                                className="sd-button-light inline-flex min-h-[39px] items-center justify-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-extrabold"
                               >
                                 <Plus size={14} />
                                 Tambah HP Lain
@@ -1434,7 +1475,7 @@ export default function SedoAI() {
                                 onClick={() =>
                                   handleExecuteSaw(message.phones)
                                 }
-                                className="sd-button-dark inline-flex min-h-[42px] items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-[10px] font-extrabold transition disabled:cursor-not-allowed disabled:opacity-50"
+                                className="sd-button-dark inline-flex min-h-[42px] items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-xs font-extrabold transition disabled:cursor-not-allowed disabled:opacity-50"
                               >
                                 <Calculator size={15} />
                                 Hitung Rekomendasi SAW
@@ -1443,7 +1484,7 @@ export default function SedoAI() {
                             </div>
 
                             {message.phones.length < 2 && (
-                              <p className="rounded-xl border border-[#f0e5cf] bg-[#fffaf0] px-3 py-2 text-[9px] leading-5 text-[#92784d]">
+                              <p className="rounded-xl border border-[#f0e5cf] bg-[#fffaf0] px-3 py-2 text-xs leading-5 text-[#92784d]">
                                 Tambahkan minimal satu smartphone lagi untuk
                                 menjalankan perbandingan SAW.
                               </p>
@@ -1468,7 +1509,7 @@ export default function SedoAI() {
                                   </span>
 
                                   <div className="min-w-0">
-                                    <p className="text-[8px] font-extrabold uppercase tracking-[0.13em] text-[#54835e]">
+                                    <p className="text-sm font-extrabold uppercase tracking-[0.13em] text-[#54835e]">
                                       Rekomendasi terbaik · Peringkat 1
                                     </p>
 
@@ -1477,7 +1518,7 @@ export default function SedoAI() {
                                         'Smartphone terbaik'}
                                     </h3>
 
-                                    <p className="mt-1 text-[9px] text-[#7d8c80]">
+                                    <p className="mt-1 text-xs text-[#7d8c80]">
                                       {formatRupiah(
                                         message.sawResult.rekomendasiTerbaik?.smartphone?.price
                                       )}
@@ -1486,7 +1527,7 @@ export default function SedoAI() {
                                 </div>
 
                                 <div className="rounded-xl border border-[#e0ece1] bg-white/90 px-4 py-3 sm:min-w-[135px] sm:text-right">
-                                  <p className="text-[8px] font-bold text-[#819084]">
+                                  <p className="text-sm font-bold text-[#819084]">
                                     Skor preferensi SAW
                                   </p>
 
@@ -1508,17 +1549,17 @@ export default function SedoAI() {
                                 </span>
 
                                 <div>
-                                  <h4 className="text-[10px] font-extrabold text-[#36543d]">
+                                  <h4 className="text-xs font-extrabold text-[#36543d]">
                                     Analisis dan alasan rekomendasi
                                   </h4>
 
-                                  <p className="mt-0.5 text-[8px] text-[#8b988e]">
+                                  <p className="mt-0.5 text-sm text-[#8b988e]">
                                     Penjelasan berdasarkan hasil perhitungan SAW
                                   </p>
                                 </div>
                               </div>
 
-                              <div className="text-[10px] leading-6 text-[#607565] sm:text-[11px]">
+                              <div className="text-xs leading-6 text-[#607565] sm:text-sm">
                                 <MarkdownRenderer
                                   content={message.aiExplanation || ''}
                                 />
@@ -1529,16 +1570,16 @@ export default function SedoAI() {
                             <div>
                               <div className="mb-2 flex items-center justify-between gap-2">
                                 <div>
-                                  <h4 className="text-[10px] font-extrabold text-[#36543d]">
+                                  <h4 className="text-xs font-extrabold text-[#36543d]">
                                     Urutan hasil perbandingan
                                   </h4>
 
-                                  <p className="mt-0.5 text-[8px] text-[#87958a]">
+                                  <p className="mt-0.5 text-sm text-[#87958a]">
                                     Nilai preferensi tertinggi berada di peringkat pertama.
                                   </p>
                                 </div>
 
-                                <span className="rounded-full bg-[#eef7ef] px-2.5 py-1 text-[8px] font-extrabold text-[#397b4b]">
+                                <span className="rounded-full bg-[#eef7ef] px-2.5 py-1 text-sm font-extrabold text-[#397b4b]">
                                   {message.sawResult.hasilAkhir.length} HP
                                 </span>
                               </div>
@@ -1555,7 +1596,7 @@ export default function SedoAI() {
                                   >
                                     <div className="flex items-start gap-2.5">
                                       <span
-                                        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-[10px] font-extrabold ${
+                                        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-xs font-extrabold ${
                                           row.rank === 1
                                             ? 'bg-[#287b44] text-white'
                                             : 'bg-[#edf2ed] text-[#6b7b6e]'
@@ -1565,11 +1606,11 @@ export default function SedoAI() {
                                       </span>
 
                                       <div className="min-w-0 flex-1">
-                                        <p className="break-words text-[10px] font-extrabold text-[#36543d]">
+                                        <p className="break-words text-xs font-extrabold text-[#36543d]">
                                           {row.smartphone.name}
                                         </p>
 
-                                        <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-1 text-[8px] text-[#87958a]">
+                                        <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-1 text-sm text-[#87958a]">
                                           <span>
                                             {formatRupiah(row.smartphone.price)}
                                           </span>
@@ -1585,7 +1626,7 @@ export default function SedoAI() {
                                       </div>
 
                                       <div className="shrink-0 text-right">
-                                        <p className="text-[8px] font-semibold text-[#87958a]">
+                                        <p className="text-sm font-semibold text-[#87958a]">
                                           Nilai V
                                         </p>
 
@@ -1601,7 +1642,7 @@ export default function SedoAI() {
 
                             {/* AKSI HASIL */}
                             <div className="flex flex-col gap-3 border-t border-[#e5eee6] pt-3 sm:flex-row sm:items-center sm:justify-between">
-                              <p className="text-[9px] leading-5 text-[#829086]">
+                              <p className="text-xs leading-5 text-[#829086]">
                                 {message.savedCount > 0
                                   ? `${message.savedCount} smartphone berhasil diproses untuk penyimpanan ke akunmu.`
                                   : 'Hasil perhitungan ini tersimpan dalam percakapan SEDO AI.'}
@@ -1612,7 +1653,7 @@ export default function SedoAI() {
                                 onClick={() =>
                                   handleOpenComparison(message.phones)
                                 }
-                                className="sd-button-dark inline-flex min-h-[40px] shrink-0 items-center justify-center gap-2 rounded-xl px-3.5 py-2 text-[9px] font-extrabold sm:text-[10px]"
+                                className="sd-button-dark inline-flex min-h-[40px] shrink-0 items-center justify-center gap-2 rounded-xl px-3.5 py-2 text-xs font-extrabold sm:text-sm"
                               >
                                 <Calculator size={14} />
                                 Buka Detail Langkah SAW
@@ -1647,7 +1688,7 @@ export default function SedoAI() {
                     className="shrink-0 animate-spin text-[#438653]"
                   />
 
-                  <span className="text-[9px] font-semibold text-[#718477] sm:text-[10px]">
+                  <span className="text-xs font-semibold text-[#718477] sm:text-sm">
                     SEDO AI sedang menganalisis spesifikasi smartphone...
                   </span>
                 </div>
@@ -1665,12 +1706,12 @@ export default function SedoAI() {
               <div className="flex items-center gap-1.5">
                 <Sparkles size={12} className="text-[#4b8c5b]" />
 
-                <span className="text-[9px] font-extrabold text-[#64796a]">
+                <span className="text-xs font-extrabold text-[#64796a]">
                   Coba tanyakan
                 </span>
               </div>
 
-              <span className="hidden text-[8px] text-[#9aa59c] sm:inline">
+              <span className="hidden text-sm text-[#9aa59c] sm:inline">
                 Pilih contoh untuk mengirim pesan langsung
               </span>
             </div>
@@ -1682,7 +1723,7 @@ export default function SedoAI() {
                   type="button"
                   disabled={isProcessing}
                   onClick={() => handleSendMessage(suggestion)}
-                  className="min-h-[34px] max-w-[245px] shrink-0 snap-start rounded-xl border border-[#e1ebe2] bg-[#f8fbf8] px-3 py-2 text-left text-[9px] font-semibold leading-4 text-[#637a68] transition hover:border-[#bfd9c4] hover:bg-[#eff7f0] hover:text-[#347c49] disabled:cursor-not-allowed disabled:opacity-50"
+                  className="min-h-[34px] max-w-[245px] shrink-0 snap-start rounded-xl border border-[#e1ebe2] bg-[#f8fbf8] px-3 py-2 text-left text-xs font-semibold leading-4 text-[#637a68] transition hover:border-[#bfd9c4] hover:bg-[#eff7f0] hover:text-[#347c49] disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {suggestion}
                 </button>
@@ -1736,13 +1777,13 @@ export default function SedoAI() {
                     : 'Tulis nama smartphone yang ingin dibandingkan...'
                 }
                 aria-label="Tulis pesan untuk SEDO AI"
-                className="min-h-[39px] min-w-0 flex-1 bg-transparent px-2 text-[10px] font-medium text-[#36543d] outline-none placeholder:text-[#a0aba2] sm:text-xs"
+                className="min-h-[39px] min-w-0 flex-1 bg-transparent px-2 text-xs font-medium text-[#36543d] outline-none placeholder:text-[#a0aba2] sm:text-sm"
               />
 
               <button
                 type="submit"
                 disabled={!inputMessage.trim() || isProcessing}
-                className="sd-button-dark inline-flex h-9 shrink-0 items-center justify-center gap-1.5 rounded-xl px-3.5 text-[10px] font-extrabold transition disabled:cursor-not-allowed disabled:opacity-45"
+                className="sd-button-dark inline-flex h-9 shrink-0 items-center justify-center gap-1.5 rounded-xl px-3.5 text-xs font-extrabold transition disabled:cursor-not-allowed disabled:opacity-45"
               >
                 <Send size={14} />
 
@@ -1752,7 +1793,7 @@ export default function SedoAI() {
               </button>
             </form>
 
-            <p className="mt-2 text-center text-[8px] leading-4 text-[#9aa59c]">
+            <p className="mt-2 text-center text-sm leading-4 text-[#9aa59c]">
               Periksa kembali spesifikasi yang diberikan AI sebelum menjalankan perhitungan.
             </p>
           </div>
@@ -1786,11 +1827,11 @@ export default function SedoAI() {
                 </span>
 
                 <div className="min-w-0">
-                  <h2 className="text-[10px] font-extrabold text-[#31513a]">
+                  <h2 className="text-xs font-extrabold text-[#31513a]">
                     Riwayat Percakapan
                   </h2>
 
-                  <p className="mt-0.5 text-[8px] text-[#8b988e]">
+                  <p className="mt-0.5 text-sm text-[#8b988e]">
                     {sessions.length} sesi tersimpan
                   </p>
                 </div>
@@ -1811,7 +1852,7 @@ export default function SedoAI() {
               <button
                 type="button"
                 onClick={handleStartNewChat}
-                className="sd-button-dark inline-flex min-h-[40px] w-full items-center justify-center gap-2 rounded-xl px-3 py-2 text-[10px] font-extrabold"
+                className="sd-button-dark inline-flex min-h-[40px] w-full items-center justify-center gap-2 rounded-xl px-3 py-2 text-xs font-extrabold"
               >
                 <Plus size={14} />
                 Mulai Obrolan Baru
@@ -1826,11 +1867,11 @@ export default function SedoAI() {
                     <MessageSquare size={21} />
                   </span>
 
-                  <p className="mt-3 text-[10px] font-extrabold text-[#526b57]">
+                  <p className="mt-3 text-xs font-extrabold text-[#526b57]">
                     Belum ada riwayat
                   </p>
 
-                  <p className="mt-1 text-[9px] leading-5 text-[#89968c]">
+                  <p className="mt-1 text-xs leading-5 text-[#89968c]">
                     Percakapan dan hasil perhitungan SAW akan otomatis tersimpan di sini.
                   </p>
                 </div>
@@ -1857,7 +1898,7 @@ export default function SedoAI() {
                 <button
                   type="button"
                   onClick={handleClearAllHistory}
-                  className="inline-flex min-h-[38px] w-full items-center justify-center gap-2 rounded-xl border border-[#f0deda] bg-white px-3 py-2 text-[9px] font-extrabold text-[#b65b52] transition hover:bg-[#fff5f3]"
+                  className="inline-flex min-h-[38px] w-full items-center justify-center gap-2 rounded-xl border border-[#f0deda] bg-white px-3 py-2 text-xs font-extrabold text-[#b65b52] transition hover:bg-[#fff5f3]"
                 >
                   <Trash2 size={13} />
                   Hapus Semua Riwayat

@@ -46,7 +46,7 @@ function FeatureItem({ icon: Icon, title, description }) {
           {title}
         </p>
 
-        <p className="mt-1 text-[10px] leading-5 text-white/65">
+        <p className="mt-1 text-xs leading-5 text-white/65">
           {description}
         </p>
       </div>
@@ -144,91 +144,86 @@ export default function Register() {
   }
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#f2f8f3] px-3 py-6 sm:px-6 sm:py-10">
-      {/* Dekorasi latar */}
-      <div className="pointer-events-none absolute -left-32 -top-36 h-80 w-80 rounded-full bg-[#dcefe0]/70 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-36 -right-28 h-96 w-96 rounded-full bg-[#e0f0e2]/70 blur-3xl" />
+    <main className="relative grid min-h-screen w-full bg-white md:grid-cols-2 lg:grid-cols-[0.92fr_1.08fr]">
+      {/* =================================
+          PANEL IDENTITAS
+      ================================= */}
+      <aside className="relative hidden min-h-screen flex-col justify-between overflow-y-auto bg-gradient-to-br from-[#174d2e] via-[#216c3b] to-[#2e874a] p-8 lg:p-12 md:flex">
+        <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full border-[38px] border-white/[0.06]" />
+        <div className="pointer-events-none absolute -bottom-24 -left-20 h-72 w-72 rounded-full bg-[#7fd18b]/10 blur-3xl" />
 
-      <div className="relative z-10 grid w-full max-w-[1050px] overflow-hidden rounded-[28px] border border-[#dfe9e0] bg-white shadow-[0_24px_70px_rgba(31,75,42,0.10)] md:grid-cols-[0.92fr_1.08fr]">
-        {/* =================================
-            PANEL IDENTITAS
-        ================================= */}
-        <aside className="relative hidden min-h-[730px] flex-col justify-between overflow-hidden bg-gradient-to-br from-[#174d2e] via-[#216c3b] to-[#2e874a] p-8 lg:p-10 md:flex">
-          <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full border-[38px] border-white/[0.06]" />
-          <div className="pointer-events-none absolute -bottom-24 -left-20 h-72 w-72 rounded-full bg-[#7fd18b]/10 blur-3xl" />
+        <div className="relative z-10">
+          <BrandLogo />
 
-          <div className="relative z-10">
-            <BrandLogo />
+          <div className="mt-12 max-w-sm">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-extrabold uppercase tracking-[0.13em] text-[#d8f0dd]">
+              <Sparkles size={12} />
+              Mulai perjalananmu
+            </span>
 
-            <div className="mt-12 max-w-sm">
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-[9px] font-extrabold uppercase tracking-[0.13em] text-[#d8f0dd]">
-                <Sparkles size={12} />
-                Mulai perjalananmu
-              </span>
+            <h1 className="mt-5 text-3xl font-extrabold leading-[1.2] tracking-tight text-white xl:text-[36px]">
+              Buat akun dan pilih smartphone dengan lebih percaya diri.
+            </h1>
 
-              <h1 className="mt-5 text-3xl font-extrabold leading-[1.2] tracking-tight text-white xl:text-[36px]">
-                Buat akun dan pilih smartphone dengan lebih percaya diri.
-              </h1>
-
-              <p className="mt-4 text-xs leading-7 text-white/70">
-                Daftarkan akun SesuaiDompet untuk menggunakan fitur
-                perbandingan, mendapatkan rekomendasi SAW, dan menyimpan
-                hasil analisis.
-              </p>
-            </div>
-
-            <div className="mt-10 space-y-5">
-              <FeatureItem
-                icon={Smartphone}
-                title="Temukan pilihan yang tepat"
-                description="Bandingkan berbagai smartphone berdasarkan kebutuhan dan budget."
-              />
-
-              <FeatureItem
-                icon={CheckCircle2}
-                title="Analisis lebih terarah"
-                description="Gunakan kriteria dan bobot untuk mendapatkan rekomendasi."
-              />
-
-              <FeatureItem
-                icon={ShieldCheck}
-                title="Akun pribadi"
-                description="Simpan hasil perhitungan dan akses kembali saat dibutuhkan."
-              />
-            </div>
-          </div>
-
-          <div className="relative z-10 border-t border-white/15 pt-5">
-            <p className="text-[9px] leading-5 text-white/50">
-              SesuaiDompet · Sistem Pendukung Keputusan Pemilihan Smartphone
+            <p className="mt-4 text-xs leading-7 text-white/70">
+              Daftarkan akun SesuaiDompet untuk menggunakan fitur
+              perbandingan, mendapatkan rekomendasi SAW, dan menyimpan
+              hasil analisis.
             </p>
           </div>
-        </aside>
 
-        {/* =================================
-            FORM REGISTER
-        ================================= */}
-        <section className="min-w-0 p-5 sm:p-8 lg:p-10">
+          <div className="mt-10 space-y-5">
+            <FeatureItem
+              icon={Smartphone}
+              title="Temukan pilihan yang tepat"
+              description="Bandingkan berbagai smartphone berdasarkan kebutuhan dan budget."
+            />
+
+            <FeatureItem
+              icon={CheckCircle2}
+              title="Analisis lebih terarah"
+              description="Gunakan kriteria dan bobot untuk mendapatkan rekomendasi."
+            />
+
+            <FeatureItem
+              icon={ShieldCheck}
+              title="Akun pribadi"
+              description="Simpan hasil perhitungan dan akses kembali saat dibutuhkan."
+            />
+          </div>
+        </div>
+
+        <div className="relative z-10 border-t border-white/15 pt-5">
+          <p className="text-xs leading-5 text-white/50">
+            SesuaiDompet · Sistem Pendukung Keputusan Pemilihan Smartphone
+          </p>
+        </div>
+      </aside>
+
+      {/* =================================
+          FORM REGISTER
+      ================================= */}
+      <section className="flex min-h-screen w-full flex-col items-center justify-center overflow-y-auto px-4 py-8 sm:px-8 lg:px-12">
+        <div className="my-auto w-full max-w-[410px]">
           {/* Logo khusus mobile */}
-          <div className="mb-7 flex flex-col items-center text-center md:hidden">
+          <div className="mb-6 flex flex-col items-center text-center md:hidden">
             <BrandLogo compact />
 
-            <p className="mt-3 text-[9px] font-semibold uppercase tracking-[0.13em] text-[#729078]">
+            <p className="mt-2.5 text-xs font-semibold uppercase tracking-[0.13em] text-[#729078]">
               Sistem Pendukung Keputusan Smartphone
             </p>
           </div>
 
-          <div className="mx-auto w-full max-w-[410px]">
-            <Link
-              to="/"
-              className="mb-6 inline-flex items-center gap-1.5 text-[10px] font-bold text-[#849188] transition hover:text-[#347c49] md:mb-8"
-            >
-              <ArrowLeft size={13} />
-              Kembali ke halaman utama
-            </Link>
+          <Link
+            to="/"
+            className="mb-6 inline-flex items-center gap-1.5 text-xs font-bold text-[#849188] transition hover:text-[#347c49] md:mb-8"
+          >
+            <ArrowLeft size={13} />
+            Kembali ke halaman utama
+          </Link>
 
             <div className="mb-5">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-[#dceade] bg-[#f0f8f1] px-3 py-1.5 text-[9px] font-extrabold uppercase tracking-[0.1em] text-[#397b4b]">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-[#dceade] bg-[#f0f8f1] px-3 py-1.5 text-xs font-extrabold uppercase tracking-[0.1em] text-[#397b4b]">
                 <UserPlus size={11} />
                 Pendaftaran akun
               </span>
@@ -237,7 +232,7 @@ export default function Register() {
                 Buat akun baru
               </h2>
 
-              <p className="mt-2 text-[11px] leading-6 text-[#849188]">
+              <p className="mt-2 text-sm leading-6 text-[#849188]">
                 Isi data berikut untuk mulai menggunakan SesuaiDompet.
               </p>
             </div>
@@ -247,7 +242,7 @@ export default function Register() {
               <div
                 role="alert"
                 aria-live="polite"
-                className="mb-4 flex items-start gap-2.5 rounded-xl border border-[#f0d9d6] bg-[#fff7f6] px-3.5 py-3 text-[10px] leading-5 text-[#a54a42]"
+                className="mb-4 flex items-start gap-2.5 rounded-xl border border-[#f0d9d6] bg-[#fff7f6] px-3.5 py-3 text-xs leading-5 text-[#a54a42]"
               >
                 <ShieldCheck
                   size={15}
@@ -263,7 +258,7 @@ export default function Register() {
               <div
                 role="status"
                 aria-live="polite"
-                className="mb-4 flex items-start gap-2.5 rounded-xl border border-[#cfe4d3] bg-[#eff8f1] px-3.5 py-3 text-[10px] leading-5 text-[#347849]"
+                className="mb-4 flex items-start gap-2.5 rounded-xl border border-[#cfe4d3] bg-[#eff8f1] px-3.5 py-3 text-xs leading-5 text-[#347849]"
               >
                 <CheckCircle2
                   size={16}
@@ -279,7 +274,7 @@ export default function Register() {
               <div>
                 <label
                   htmlFor="name"
-                  className="mb-2 block text-[10px] font-extrabold text-[#526b57]"
+                  className="mb-2 block text-xs font-extrabold text-[#526b57]"
                 >
                   Nama Lengkap
                 </label>
@@ -300,7 +295,7 @@ export default function Register() {
                     }
                     placeholder="Masukkan nama lengkap"
                     required
-                    className="min-h-[44px] w-full rounded-xl border border-[#dfe9e0] bg-[#fbfdfb] py-2.5 pl-10 pr-3.5 text-[11px] font-medium text-[#36543d] outline-none transition placeholder:font-normal placeholder:text-[#a0aba2] hover:border-[#cadfcd] focus:border-[#80b78b] focus:bg-white focus:ring-4 focus:ring-[#e7f3e9]"
+                    className="min-h-[44px] w-full rounded-xl border border-[#dfe9e0] bg-[#fbfdfb] py-2.5 pl-10 pr-3.5 text-sm font-medium text-[#36543d] outline-none transition placeholder:font-normal placeholder:text-[#a0aba2] hover:border-[#cadfcd] focus:border-[#80b78b] focus:bg-white focus:ring-4 focus:ring-[#e7f3e9]"
                   />
                 </div>
               </div>
@@ -309,7 +304,7 @@ export default function Register() {
               <div>
                 <label
                   htmlFor="email"
-                  className="mb-2 block text-[10px] font-extrabold text-[#526b57]"
+                  className="mb-2 block text-xs font-extrabold text-[#526b57]"
                 >
                   Alamat Email
                 </label>
@@ -330,7 +325,7 @@ export default function Register() {
                     }
                     placeholder="nama@email.com"
                     required
-                    className="min-h-[44px] w-full rounded-xl border border-[#dfe9e0] bg-[#fbfdfb] py-2.5 pl-10 pr-3.5 text-[11px] font-medium text-[#36543d] outline-none transition placeholder:font-normal placeholder:text-[#a0aba2] hover:border-[#cadfcd] focus:border-[#80b78b] focus:bg-white focus:ring-4 focus:ring-[#e7f3e9]"
+                    className="min-h-[44px] w-full rounded-xl border border-[#dfe9e0] bg-[#fbfdfb] py-2.5 pl-10 pr-3.5 text-sm font-medium text-[#36543d] outline-none transition placeholder:font-normal placeholder:text-[#a0aba2] hover:border-[#cadfcd] focus:border-[#80b78b] focus:bg-white focus:ring-4 focus:ring-[#e7f3e9]"
                   />
                 </div>
               </div>
@@ -339,7 +334,7 @@ export default function Register() {
               <div>
                 <label
                   htmlFor="password"
-                  className="mb-2 block text-[10px] font-extrabold text-[#526b57]"
+                  className="mb-2 block text-xs font-extrabold text-[#526b57]"
                 >
                   Password
                 </label>
@@ -361,7 +356,7 @@ export default function Register() {
                     placeholder="Minimal 6 karakter"
                     minLength={6}
                     required
-                    className="min-h-[44px] w-full rounded-xl border border-[#dfe9e0] bg-[#fbfdfb] py-2.5 pl-10 pr-11 text-[11px] font-medium text-[#36543d] outline-none transition placeholder:font-normal placeholder:text-[#a0aba2] hover:border-[#cadfcd] focus:border-[#80b78b] focus:bg-white focus:ring-4 focus:ring-[#e7f3e9]"
+                    className="min-h-[44px] w-full rounded-xl border border-[#dfe9e0] bg-[#fbfdfb] py-2.5 pl-10 pr-11 text-sm font-medium text-[#36543d] outline-none transition placeholder:font-normal placeholder:text-[#a0aba2] hover:border-[#cadfcd] focus:border-[#80b78b] focus:bg-white focus:ring-4 focus:ring-[#e7f3e9]"
                   />
 
                   <button
@@ -384,7 +379,7 @@ export default function Register() {
                   </button>
                 </div>
 
-                <p className="mt-1.5 text-[9px] text-[#929e94]">
+                <p className="mt-1.5 text-xs text-[#929e94]">
                   Gunakan minimal 6 karakter.
                 </p>
               </div>
@@ -393,7 +388,7 @@ export default function Register() {
               <div>
                 <label
                   htmlFor="confirmPassword"
-                  className="mb-2 block text-[10px] font-extrabold text-[#526b57]"
+                  className="mb-2 block text-xs font-extrabold text-[#526b57]"
                 >
                   Konfirmasi Password
                 </label>
@@ -415,7 +410,7 @@ export default function Register() {
                     placeholder="Ulangi password"
                     minLength={6}
                     required
-                    className="min-h-[44px] w-full rounded-xl border border-[#dfe9e0] bg-[#fbfdfb] py-2.5 pl-10 pr-11 text-[11px] font-medium text-[#36543d] outline-none transition placeholder:font-normal placeholder:text-[#a0aba2] hover:border-[#cadfcd] focus:border-[#80b78b] focus:bg-white focus:ring-4 focus:ring-[#e7f3e9]"
+                    className="min-h-[44px] w-full rounded-xl border border-[#dfe9e0] bg-[#fbfdfb] py-2.5 pl-10 pr-11 text-sm font-medium text-[#36543d] outline-none transition placeholder:font-normal placeholder:text-[#a0aba2] hover:border-[#cadfcd] focus:border-[#80b78b] focus:bg-white focus:ring-4 focus:ring-[#e7f3e9]"
                   />
 
                   <button
@@ -448,7 +443,7 @@ export default function Register() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="sd-button-dark mt-2 inline-flex min-h-[45px] w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-[11px] font-extrabold transition disabled:cursor-not-allowed disabled:opacity-55"
+                className="sd-button-dark mt-2 inline-flex min-h-[45px] w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-extrabold transition disabled:cursor-not-allowed disabled:opacity-55"
               >
                 {submitting ? (
                   <>
@@ -472,7 +467,7 @@ export default function Register() {
             <div className="my-4 flex items-center gap-3">
               <span className="h-px flex-1 bg-[#e6ece6]" />
 
-              <span className="text-[9px] font-semibold text-[#9aa59c]">
+              <span className="text-xs font-semibold text-[#9aa59c]">
                 atau daftar menggunakan
               </span>
 
@@ -486,26 +481,25 @@ export default function Register() {
 
             {/* LOGIN */}
             <div className="mt-5 rounded-xl border border-[#e5eee6] bg-[#f8fbf8] p-4 text-center">
-              <p className="text-[10px] font-medium text-[#758579]">
+              <p className="text-xs font-medium text-[#758579]">
                 Sudah punya akun?
               </p>
 
               <Link
                 to="/login"
-                className="mt-1 inline-flex items-center gap-1 text-[11px] font-extrabold text-[#347c49] transition hover:text-[#1e6337] hover:underline"
+                className="mt-1 inline-flex items-center gap-1 text-sm font-extrabold text-[#347c49] transition hover:text-[#1e6337] hover:underline"
               >
                 Masuk ke akun
                 <ArrowRight size={13} />
               </Link>
             </div>
 
-            <p className="mt-5 text-center text-[8px] leading-5 text-[#a0aaa2]">
+            <p className="mt-5 text-center text-sm leading-5 text-[#a0aaa2]">
               Dengan mendaftar, akun baru akan menggunakan hak akses
               pengguna biasa sesuai pengaturan aplikasi.
             </p>
           </div>
         </section>
-      </div>
     </main>
   );
 }

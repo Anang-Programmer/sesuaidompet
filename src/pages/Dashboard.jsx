@@ -16,7 +16,6 @@ import {
   ListChecks,
   Settings2,
   Smartphone,
-  Sparkles,
   Trophy,
 } from 'lucide-react';
 
@@ -58,12 +57,14 @@ function DashboardLoading() {
         <div className="sd-loading-block w-full max-w-xl" />
       </div>
 
-      <div className="sd-welcome-banner">
-        <div className="w-full max-w-xl space-y-3">
-          <div className="sd-loading-block w-32" />
-          <div className="sd-loading-block h-8 w-3/4" />
-          <div className="sd-loading-block w-full" />
+      <div className="rounded-2xl border border-[#e2ede4] bg-white p-5 sm:p-6 space-y-4">
+        <div className="flex items-center gap-3">
+          <div className="sd-loading-block h-6 w-36 rounded-full" />
+          <div className="sd-loading-block h-6 w-44 rounded-full" />
         </div>
+        <div className="sd-loading-block h-7 w-2/3" />
+        <div className="sd-loading-block h-4 w-full max-w-xl" />
+        <div className="sd-loading-block h-2 w-full rounded-full" />
       </div>
 
       <div className="sd-stats-grid">
@@ -243,6 +244,13 @@ export default function Dashboard() {
     [criteria, smartphones]
   );
 
+  /* Kriteria dengan bobot tertinggi */
+
+  const dominantCriterion = useMemo(() => {
+    if (!criteria || criteria.length === 0) return null;
+    return [...criteria].sort((a, b) => (b.weight || 0) - (a.weight || 0))[0];
+  }, [criteria]);
+
 
   /* Informasi pengguna */
 
@@ -293,6 +301,13 @@ export default function Dashboard() {
 
   const topPhone = sawPreview.rekomendasiTerbaik;
 
+  const completionPercentage =
+    stats.totalCount > 0
+      ? Math.round((stats.readyCount / stats.totalCount) * 100)
+      : 0;
+
+  const isReadyForSAW = stats.readyCount >= 2;
+
 
   return (
     <div className="sd-dashboard">
@@ -325,46 +340,86 @@ export default function Dashboard() {
       )}
 
 
-      {/* BANNER UTAMA */}
+      {/* STATUS PIPELINE & PUSAT AKSI SPK */}
 
-      <section className="sd-welcome-banner">
+      <section className="rounded-2xl border border-[#e2ede4] bg-white p-5 shadow-[0_4px_20px_rgba(20,50,30,0.04)] sm:p-6">
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+          <div className="min-w-0 max-w-2xl space-y-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <span
+                className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-extrabold ${
+                  isReadyForSAW
+                    ? 'border border-[#cbe8d2] bg-[#eef8f0] text-[#247541]'
+                    : 'border border-[#fae2c8] bg-[#fef7ee] text-[#b45309]'
+                }`}
+              >
+                <span
+                  className={`h-2 w-2 rounded-full ${
+                    isReadyForSAW ? 'bg-[#2f9e59] animate-pulse' : 'bg-[#f59e0b]'
+                  }`}
+                />
+                {isReadyForSAW
+                  ? 'Sistem Siap Menghitung SAW'
+                  : 'Memerlukan Minimal 2 Alternatif Lengkap'}
+              </span>
 
-        <div className="sd-welcome-copy">
-          <div className="sd-welcome-kicker">
-            <Sparkles size={14} />
-            Pilih smartphone dengan lebih yakin
+              {dominantCriterion && (
+                <span className="inline-flex items-center gap-1 rounded-full border border-[#e3ebe4] bg-[#f4f8f4] px-2.5 py-1 text-xs font-semibold text-[#526b57]">
+                  Prioritas Utama: <strong className="font-extrabold text-[#254632]">{dominantCriterion.name} ({dominantCriterion.weight}%)</strong>
+                </span>
+              )}
+            </div>
+
+            <div>
+              <h2 className="text-lg font-extrabold tracking-tight text-[#1b3d2b] sm:text-xl">
+                Status Pipeline Pengambilan Keputusan
+              </h2>
+              <p className="mt-1 text-xs leading-relaxed text-[#687b6e]">
+                {stats.readyCount} dari {stats.totalCount} smartphone terdaftar siap dihitung dengan metode SAW. Pastikan seluruh kriteria terisi untuk rekomendasi yang akurat.
+              </p>
+            </div>
+
+            <div className="space-y-1.5 pt-1">
+              <div className="flex items-center justify-between text-sm font-bold text-[#506655]">
+                <span>Kelengkapan Spesifikasi Alternatif</span>
+                <span>{completionPercentage}% ({stats.readyCount}/{stats.totalCount} HP)</span>
+              </div>
+              <div className="h-2 w-full overflow-hidden rounded-full bg-[#e9f2eb]">
+                <div
+                  className="h-full rounded-full bg-[#2f9e59] transition-all duration-500"
+                  style={{ width: `${completionPercentage}%` }}
+                />
+              </div>
+            </div>
           </div>
 
-          <h2 className="sd-welcome-title">
-            Pilihan yang tepat, sesuai kebutuhan dan isi dompet.
-          </h2>
+          <div className="flex flex-wrap items-center gap-2.5 lg:w-52 lg:flex-col lg:items-stretch shrink-0">
+            <Link
+              to="/perhitungan"
+              className="sd-button-dark inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-extrabold !text-white shadow-xs transition"
+            >
+              <Calculator size={15} className="!text-white shrink-0" />
+              <span className="!text-white">Hitung SAW Sekarang</span>
+              <ArrowRight size={13} className="!text-white shrink-0" />
+            </Link>
 
-          <p className="sd-welcome-description">
-            Bandingkan spesifikasi, tentukan prioritas,
-            dan lihat rekomendasi berdasarkan metode
-            Simple Additive Weighting (SAW).
-          </p>
+            <Link
+              to="/bandingkan"
+              className="sd-button-light inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-extrabold transition"
+            >
+              <ListChecks size={15} className="shrink-0" />
+              <span>Bandingkan HP</span>
+            </Link>
 
-          <Link
-            to="/bandingkan"
-            className="sd-primary-button"
-          >
-            Mulai perbandingan
-            <ArrowUpRight size={16} />
-          </Link>
-        </div>
-
-        <div
-          className="sd-welcome-visual"
-          aria-hidden="true"
-        >
-          <div className="sd-phone-orbit" />
-
-          <div className="sd-phone-illustration">
-            <Smartphone />
+            <Link
+              to="/sedo-ai"
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#cbe5cf] bg-[#f0f8f1] px-4 py-2.5 text-sm font-extrabold text-[#23683b] transition hover:bg-[#e4f3e6]"
+            >
+              <Bot size={15} className="shrink-0" />
+              <span>Tanya SEDO AI</span>
+            </Link>
           </div>
         </div>
-
       </section>
 
 
@@ -719,15 +774,15 @@ export default function Dashboard() {
 
                 <div className="min-w-0">
 
-                  <div className="text-[9px] font-extrabold tracking-[0.12em] text-[#89a092]">
+                  <div className="text-xs font-extrabold tracking-[0.12em] text-[#89a092]">
                     LANGKAH {step.number}
                   </div>
 
-                  <div className="mt-1 text-[12px] font-extrabold text-[#254632]">
+                  <div className="mt-1 text-sm font-extrabold text-[#254632]">
                     {step.title}
                   </div>
 
-                  <div className="mt-1 text-[10px] leading-relaxed text-[#86938a]">
+                  <div className="mt-1 text-xs leading-relaxed text-[#86938a]">
                     {step.text}
                   </div>
 

@@ -32,7 +32,7 @@ export function GoogleAuthButton({
       type="button"
       onClick={handleGoogleLogin}
       disabled={loading}
-      className="inline-flex min-h-[44px] w-full items-center justify-center gap-2.5 rounded-xl border border-[#dfe8e0] bg-white px-4 py-2.5 text-[10px] font-extrabold text-[#526b57] shadow-[0_2px_7px_rgba(25,68,39,0.025)] transition hover:border-[#bfd9c4] hover:bg-[#f8fbf8] hover:text-[#347c49] disabled:cursor-not-allowed disabled:opacity-55"
+      className="inline-flex min-h-[44px] w-full items-center justify-center gap-2.5 rounded-xl border border-[#dfe8e0] bg-white px-4 py-2.5 text-xs font-extrabold text-[#526b57] shadow-[0_2px_7px_rgba(25,68,39,0.025)] transition hover:border-[#bfd9c4] hover:bg-[#f8fbf8] hover:text-[#347c49] disabled:cursor-not-allowed disabled:opacity-55"
     >
       {loading ? (
         <LoaderCircle

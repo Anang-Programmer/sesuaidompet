@@ -40,7 +40,7 @@ function TablePagination({
 
   return (
     <div className="flex flex-col gap-3 border-t border-[#e6eee7] bg-[#fbfdfb] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-      <span className="text-center text-[10px] text-[#849188] sm:text-left">
+      <span className="text-center text-xs text-[#849188] sm:text-left">
         Menampilkan{' '}
         <strong className="text-[#46624b]">
           {startIndex + 1}
@@ -63,13 +63,13 @@ function TablePagination({
             onPageChange(Math.max(currentPage - 1, 1))
           }
           disabled={currentPage === 1}
-          className="sd-button-light inline-flex min-h-[34px] items-center gap-1 rounded-xl px-3 py-1.5 text-[10px] font-bold transition disabled:cursor-not-allowed disabled:opacity-40"
+          className="sd-button-light inline-flex min-h-[34px] items-center gap-1 rounded-xl px-3 py-1.5 text-xs font-bold transition disabled:cursor-not-allowed disabled:opacity-40"
         >
           <ChevronLeft size={14} />
           Sebelumnya
         </button>
 
-        <span className="min-w-[65px] text-center text-[10px] font-extrabold text-[#536b58]">
+        <span className="min-w-[65px] text-center text-xs font-extrabold text-[#536b58]">
           {currentPage} / {Math.max(totalPages, 1)}
         </span>
 
@@ -81,7 +81,7 @@ function TablePagination({
             )
           }
           disabled={currentPage >= totalPages}
-          className="sd-button-light inline-flex min-h-[34px] items-center gap-1 rounded-xl px-3 py-1.5 text-[10px] font-bold transition disabled:cursor-not-allowed disabled:opacity-40"
+          className="sd-button-light inline-flex min-h-[34px] items-center gap-1 rounded-xl px-3 py-1.5 text-xs font-bold transition disabled:cursor-not-allowed disabled:opacity-40"
         >
           Selanjutnya
           <ChevronRight size={14} />
@@ -109,7 +109,7 @@ function StepHeader({
         </div>
 
         <div className="min-w-0">
-          <div className="text-[9px] font-extrabold uppercase tracking-[0.13em] text-[#398653]">
+          <div className="text-xs font-extrabold uppercase tracking-[0.13em] text-[#398653]">
             Tahap {number}
           </div>
 
@@ -118,7 +118,7 @@ function StepHeader({
           </h3>
 
           {description && (
-            <p className="mt-1 max-w-3xl text-[10px] leading-5 text-[#849188]">
+            <p className="mt-1 max-w-3xl text-xs leading-5 text-[#849188]">
               {description}
             </p>
           )}
@@ -172,7 +172,7 @@ function TypeBadge({ type }) {
 
   return (
     <span
-      className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[9px] font-extrabold ${
+      className={`inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-extrabold ${
         isCost
           ? 'border-[#f0dfc3] bg-[#fff7e9] text-[#a5762f]'
           : 'border-[#d2e9d6] bg-[#eaf6ec] text-[#2d7944]'
@@ -201,7 +201,7 @@ function WeightCard({
     <article className="rounded-2xl border border-[#e4ece5] bg-[#fbfdfb] p-4">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <span className="inline-flex rounded-md bg-[#eaf1eb] px-2 py-1 text-[9px] font-extrabold text-[#718176]">
+          <span className="inline-flex rounded-md bg-[#eaf1eb] px-2 py-1 text-xs font-extrabold text-[#718176]">
             {criterion.code}
           </span>
 
@@ -215,7 +215,7 @@ function WeightCard({
 
       <div className="mt-4 flex items-end justify-between gap-2">
         <div>
-          <p className="text-[9px] font-semibold text-[#849188]">
+          <p className="text-xs font-semibold text-[#849188]">
             Bobot aktif
           </p>
 
@@ -225,7 +225,7 @@ function WeightCard({
         </div>
 
         <div className="text-right">
-          <p className="text-[9px] font-semibold text-[#929e94]">
+          <p className="text-xs font-semibold text-[#929e94]">
             Nilai Wj
           </p>
 
@@ -248,7 +248,7 @@ function WeightCard({
       </div>
 
       {wasWeightNormalized && (
-        <div className="mt-3 rounded-lg bg-white px-2.5 py-2 text-[9px] text-[#829087]">
+        <div className="mt-3 rounded-lg bg-white px-2.5 py-2 text-xs text-[#829087]">
           Bobot input:{' '}
           <strong className="font-mono text-[#506b56]">
             {formatDecimal(criterion.rawWeight, 3)}
@@ -265,7 +265,7 @@ function WeightCard({
 function TableHeader({ children, align = 'left' }) {
   return (
     <th
-      className={`whitespace-nowrap border-b border-[#e0eae1] bg-[#f2f8f3] px-4 py-3 text-[9px] font-extrabold uppercase tracking-[0.08em] text-[#637a68] ${
+      className={`whitespace-nowrap border-b border-[#e0eae1] bg-[#f2f8f3] px-4 py-3 text-xs font-extrabold uppercase tracking-[0.08em] text-[#637a68] ${
         align === 'right' ? 'text-right' : 'text-left'
       }`}
     >
@@ -285,7 +285,7 @@ function TableCell({
 }) {
   return (
     <td
-      className={`border-b border-[#edf2ed] px-4 py-3 text-[10px] ${
+      className={`border-b border-[#edf2ed] px-4 py-3 text-xs ${
         align === 'right' ? 'text-right' : 'text-left'
       } ${
         strong
@@ -349,7 +349,7 @@ export function SawStepTables({ sawResult }) {
             Rincian proses perhitungan SAW
           </h2>
 
-          <p className="mt-1 text-[10px] leading-5 text-[#718476]">
+          <p className="mt-1 text-xs leading-5 text-[#718476]">
             Berikut seluruh tahapan perhitungan mulai dari penentuan
             bobot, penyusunan matriks keputusan, normalisasi,
             hingga perolehan nilai preferensi setiap alternatif.
@@ -367,7 +367,7 @@ export function SawStepTables({ sawResult }) {
         title="Alternatif, Kriteria, dan Bobot"
         description="Menampilkan sifat setiap kriteria, bobot input, dan bobot aktif yang digunakan dalam perhitungan."
         badge={
-          <span className="rounded-full border border-[#dce9de] bg-[#f4f9f4] px-3 py-1.5 text-[9px] font-extrabold text-[#53705a]">
+          <span className="rounded-full border border-[#dce9de] bg-[#f4f9f4] px-3 py-1.5 text-xs font-extrabold text-[#53705a]">
             {matriksAwal.length} Alternatif
           </span>
         }
@@ -380,7 +380,7 @@ export function SawStepTables({ sawResult }) {
                 className="mt-0.5 shrink-0 text-[#a57935]"
               />
 
-              <p className="text-[10px] leading-5 text-[#8e703e]">
+              <p className="text-xs leading-5 text-[#8e703e]">
                 Total bobot input adalah{' '}
                 <strong>
                   {formatDecimal(weightSum, 3)}
@@ -392,11 +392,11 @@ export function SawStepTables({ sawResult }) {
           )}
 
           <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-            <h4 className="text-[10px] font-extrabold uppercase tracking-[0.1em] text-[#77887a]">
+            <h4 className="text-xs font-extrabold uppercase tracking-[0.1em] text-[#77887a]">
               Bobot setiap kriteria
             </h4>
 
-            <span className="rounded-full bg-[#eaf6ec] px-2.5 py-1 text-[9px] font-extrabold text-[#347d49]">
+            <span className="rounded-full bg-[#eaf6ec] px-2.5 py-1 text-xs font-extrabold text-[#347d49]">
               Total 100%
             </span>
           </div>
@@ -413,7 +413,7 @@ export function SawStepTables({ sawResult }) {
 
           <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div className="rounded-xl border border-[#e5ece5] bg-[#f9fbf9] p-3">
-              <p className="text-[9px] font-semibold text-[#87948a]">
+              <p className="text-xs font-semibold text-[#87948a]">
                 Total bobot input
               </p>
 
@@ -423,7 +423,7 @@ export function SawStepTables({ sawResult }) {
             </div>
 
             <div className="rounded-xl border border-[#d8eadd] bg-[#eff8f1] p-3">
-              <p className="text-[9px] font-semibold text-[#718b76]">
+              <p className="text-xs font-semibold text-[#718b76]">
                 Total bobot aktif
               </p>
 
@@ -452,12 +452,12 @@ export function SawStepTables({ sawResult }) {
         title="Matriks Keputusan (X)"
         description="Nilai asli setiap smartphone berdasarkan keenam kriteria penilaian sebelum dilakukan normalisasi."
         badge={
-          <span className="rounded-full border border-[#dce9de] bg-[#f4f9f4] px-3 py-1.5 text-[9px] font-extrabold text-[#53705a]">
+          <span className="rounded-full border border-[#dce9de] bg-[#f4f9f4] px-3 py-1.5 text-xs font-extrabold text-[#53705a]">
             Matriks awal
           </span>
         }
       >
-        <div className="border-b border-[#e6eee7] bg-[#fbfdfb] px-5 py-3 text-[9px] leading-5 text-[#839087] sm:px-6">
+        <div className="border-b border-[#e6eee7] bg-[#fbfdfb] px-5 py-3 text-xs leading-5 text-[#839087] sm:px-6">
           Xij merupakan nilai asli alternatif ke-i pada kriteria ke-j.
           Nilai belum mengalami normalisasi.
         </div>
@@ -491,7 +491,7 @@ export function SawStepTables({ sawResult }) {
                   className="transition hover:bg-[#f8fbf8]"
                 >
                   <TableCell strong>
-                    <span className="inline-flex rounded-md bg-[#edf5ee] px-2 py-1 text-[9px] font-extrabold text-[#3c754a]">
+                    <span className="inline-flex rounded-md bg-[#edf5ee] px-2 py-1 text-xs font-extrabold text-[#3c754a]">
                       {row.code}
                     </span>
                   </TableCell>
@@ -540,7 +540,7 @@ export function SawStepTables({ sawResult }) {
         title="Nilai Maksimum dan Minimum"
         description="Menentukan nilai acuan setiap kriteria untuk proses normalisasi."
         badge={
-          <span className="rounded-full border border-[#dce9de] bg-[#f4f9f4] px-3 py-1.5 text-[9px] font-extrabold text-[#53705a]">
+          <span className="rounded-full border border-[#dce9de] bg-[#f4f9f4] px-3 py-1.5 text-xs font-extrabold text-[#53705a]">
             Max / Min
           </span>
         }
@@ -553,11 +553,11 @@ export function SawStepTables({ sawResult }) {
               </div>
 
               <div>
-                <p className="text-[10px] font-extrabold text-[#327849]">
+                <p className="text-xs font-extrabold text-[#327849]">
                   Benefit
                 </p>
 
-                <p className="mt-1 text-[9px] leading-5 text-[#728678]">
+                <p className="mt-1 text-xs leading-5 text-[#728678]">
                   Menggunakan nilai maksimum (Max) sebagai
                   acuan normalisasi.
                 </p>
@@ -570,11 +570,11 @@ export function SawStepTables({ sawResult }) {
               </div>
 
               <div>
-                <p className="text-[10px] font-extrabold text-[#9d742f]">
+                <p className="text-xs font-extrabold text-[#9d742f]">
                   Cost
                 </p>
 
-                <p className="mt-1 text-[9px] leading-5 text-[#8f8060]">
+                <p className="mt-1 text-xs leading-5 text-[#8f8060]">
                   Menggunakan nilai minimum (Min) sebagai
                   acuan normalisasi.
                 </p>
@@ -594,7 +594,7 @@ export function SawStepTables({ sawResult }) {
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <span className="text-[9px] font-extrabold text-[#8a988e]">
+                      <span className="text-xs font-extrabold text-[#8a988e]">
                         {item.code}
                       </span>
 
@@ -614,7 +614,7 @@ export function SawStepTables({ sawResult }) {
                           : 'border-[#e3ece4] bg-white'
                       }`}
                     >
-                      <p className="text-[9px] font-semibold text-[#929d93]">
+                      <p className="text-xs font-semibold text-[#929d93]">
                         Maksimum
                       </p>
 
@@ -630,7 +630,7 @@ export function SawStepTables({ sawResult }) {
                           : 'border-[#e3ece4] bg-white'
                       }`}
                     >
-                      <p className="text-[9px] font-semibold text-[#929d93]">
+                      <p className="text-xs font-semibold text-[#929d93]">
                         Minimum
                       </p>
 
@@ -641,7 +641,7 @@ export function SawStepTables({ sawResult }) {
                   </div>
 
                   <div className="mt-3 flex items-center justify-between gap-2 rounded-xl bg-[#eaf5ec] px-3 py-2.5">
-                    <span className="text-[9px] font-bold text-[#66816b]">
+                    <span className="text-xs font-bold text-[#66816b]">
                       Acuan dipakai
                     </span>
 
@@ -670,7 +670,7 @@ export function SawStepTables({ sawResult }) {
         title="Matriks Ternormalisasi (R)"
         description="Nilai asli dikonversi menjadi nilai normalisasi berdasarkan jenis Cost atau Benefit."
         badge={
-          <span className="rounded-full border border-[#dce9de] bg-[#f4f9f4] px-3 py-1.5 text-[9px] font-extrabold text-[#53705a]">
+          <span className="rounded-full border border-[#dce9de] bg-[#f4f9f4] px-3 py-1.5 text-xs font-extrabold text-[#53705a]">
             Hasil normalisasi
           </span>
         }
@@ -678,27 +678,27 @@ export function SawStepTables({ sawResult }) {
         <div className="border-b border-[#e6eee7] bg-[#fbfdfb] px-5 py-3 sm:px-6">
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             <div className="rounded-xl border border-[#dcebdc] bg-[#f0f8f1] px-3 py-2.5">
-              <span className="text-[9px] font-extrabold text-[#337b49]">
+              <span className="text-xs font-extrabold text-[#337b49]">
                 Benefit
               </span>
 
-              <code className="mt-1 block text-[10px] font-semibold text-[#486b50]">
+              <code className="mt-1 block text-xs font-semibold text-[#486b50]">
                 rᵢⱼ = xᵢⱼ / Max(xᵢⱼ)
               </code>
             </div>
 
             <div className="rounded-xl border border-[#f0e5ce] bg-[#fff9ee] px-3 py-2.5">
-              <span className="text-[9px] font-extrabold text-[#a17631]">
+              <span className="text-xs font-extrabold text-[#a17631]">
                 Cost
               </span>
 
-              <code className="mt-1 block text-[10px] font-semibold text-[#8e774f]">
+              <code className="mt-1 block text-xs font-semibold text-[#8e774f]">
                 rᵢⱼ = Min(xᵢⱼ) / xᵢⱼ
               </code>
             </div>
           </div>
 
-          <p className="mt-2 text-[9px] text-[#87938a]">
+          <p className="mt-2 text-xs text-[#87938a]">
             Seluruh hasil normalisasi ditampilkan dengan empat angka di belakang koma.
           </p>
         </div>
@@ -737,7 +737,7 @@ export function SawStepTables({ sawResult }) {
                   className="transition hover:bg-[#f8fbf8]"
                 >
                   <TableCell strong>
-                    <span className="inline-flex rounded-md bg-[#edf5ee] px-2 py-1 text-[9px] font-extrabold text-[#3c754a]">
+                    <span className="inline-flex rounded-md bg-[#edf5ee] px-2 py-1 text-xs font-extrabold text-[#3c754a]">
                       {row.code}
                     </span>
                   </TableCell>
@@ -753,7 +753,7 @@ export function SawStepTables({ sawResult }) {
                       key={criterion.code}
                       align="right"
                     >
-                      <span className="font-mono text-[11px] font-bold text-[#39784b]">
+                      <span className="font-mono text-sm font-bold text-[#39784b]">
                         {formatDecimal(
                           row.values[criterion.code],
                           4
@@ -788,14 +788,14 @@ export function SawStepTables({ sawResult }) {
         title="Perhitungan Nilai Preferensi (Vᵢ)"
         description="Hasil perkalian bobot aktif dengan nilai normalisasi pada setiap kriteria, kemudian dijumlahkan menjadi skor akhir."
         badge={
-          <span className="rounded-full border border-[#dce9de] bg-[#f4f9f4] px-3 py-1.5 text-[9px] font-extrabold text-[#53705a]">
+          <span className="rounded-full border border-[#dce9de] bg-[#f4f9f4] px-3 py-1.5 text-xs font-extrabold text-[#53705a]">
             Skor akhir
           </span>
         }
       >
         <div className="border-b border-[#e6eee7] bg-[#fbfdfb] px-5 py-3 sm:px-6">
           <div className="rounded-xl border border-[#dcebdd] bg-[#eff8f1] px-3.5 py-3">
-            <p className="text-[9px] font-extrabold uppercase tracking-[0.1em] text-[#488257]">
+            <p className="text-xs font-extrabold uppercase tracking-[0.1em] text-[#488257]">
               Rumus nilai preferensi
             </p>
 
@@ -803,7 +803,7 @@ export function SawStepTables({ sawResult }) {
               Vᵢ = Σ (Wⱼ × rᵢⱼ)
             </code>
 
-            <p className="mt-1 text-[9px] leading-5 text-[#7a907e]">
+            <p className="mt-1 text-xs leading-5 text-[#7a907e]">
               Total setiap nilai perkalian menjadi skor preferensi
               alternatif yang digunakan dalam perangkingan.
             </p>
@@ -826,7 +826,7 @@ export function SawStepTables({ sawResult }) {
                       W × {criterion.code}
                     </div>
 
-                    <div className="mt-1 font-mono text-[9px] font-medium normal-case tracking-normal text-[#8a988d]">
+                    <div className="mt-1 font-mono text-xs font-medium normal-case tracking-normal text-[#8a988d]">
                       {formatDecimal(
                         criterion.normalizedWeight,
                         4
@@ -848,7 +848,7 @@ export function SawStepTables({ sawResult }) {
                   className="transition hover:bg-[#f8fbf8]"
                 >
                   <TableCell strong>
-                    <span className="inline-flex rounded-md bg-[#edf5ee] px-2 py-1 text-[9px] font-extrabold text-[#3c754a]">
+                    <span className="inline-flex rounded-md bg-[#edf5ee] px-2 py-1 text-xs font-extrabold text-[#3c754a]">
                       {row.code}
                     </span>
                   </TableCell>
@@ -864,7 +864,7 @@ export function SawStepTables({ sawResult }) {
                       key={criterion.code}
                       align="right"
                     >
-                      <span className="font-mono text-[10px]">
+                      <span className="font-mono text-xs">
                         {formatDecimal(
                           row.weightedValues[criterion.code],
                           4
@@ -906,11 +906,11 @@ export function SawStepTables({ sawResult }) {
         </div>
 
         <div>
-          <h4 className="text-[10px] font-extrabold text-[#327849]">
+          <h4 className="text-xs font-extrabold text-[#327849]">
             Perhitungan selesai
           </h4>
 
-          <p className="mt-1 text-[10px] leading-5 text-[#738777]">
+          <p className="mt-1 text-xs leading-5 text-[#738777]">
             Seluruh nilai preferensi telah diperoleh melalui
             tahapan SAW. Nilai Vᵢ yang lebih tinggi menunjukkan
             peringkat alternatif yang lebih baik.
