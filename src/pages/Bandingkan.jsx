@@ -51,9 +51,6 @@ import {
 } from '../utils/formatters';
 
 
-const MAX_COMPARE = 4;
-
-
 /* =========================================
    KOMPONEN KECIL
 ========================================= */
@@ -79,7 +76,7 @@ function SectionHeading({
           </h2>
 
           {description && (
-            <p className="mt-1 text-[10px] leading-5 text-[#87948a]">
+            <p className="mt-1 text-xs leading-5 text-[#87948a]">
               {description}
             </p>
           )}
@@ -109,7 +106,7 @@ function InfoCard({
 
       <div className="min-w-0">
 
-        <p className="text-[10px] font-bold text-[#839087]">
+        <p className="text-xs font-bold text-[#839087]">
           {label}
         </p>
 
@@ -117,7 +114,7 @@ function InfoCard({
           {value}
         </p>
 
-        <p className="mt-0.5 truncate text-[9px] text-[#94a097]">
+        <p className="mt-0.5 truncate text-xs text-[#94a097]">
           {description}
         </p>
 
@@ -168,7 +165,7 @@ function PhoneOption({
       <span className="min-w-0 flex-1">
 
         <span className="flex flex-wrap items-center gap-1.5">
-          <span className="truncate text-[11px] font-extrabold text-[#31513a]">
+          <span className="truncate text-sm font-extrabold text-[#31513a]">
             {phone.name}
           </span>
 
@@ -178,7 +175,7 @@ function PhoneOption({
           />
         </span>
 
-        <span className="mt-1 block text-[10px] font-semibold text-[#37834d]">
+        <span className="mt-1 block text-xs font-semibold text-[#37834d]">
           {formatRupiah(phone.price)}
         </span>
 
@@ -222,7 +219,7 @@ function SelectedPhoneCard({
     >
 
       {isWinner && (
-        <div className="absolute right-0 top-0 rounded-bl-xl bg-gradient-to-r from-[#257a42] to-[#3ba75c] px-3 py-1.5 text-[9px] font-extrabold text-white shadow-sm">
+        <div className="absolute right-0 top-0 rounded-bl-xl bg-gradient-to-r from-[#257a42] to-[#3ba75c] px-3 py-1.5 text-xs font-extrabold text-white shadow-sm">
           <span className="inline-flex items-center gap-1">
             <Trophy size={11} />
             TERBAIK
@@ -247,7 +244,7 @@ function SelectedPhoneCard({
 
           <div className="min-w-0">
 
-            <div className="text-[9px] font-extrabold text-[#8b998e]">
+            <div className="text-xs font-extrabold text-[#8b998e]">
               ALTERNATIF A{rankInfo?.code?.replace('A', '') || rank}
             </div>
 
@@ -282,7 +279,7 @@ function SelectedPhoneCard({
 
       <div className="mt-4 rounded-xl bg-[#f5faf6] px-3.5 py-3">
 
-        <p className="text-[9px] font-semibold text-[#86948a]">
+        <p className="text-xs font-semibold text-[#86948a]">
           Harga smartphone
         </p>
 
@@ -296,7 +293,7 @@ function SelectedPhoneCard({
       <div className="mt-3 flex items-end justify-between gap-2">
 
         <div>
-          <p className="text-[9px] font-semibold text-[#8a988e]">
+          <p className="text-xs font-semibold text-[#8a988e]">
             Skor preferensi SAW
           </p>
 
@@ -313,7 +310,7 @@ function SelectedPhoneCard({
 
 
         <span
-          className={`rounded-xl px-3 py-1.5 text-[10px] font-extrabold ${
+          className={`rounded-xl px-3 py-1.5 text-xs font-extrabold ${
             isWinner
               ? 'bg-[#267d44] text-white'
               : 'border border-[#e1e9e2] bg-white text-[#65776a]'
@@ -338,11 +335,11 @@ function CriteriaLabel({ criterion, isCost }) {
     <div className="min-w-[165px]">
 
       <div className="flex items-center gap-1.5">
-        <span className="rounded-md bg-[#f0f5f0] px-2 py-1 text-[9px] font-extrabold text-[#718477]">
+        <span className="rounded-md bg-[#f0f5f0] px-2 py-1 text-xs font-extrabold text-[#718477]">
           {criterion.code}
         </span>
 
-        <span className="text-[11px] font-extrabold text-[#34513a]">
+        <span className="text-sm font-extrabold text-[#34513a]">
           {criterion.name}
         </span>
       </div>
@@ -350,7 +347,7 @@ function CriteriaLabel({ criterion, isCost }) {
       <div className="mt-2 flex flex-wrap items-center gap-2">
 
         <span
-          className={`rounded-full px-2 py-1 text-[9px] font-extrabold ${
+          className={`rounded-full px-2 py-1 text-xs font-extrabold ${
             isCost
               ? 'bg-[#fff5e7] text-[#a5762f]'
               : 'bg-[#e9f6eb] text-[#2d7a44]'
@@ -359,7 +356,7 @@ function CriteriaLabel({ criterion, isCost }) {
           {isCost ? 'Cost' : 'Benefit'}
         </span>
 
-        <span className="text-[9px] text-[#89968c]">
+        <span className="text-xs text-[#89968c]">
           Bobot {(Number(criterion.normalizedWeight) * 100)
             .toFixed(1)
             .replace('.', ',')}%
@@ -759,14 +756,7 @@ export default function Bandingkan() {
           return previous;
         }
 
-        if (previous.length < MAX_COMPARE) {
-          return [...previous, created.id];
-        }
-
-        return [
-          ...previous.slice(0, MAX_COMPARE - 1),
-          created.id,
-        ];
+        return [...previous, created.id];
       });
     }
   }
@@ -908,7 +898,7 @@ export default function Bandingkan() {
       <PageHeader
         kicker="Analisis smartphone"
         title="Bandingkan Smartphone"
-        description={`Pilih 2 hingga ${MAX_COMPARE} smartphone untuk membandingkan spesifikasi dan melihat rekomendasi berdasarkan metode SAW.`}
+        description="Pilih minimal 2 smartphone untuk membandingkan spesifikasi dan melihat rekomendasi berdasarkan metode SAW."
         action={
           <button
             type="button"
@@ -953,8 +943,8 @@ export default function Bandingkan() {
         <InfoCard
           icon={Scale}
           label="Dipilih untuk perbandingan"
-          value={`${comparedPhones.length} / ${MAX_COMPARE}`}
-          description="Maksimal empat smartphone"
+          value={`${comparedPhones.length} HP`}
+          description="Alternatif yang dibandingkan"
         />
 
         <InfoCard
@@ -985,8 +975,8 @@ export default function Bandingkan() {
             title="Pilih smartphone"
             description="Pilih perangkat yang ingin kamu bandingkan."
             action={
-              <span className="rounded-full bg-[#eaf5ec] px-3 py-1.5 text-[9px] font-extrabold text-[#367c4a]">
-                {comparedPhones.length}/{MAX_COMPARE} dipilih
+              <span className="rounded-full bg-[#eaf5ec] px-3 py-1.5 text-xs font-extrabold text-[#367c4a]">
+                {comparedPhones.length} dipilih
               </span>
             }
           />
@@ -994,48 +984,30 @@ export default function Bandingkan() {
 
           {/* SLOT PILIHAN */}
 
-          <div className="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
-
-            {Array.from({ length: MAX_COMPARE }).map((_, index) => {
-
-              const phone = comparedPhones[index];
-
-              return (
-                <div
-                  key={index}
-                  className={`flex min-h-[88px] flex-col justify-between rounded-xl border p-3 ${
-                    phone
-                      ? 'border-[#cce5d1] bg-[#f0f8f1]'
-                      : 'border-dashed border-[#dce7dd] bg-[#fafcfa]'
-                  }`}
-                >
-
-                  <div className="flex items-center justify-between">
-
-                    <span className="text-[9px] font-extrabold text-[#89978d]">
-                      SLOT {index + 1}
-                    </span>
-
-                    {phone ? (
+          <div className="mb-4">
+            {comparedPhones.length === 0 ? (
+              <div className="flex min-h-[72px] items-center justify-center rounded-xl border border-dashed border-[#dce7dd] bg-[#fafcfa] p-3 text-center text-xs font-medium text-[#a1aca3]">
+                Belum ada smartphone dipilih. Klik smartphone pada daftar di bawah untuk membandingkan (minimal 2 HP).
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
+                {comparedPhones.map((phone, index) => (
+                  <div
+                    key={phone.id}
+                    className="flex min-h-[80px] flex-col justify-between rounded-xl border border-[#cce5d1] bg-[#f0f8f1] p-3"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-extrabold text-[#89978d]">
+                        HP #{index + 1}
+                      </span>
                       <CheckCircle2
                         size={14}
                         className="text-[#31834b]"
                       />
-                    ) : (
-                      <Plus
-                        size={14}
-                        className="text-[#a0aca2]"
-                      />
-                    )}
-
-                  </div>
-
-
-                  {phone ? (
+                    </div>
 
                     <div className="mt-2 flex items-center justify-between gap-1">
-
-                      <span className="line-clamp-2 text-[10px] font-extrabold leading-snug text-[#31533a]">
+                      <span className="line-clamp-2 text-xs font-extrabold leading-snug text-[#31533a]">
                         {phone.name}
                       </span>
 
@@ -1049,22 +1021,11 @@ export default function Bandingkan() {
                       >
                         <X size={13} />
                       </button>
-
                     </div>
-
-                  ) : (
-
-                    <span className="mt-2 text-[9px] font-medium text-[#a1aca3]">
-                      Belum dipilih
-                    </span>
-
-                  )}
-
-                </div>
-              );
-
-            })}
-
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
 
@@ -1107,7 +1068,7 @@ export default function Bandingkan() {
                     type="button"
                     aria-pressed={sourceFilter === tab.id}
                     onClick={() => setSourceFilter(tab.id)}
-                    className={`min-h-[34px] rounded-lg px-3 py-1.5 text-[10px] font-bold transition ${
+                    className={`min-h-[34px] rounded-lg px-3 py-1.5 text-xs font-bold transition ${
                       sourceFilter === tab.id
                         ? 'bg-[#267f45] text-white shadow-sm'
                         : 'text-[#718176] hover:bg-white hover:text-[#287a43]'
@@ -1131,11 +1092,11 @@ export default function Bandingkan() {
 
             <div className="mb-2 flex items-center justify-between gap-2">
 
-              <p className="text-[10px] font-extrabold text-[#63776a]">
+              <p className="text-xs font-extrabold text-[#63776a]">
                 Alternatif siap dibandingkan
               </p>
 
-              <span className="text-[9px] text-[#99a49b]">
+              <span className="text-xs text-[#99a49b]">
                 {filteredPhones.length} ditemukan
               </span>
 
@@ -1155,7 +1116,7 @@ export default function Bandingkan() {
                   Smartphone tidak ditemukan
                 </p>
 
-                <p className="mt-1 text-[10px] leading-5 text-[#89968c]">
+                <p className="mt-1 text-xs leading-5 text-[#89968c]">
                   Coba kata pencarian lain atau ubah sumber data.
                 </p>
 
@@ -1165,7 +1126,7 @@ export default function Bandingkan() {
                     setSearch('');
                     setSourceFilter('all');
                   }}
-                  className="mt-3 text-[10px] font-bold text-[#327d49] hover:underline"
+                  className="mt-3 text-xs font-bold text-[#327d49] hover:underline"
                 >
                   Reset pencarian dan filter
                 </button>
@@ -1180,9 +1141,7 @@ export default function Bandingkan() {
 
                   const selected = selectedIds.includes(phone.id);
 
-                  const disabled =
-                    !selected &&
-                    selectedIds.length >= MAX_COMPARE;
+                  const disabled = false;
 
                   return (
                     <PhoneOption
@@ -1217,7 +1176,7 @@ export default function Bandingkan() {
                 className="mt-0.5 shrink-0 text-[#ad813c]"
               />
 
-              <p className="text-[10px] leading-5 text-[#8d713e]">
+              <p className="text-xs leading-5 text-[#8d713e]">
                 <strong>{incompleteCount} smartphone</strong> belum
                 memiliki enam spesifikasi lengkap sehingga belum dapat
                 dibandingkan. Lengkapi melalui{' '}
@@ -1250,7 +1209,7 @@ export default function Bandingkan() {
                 <button
                   type="button"
                   onClick={resetWeightsToDefault}
-                  className="inline-flex items-center gap-1 rounded-lg px-2 py-1.5 text-[9px] font-bold text-[#708174] transition hover:bg-[#f1f7f2] hover:text-[#287943]"
+                  className="inline-flex items-center gap-1 rounded-lg px-2 py-1.5 text-xs font-bold text-[#708174] transition hover:bg-[#f1f7f2] hover:text-[#287943]"
                 >
                   <RotateCcw size={12} />
                   Reset
@@ -1266,7 +1225,7 @@ export default function Bandingkan() {
               <button
                 type="button"
                 onClick={() => setWeightMode('default')}
-                className={`min-h-[38px] rounded-lg px-3 py-2 text-[10px] font-extrabold transition ${
+                className={`min-h-[38px] rounded-lg px-3 py-2 text-xs font-extrabold transition ${
                   effectiveWeightMode === 'default'
                     ? 'bg-[#267f45] text-white shadow-sm'
                     : 'text-[#6f8172] hover:bg-white'
@@ -1278,7 +1237,7 @@ export default function Bandingkan() {
               <button
                 type="button"
                 onClick={() => setWeightMode('custom')}
-                className={`min-h-[38px] rounded-lg px-3 py-2 text-[10px] font-extrabold transition ${
+                className={`min-h-[38px] rounded-lg px-3 py-2 text-xs font-extrabold transition ${
                   effectiveWeightMode === 'custom'
                     ? 'bg-[#267f45] text-white shadow-sm'
                     : 'text-[#6f8172] hover:bg-white'
@@ -1294,7 +1253,7 @@ export default function Bandingkan() {
 
               <div className="mt-4 space-y-2">
 
-                <div className="text-[10px] font-bold text-[#7b8b7f]">
+                <div className="text-xs font-bold text-[#7b8b7f]">
                   Bobot dari database
                 </div>
 
@@ -1312,16 +1271,16 @@ export default function Bandingkan() {
                       <div className="mb-2 flex items-center justify-between gap-2">
 
                         <div className="min-w-0">
-                          <span className="mr-1.5 text-[9px] font-extrabold text-[#87958b]">
+                          <span className="mr-1.5 text-xs font-extrabold text-[#87958b]">
                             {criterion.code}
                           </span>
 
-                          <span className="text-[10px] font-bold text-[#516b57]">
+                          <span className="text-xs font-bold text-[#516b57]">
                             {criterion.name}
                           </span>
                         </div>
 
-                        <span className="shrink-0 font-mono text-[11px] font-extrabold text-[#2d7d47]">
+                        <span className="shrink-0 font-mono text-sm font-extrabold text-[#2d7d47]">
                           {percentage.toFixed(1).replace('.', ',')}%
                         </span>
 
@@ -1344,7 +1303,7 @@ export default function Bandingkan() {
 
                 })}
 
-                <p className="pt-1 text-[9px] leading-5 text-[#8c998f]">
+                <p className="pt-1 text-xs leading-5 text-[#8c998f]">
                   Bobot standar mengikuti pengaturan Kriteria & Bobot.
                 </p>
 
@@ -1354,7 +1313,7 @@ export default function Bandingkan() {
 
               <div className="mt-4 space-y-3">
 
-                <div className="rounded-xl border border-[#dcebdd] bg-[#f0f8f1] p-3 text-[10px] leading-5 text-[#607b66]">
+                <div className="rounded-xl border border-[#dcebdd] bg-[#f0f8f1] p-3 text-xs leading-5 text-[#607b66]">
                   Bobot kustom hanya digunakan untuk perbandingan ini.
                   Bobot standar dalam database tidak akan diubah.
                   Sistem melakukan normalisasi otomatis pada proses SAW.
@@ -1369,7 +1328,7 @@ export default function Bandingkan() {
 
                       <label
                         htmlFor={`cmp-w-${criterion.code}`}
-                        className="mb-1.5 block text-[10px] font-bold text-[#64766a]"
+                        className="mb-1.5 block text-xs font-bold text-[#64766a]"
                       >
                         {criterion.code} · {criterion.name}
                       </label>
@@ -1397,7 +1356,7 @@ export default function Bandingkan() {
 
 
                 <div
-                  className={`rounded-xl px-3 py-2.5 text-[10px] font-bold ${
+                  className={`rounded-xl px-3 py-2.5 text-xs font-bold ${
                     customWeightSum > 0
                       ? 'bg-[#f0f7f1] text-[#357849]'
                       : 'bg-[#fff3f2] text-[#b14d4d]'
@@ -1480,7 +1439,7 @@ export default function Bandingkan() {
             Pilih minimal dua smartphone
           </h2>
 
-          <p className="mt-2 max-w-md text-[10px] leading-6 text-[#839087]">
+          <p className="mt-2 max-w-md text-xs leading-6 text-[#839087]">
             Pilih dua hingga empat smartphone dari daftar di atas.
             Setelah itu, sistem akan menampilkan perbandingan
             spesifikasi dan hasil perhitungan SAW.
@@ -1489,7 +1448,7 @@ export default function Bandingkan() {
           <button
             type="button"
             onClick={() => setModalOpen(true)}
-            className="sd-button-dark mt-4 inline-flex min-h-[40px] items-center gap-2 rounded-xl px-4 py-2 text-[10px] font-extrabold transition hover:-translate-y-0.5"
+            className="sd-button-dark mt-4 inline-flex min-h-[40px] items-center gap-2 rounded-xl px-4 py-2 text-xs font-extrabold transition hover:-translate-y-0.5"
           >
             <Plus size={15} />
             Tambah HP Manual
@@ -1508,7 +1467,7 @@ export default function Bandingkan() {
 
           <div
             role="alert"
-            className="flex items-start gap-2.5 rounded-2xl border border-[#f0d6d4] bg-[#fff5f4] px-4 py-3 text-[11px] leading-5 text-[#a44747]"
+            className="flex items-start gap-2.5 rounded-2xl border border-[#f0d6d4] bg-[#fff5f4] px-4 py-3 text-sm leading-5 text-[#a44747]"
           >
             <AlertCircle
               size={16}
@@ -1536,7 +1495,7 @@ export default function Bandingkan() {
             title="Hasil perbandingan"
             description="Perbandingan nilai asli, normalisasi, dan skor akhir setiap smartphone."
             action={
-              <span className="rounded-full border border-[#d8eadb] bg-[#edf7ef] px-3 py-1.5 text-[9px] font-extrabold text-[#327948]">
+              <span className="rounded-full border border-[#d8eadb] bg-[#edf7ef] px-3 py-1.5 text-xs font-extrabold text-[#327948]">
                 {comparedPhones.length} alternatif
               </span>
             }
@@ -1563,7 +1522,7 @@ export default function Bandingkan() {
 
                   <div className="min-w-0">
 
-                    <span className="text-[9px] font-extrabold uppercase tracking-[0.15em] text-[#3a8b53]">
+                    <span className="text-xs font-extrabold uppercase tracking-[0.15em] text-[#3a8b53]">
                       Rekomendasi terbaik
                     </span>
 
@@ -1575,7 +1534,7 @@ export default function Bandingkan() {
                       {formatRupiah(top.smartphone.price)}
                     </p>
 
-                    <p className="mt-2 text-[10px] leading-5 text-[#6f8874]">
+                    <p className="mt-2 text-xs leading-5 text-[#6f8874]">
                       Memperoleh peringkat pertama dari{' '}
                       {comparedPhones.length} smartphone yang dibandingkan.
                     </p>
@@ -1587,7 +1546,7 @@ export default function Bandingkan() {
 
                 <div className="relative flex shrink-0 items-center justify-between gap-5 rounded-2xl border border-white/80 bg-white/85 px-5 py-4 shadow-sm backdrop-blur sm:min-w-[180px] sm:flex-col sm:justify-center sm:gap-1">
 
-                  <div className="text-[9px] font-bold text-[#829287]">
+                  <div className="text-xs font-bold text-[#829287]">
                     NILAI PREFERENSI
                   </div>
 
@@ -1595,7 +1554,7 @@ export default function Bandingkan() {
                     {formatDecimal(top.totalScore, 4)}
                   </div>
 
-                  <div className="text-[9px] font-bold text-[#6c8a73]">
+                  <div className="text-xs font-bold text-[#6c8a73]">
                     Peringkat #1
                   </div>
 
@@ -1619,12 +1578,12 @@ export default function Bandingkan() {
                   Perbandingan spesifikasi
                 </h3>
 
-                <p className="mt-1 text-[9px] text-[#89968d]">
+                <p className="mt-1 text-xs text-[#89968d]">
                   Geser tabel ke samping jika layar tidak cukup lebar.
                 </p>
               </div>
 
-              <span className="inline-flex items-center gap-1.5 text-[9px] font-bold text-[#6c8a73]">
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#6c8a73]">
                 <CheckCircle2 size={13} />
                 Data siap dibandingkan
               </span>
@@ -1640,7 +1599,7 @@ export default function Bandingkan() {
 
                   <tr className="border-b border-[#e4ece5] bg-[#f5f9f5]">
 
-                    <th className="sticky left-0 z-10 min-w-[190px] bg-[#f5f9f5] px-4 py-4 text-[10px] font-extrabold uppercase tracking-wide text-[#718176]">
+                    <th className="sticky left-0 z-10 min-w-[190px] bg-[#f5f9f5] px-4 py-4 text-xs font-extrabold uppercase tracking-wide text-[#718176]">
                       Kriteria
                     </th>
 
@@ -1661,7 +1620,7 @@ export default function Bandingkan() {
                           <div className="flex items-center justify-between gap-2">
 
                             <span
-                              className={`rounded-lg px-2 py-1 text-[9px] font-extrabold ${
+                              className={`rounded-lg px-2 py-1 text-xs font-extrabold ${
                                 isWinner
                                   ? 'bg-[#267d44] text-white'
                                   : 'bg-white text-[#718176] ring-1 ring-[#e1e9e2]'
@@ -1684,7 +1643,7 @@ export default function Bandingkan() {
                             {phone.name}
                           </p>
 
-                          <p className="mt-1.5 text-[10px] font-extrabold text-[#398650]">
+                          <p className="mt-1.5 text-xs font-extrabold text-[#398650]">
                             {formatRupiah(phone.price)}
                           </p>
 
@@ -1697,7 +1656,7 @@ export default function Bandingkan() {
                             onClick={() =>
                               removePhoneSelection(phone.id)
                             }
-                            className="mt-3 inline-flex items-center gap-1 text-[9px] font-bold text-[#9a817e] transition hover:text-[#b34e4e]"
+                            className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-[#9a817e] transition hover:text-[#b34e4e]"
                           >
                             <X size={12} />
                             Keluarkan
@@ -1740,7 +1699,7 @@ export default function Bandingkan() {
                             isCost={isCost}
                           />
 
-                          <p className="mt-2 text-[9px] text-[#98a39a]">
+                          <p className="mt-2 text-xs text-[#98a39a]">
                             Satuan: {criterion.unit || '-'}
                           </p>
 
@@ -1791,7 +1750,7 @@ export default function Bandingkan() {
                                 </span>
 
                                 {isBest && (
-                                  <span className="rounded-full bg-[#e3f3e6] px-2 py-1 text-[8px] font-extrabold text-[#2b7b43]">
+                                  <span className="rounded-full bg-[#e3f3e6] px-2 py-1 text-sm font-extrabold text-[#2b7b43]">
                                     Unggul
                                   </span>
                                 )}
@@ -1799,11 +1758,11 @@ export default function Bandingkan() {
                               </div>
 
 
-                              <p className="mt-2 text-[9px] font-medium text-[#8b998e]">
+                              <p className="mt-2 text-xs font-medium text-[#8b998e]">
                                 Normalisasi
                               </p>
 
-                              <p className="mt-0.5 font-mono text-[11px] font-bold text-[#667c6a]">
+                              <p className="mt-0.5 font-mono text-sm font-bold text-[#667c6a]">
                                 {formatDecimal(normalizedValue, 4)}
                               </p>
 
@@ -1863,7 +1822,7 @@ export default function Bandingkan() {
                             </span>
 
                             <span
-                              className={`rounded-lg px-2 py-1 text-[9px] font-extrabold ${
+                              className={`rounded-lg px-2 py-1 text-xs font-extrabold ${
                                 isWinner
                                   ? 'bg-[#267d44] text-white'
                                   : 'bg-white text-[#647569] ring-1 ring-[#e1e9e2]'
@@ -1891,11 +1850,11 @@ export default function Bandingkan() {
             <div className="space-y-3 p-3 md:hidden">
 
               <div className="rounded-xl border border-[#dceade] bg-[#f0f8f1] px-3.5 py-3">
-                <p className="text-[10px] font-extrabold text-[#327849]">
+                <p className="text-xs font-extrabold text-[#327849]">
                   Perbandingan spesifikasi
                 </p>
 
-                <p className="mt-1 text-[9px] leading-5 text-[#718476]">
+                <p className="mt-1 text-xs leading-5 text-[#718476]">
                   Buka setiap kriteria untuk melihat perbedaan nilai
                   dari seluruh smartphone yang dipilih.
                 </p>
@@ -1924,12 +1883,12 @@ export default function Bandingkan() {
 
                         <div className="flex flex-wrap items-center gap-2">
 
-                          <span className="rounded-md bg-[#edf5ee] px-2 py-1 text-[9px] font-extrabold text-[#3c754a]">
+                          <span className="rounded-md bg-[#edf5ee] px-2 py-1 text-xs font-extrabold text-[#3c754a]">
                             {criterion.code}
                           </span>
 
                           <span
-                            className={`rounded-full px-2 py-1 text-[9px] font-extrabold ${
+                            className={`rounded-full px-2 py-1 text-xs font-extrabold ${
                               isCost
                                 ? 'bg-[#fff5e7] text-[#a5762f]'
                                 : 'bg-[#e9f6eb] text-[#2d7a44]'
@@ -1944,7 +1903,7 @@ export default function Bandingkan() {
                           {criterion.name}
                         </h4>
 
-                        <p className="mt-1 text-[9px] text-[#89968c]">
+                        <p className="mt-1 text-xs text-[#89968c]">
                           Bobot {(Number(criterion.normalizedWeight) * 100)
                             .toFixed(1)
                             .replace('.', ',')}%
@@ -1998,18 +1957,18 @@ export default function Bandingkan() {
 
                               <div className="min-w-0">
 
-                                <p className="break-words text-[11px] font-extrabold leading-snug text-[#31513a]">
+                                <p className="break-words text-sm font-extrabold leading-snug text-[#31513a]">
                                   {phone.name}
                                 </p>
 
-                                <p className="mt-1 text-[9px] text-[#89968c]">
+                                <p className="mt-1 text-xs text-[#89968c]">
                                   Peringkat #{rankInfo?.rank ?? '-'}
                                 </p>
 
                               </div>
 
                               {isWinner && (
-                                <span className="shrink-0 rounded-full bg-[#267d44] px-2 py-1 text-[8px] font-extrabold text-white">
+                                <span className="shrink-0 rounded-full bg-[#267d44] px-2 py-1 text-sm font-extrabold text-white">
                                   Terbaik
                                 </span>
                               )}
@@ -2021,7 +1980,7 @@ export default function Bandingkan() {
 
                               <div>
 
-                                <p className="text-[9px] font-semibold text-[#8a988e]">
+                                <p className="text-xs font-semibold text-[#8a988e]">
                                   Nilai asli
                                 </p>
 
@@ -2041,7 +2000,7 @@ export default function Bandingkan() {
 
                               <div className="text-right">
 
-                                <p className="text-[9px] font-semibold text-[#8a988e]">
+                                <p className="text-xs font-semibold text-[#8a988e]">
                                   Normalisasi (R)
                                 </p>
 
@@ -2055,7 +2014,7 @@ export default function Bandingkan() {
 
 
                             {isBest && (
-                              <div className="mt-3 inline-flex items-center gap-1 rounded-full bg-[#e4f4e7] px-2.5 py-1 text-[9px] font-extrabold text-[#2b7b43]">
+                              <div className="mt-3 inline-flex items-center gap-1 rounded-full bg-[#e4f4e7] px-2.5 py-1 text-xs font-extrabold text-[#2b7b43]">
                                 <CheckCircle2 size={11} />
                                 Nilai terbaik pada kriteria ini
                               </div>
@@ -2089,7 +2048,7 @@ export default function Bandingkan() {
 
                 <div className="min-w-0">
 
-                  <div className="flex items-center gap-2 text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#398653]">
+                  <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.12em] text-[#398653]">
                     <Award size={14} />
                     Kesimpulan perbandingan
                   </div>
@@ -2124,7 +2083,7 @@ export default function Bandingkan() {
                     onClick={() =>
                       setShowSteps((previous) => !previous)
                     }
-                    className="sd-button-light inline-flex min-h-[40px] items-center justify-center gap-2 rounded-xl px-4 py-2 text-[10px] font-extrabold transition"
+                    className="sd-button-light inline-flex min-h-[40px] items-center justify-center gap-2 rounded-xl px-4 py-2 text-xs font-extrabold transition"
                   >
                     {showSteps ? (
                       <ChevronUp size={15} />
@@ -2142,7 +2101,7 @@ export default function Bandingkan() {
                     type="button"
                     disabled={savingHistory}
                     onClick={handleSaveToHistory}
-                    className="sd-button-dark inline-flex min-h-[40px] items-center justify-center gap-2 rounded-xl px-4 py-2 text-[10px] font-extrabold transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="sd-button-dark inline-flex min-h-[40px] items-center justify-center gap-2 rounded-xl px-4 py-2 text-xs font-extrabold transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
                   >
 
                     {savingHistory ? (
@@ -2170,7 +2129,7 @@ export default function Bandingkan() {
               {saveError && (
                 <div
                   role="alert"
-                  className="mt-4 flex items-start gap-2 rounded-xl border border-[#f0d6d4] bg-[#fff5f4] px-3.5 py-3 text-[10px] leading-5 text-[#a44747]"
+                  className="mt-4 flex items-start gap-2 rounded-xl border border-[#f0d6d4] bg-[#fff5f4] px-3.5 py-3 text-xs leading-5 text-[#a44747]"
                 >
                   <AlertCircle size={14} className="mt-0.5 shrink-0" />
                   {saveError}
@@ -2187,14 +2146,14 @@ export default function Bandingkan() {
                   className="mt-4 flex flex-col gap-2 rounded-xl border border-[#d6ead9] bg-[#f0f8f1] px-3.5 py-3 sm:flex-row sm:items-center sm:justify-between"
                 >
 
-                  <span className="flex items-center gap-2 text-[10px] font-bold text-[#337949]">
+                  <span className="flex items-center gap-2 text-xs font-bold text-[#337949]">
                     <CheckCircle2 size={15} />
                     Hasil perbandingan berhasil disimpan ke Riwayat.
                   </span>
 
                   <Link
                     to="/riwayat"
-                    className="inline-flex items-center gap-1 text-[10px] font-extrabold text-[#267944] hover:underline"
+                    className="inline-flex items-center gap-1 text-xs font-extrabold text-[#267944] hover:underline"
                   >
                     Buka Riwayat
                     <ChevronRight size={13} />

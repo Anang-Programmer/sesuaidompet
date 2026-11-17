@@ -204,7 +204,7 @@ export function SmartphoneModal({
 
               <div className="min-w-0">
 
-                <p className="text-[9px] font-extrabold uppercase tracking-[0.15em] text-[#b7ebc0]">
+                <p className="text-xs font-extrabold uppercase tracking-[0.15em] text-[#b7ebc0]">
                   Pengelolaan data perangkat
                 </p>
 
@@ -219,7 +219,7 @@ export function SmartphoneModal({
                       : 'Tambah Smartphone Baru'}
                 </h2>
 
-                <p className="mt-1 max-w-xl text-[10px] leading-5 text-white/70">
+                <p className="mt-1 max-w-xl text-xs leading-5 text-white/70">
                   {isPenilaianMode
                     ? `Lengkapi spesifikasi untuk ${smartphone?.name || 'smartphone ini'}.`
                     : mustFillSpecs
@@ -264,7 +264,7 @@ export function SmartphoneModal({
               className="mt-0.5 shrink-0 text-[#378651]"
             />
 
-            <p className="text-[10px] leading-5 text-[#637b69]">
+            <p className="text-xs leading-5 text-[#637b69]">
               {mustFillSpecs
                 ? 'Semua enam spesifikasi wajib diisi dengan nilai lebih dari nol. Pastikan satuan yang digunakan sudah benar.'
                 : 'Nama smartphone wajib diisi. Spesifikasi boleh dikosongkan apabila informasinya belum tersedia dan dapat dilengkapi melalui menu Penilaian.'}
@@ -290,7 +290,7 @@ export function SmartphoneModal({
                     Identitas Smartphone
                   </h3>
 
-                  <p className="mt-0.5 text-[9px] text-[#8a988d]">
+                  <p className="mt-0.5 text-xs text-[#8a988d]">
                     Nama dan model perangkat
                   </p>
                 </div>
@@ -300,7 +300,7 @@ export function SmartphoneModal({
 
               <label
                 htmlFor="phone-name"
-                className="mb-1.5 block text-[11px] font-bold text-[#536b59]"
+                className="mb-1.5 block text-sm font-bold text-[#536b59]"
               >
                 Nama Smartphone
                 <span className="ml-1 text-rose-500">*</span>
@@ -336,14 +336,14 @@ export function SmartphoneModal({
                   Spesifikasi Smartphone
                 </h3>
 
-                <p className="mt-1 text-[9px] text-[#87958b]">
+                <p className="mt-1 text-xs text-[#87958b]">
                   {mustFillSpecs
                     ? 'Seluruh spesifikasi wajib dilengkapi.'
                     : 'Lengkapi informasi yang sudah diketahui.'}
                 </p>
               </div>
 
-              <span className="rounded-full bg-[#e8f5eb] px-2.5 py-1 text-[9px] font-extrabold text-[#327d48]">
+              <span className="rounded-full bg-[#e8f5eb] px-2.5 py-1 text-xs font-extrabold text-[#327d48]">
                 6 Kriteria
               </span>
 
@@ -366,7 +366,7 @@ export function SmartphoneModal({
 
                     <label
                       htmlFor={`spec-${field}`}
-                      className="mb-2 flex items-center gap-2 text-[10px] font-bold text-[#506a56]"
+                      className="mb-2 flex items-center gap-2 text-xs font-bold text-[#506a56]"
                     >
 
                       <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#e8f4e9] text-[#398451]">
@@ -401,7 +401,7 @@ export function SmartphoneModal({
                       className="min-h-[41px] w-full rounded-xl border border-[#e0e9e1] bg-white px-3 py-2 text-xs font-semibold text-[#31513a] outline-none transition placeholder:font-normal placeholder:text-[#a6b0a7] focus:border-[#83c894] focus:ring-4 focus:ring-[#e4f3e6] disabled:opacity-60"
                     />
 
-                    <p className="mt-2 text-[9px] leading-4 text-[#8a978d]">
+                    <p className="mt-2 text-xs leading-4 text-[#8a978d]">
                       {meta.hint}
                     </p>
 
@@ -421,7 +421,7 @@ export function SmartphoneModal({
 
             <div
               role="alert"
-              className="flex items-start gap-2.5 rounded-xl border border-[#f0d4d2] bg-[#fff4f3] px-3.5 py-3 text-[11px] leading-5 text-[#a74848]"
+              className="flex items-start gap-2.5 rounded-xl border border-[#f0d4d2] bg-[#fff4f3] px-3.5 py-3 text-sm leading-5 text-[#a74848]"
             >
 
               <AlertCircle
@@ -440,7 +440,7 @@ export function SmartphoneModal({
 
           <div className="flex flex-col-reverse gap-2 border-t border-[#eaf0ea] pt-4 sm:flex-row sm:items-center sm:justify-between">
 
-            <p className="text-[9px] leading-4 text-[#96a198]">
+            <p className="text-xs leading-4 text-[#96a198]">
               Pastikan nilai spesifikasi sesuai satuan yang berlaku.
             </p>
 
@@ -451,7 +451,7 @@ export function SmartphoneModal({
                 type="button"
                 onClick={onClose}
                 disabled={submitting}
-                className="inline-flex min-h-[40px] items-center justify-center rounded-xl border border-[#e0e8e1] bg-white px-4 py-2 text-[11px] font-bold text-[#647468] transition hover:bg-[#f5f8f5] disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex min-h-[40px] items-center justify-center rounded-xl border border-[#e0e8e1] bg-white px-4 py-2 text-sm font-bold text-[#647468] transition hover:bg-[#f5f8f5] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Batal
               </button>
@@ -460,7 +460,7 @@ export function SmartphoneModal({
               <button
                 type="submit"
                 disabled={submitting}
-                className="inline-flex min-h-[40px] items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#27884a] to-[#39a95d] px-5 py-2 text-[11px] font-extrabold text-white shadow-[0_6px_16px_rgba(39,136,74,0.18)] transition hover:-translate-y-0.5 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex min-h-[40px] items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#27884a] to-[#39a95d] px-5 py-2 text-sm font-extrabold text-white shadow-[0_6px_16px_rgba(39,136,74,0.18)] transition hover:-translate-y-0.5 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60"
               >
 
                 {submitting ? (

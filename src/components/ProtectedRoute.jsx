@@ -27,7 +27,7 @@ function AuthenticationLoading() {
             <div className="h-10 w-2/3 animate-pulse rounded-xl bg-[#f3f7f3]" />
           </div>
 
-          <p className="mt-6 text-[10px] font-semibold text-[#829086]">
+          <p className="mt-6 text-xs font-semibold text-[#829086]">
             Memeriksa sesi akun...
           </p>
         </div>

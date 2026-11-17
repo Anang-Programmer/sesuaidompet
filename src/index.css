@@ -1,6 +1,16 @@
 
 @import "tailwindcss";
 
+@theme {
+  --radius-xs: 2px;
+  --radius-sm: 3px;
+  --radius-md: 5px;
+  --radius-lg: 7px;
+  --radius-xl: 10px;
+  --radius-2xl: 14px;
+  --radius-3xl: 18px;
+}
+
 /* =========================================
    SESUAIDOMPET — DESIGN SYSTEM
 ========================================= */
@@ -158,7 +168,7 @@ a {
   width: 34px;
   height: 34px;
   color: #d9e9dd;
-  border-radius: 11px;
+  border-radius: 9px;
 }
 
 .sd-sidebar-close:hover {
@@ -168,7 +178,7 @@ a {
 .sd-nav-label {
   margin: 22px 18px 10px;
   color: rgba(225, 241, 229, 0.48);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -194,8 +204,8 @@ a {
   padding: 0 13px;
   color: rgba(236, 247, 238, 0.75);
   border: 1px solid transparent;
-  border-radius: 14px;
-  font-size: 13px;
+  border-radius: 11px;
+  font-size: 14px;
   font-weight: 600;
   transition:
     background 160ms ease,
@@ -234,8 +244,8 @@ a {
   color: #d9ffe0;
   background: rgba(111, 219, 133, 0.17);
   border: 1px solid rgba(139, 235, 157, 0.18);
-  border-radius: 7px;
-  font-size: 9px;
+  border-radius: 5px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.06em;
 }
@@ -258,7 +268,7 @@ a {
   padding: 11px 10px;
   background: rgba(255, 255, 255, 0.07);
   border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 14px;
+  border-radius: 11px;
 }
 
 .sd-avatar {
@@ -271,7 +281,7 @@ a {
   color: #123c29;
   background: linear-gradient(145deg, #c8f4cf, #78dc8d);
   border-radius: 50%;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 800;
 }
 
@@ -283,7 +293,7 @@ a {
 .sd-profile-name {
   overflow: hidden;
   color: #f4fff6;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -293,7 +303,7 @@ a {
   overflow: hidden;
   margin-top: 3px;
   color: rgba(222, 239, 226, 0.62);
-  font-size: 10px;
+  font-size: 11px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -304,8 +314,8 @@ a {
   padding: 2px 7px;
   color: #d7ffe0;
   background: rgba(114, 220, 131, 0.15);
-  border-radius: 6px;
-  font-size: 9px;
+  border-radius: 5px;
+  font-size: 11px;
   font-weight: 700;
 }
 
@@ -320,8 +330,8 @@ a {
   color: rgba(240, 249, 241, 0.8);
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 11px;
-  font-size: 12px;
+  border-radius: 9px;
+  font-size: 13px;
   font-weight: 600;
   transition: background 160ms ease, color 160ms ease;
 }
@@ -361,7 +371,7 @@ a {
 
 .sd-topbar-eyebrow {
   color: #819187;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -370,7 +380,7 @@ a {
 .sd-topbar-title {
   overflow: hidden;
   color: #1b3e2d;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 750;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -388,14 +398,14 @@ a {
 
 .sd-topbar-user-name {
   color: #274735;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
 }
 
 .sd-topbar-user-role {
   margin-top: 2px;
   color: #829187;
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .sd-mobile-menu {
@@ -405,7 +415,7 @@ a {
   flex: 0 0 auto;
   color: #1c5637;
   background: #e8f5eb;
-  border-radius: 12px;
+  border-radius: 9px;
 }
 
 .sd-mobile-menu:hover {
@@ -421,7 +431,7 @@ a {
 .sd-footer-note {
   margin-top: 34px;
   color: #93a198;
-  font-size: 10px;
+  font-size: 12px;
   text-align: center;
 }
 
@@ -435,7 +445,7 @@ a {
 
 /* =========================================
    REUSABLE PAGE HEADER
-========================================= */
+================================= */
 
 .sd-page-heading {
   display: flex;
@@ -452,7 +462,7 @@ a {
 .sd-page-kicker {
   margin-bottom: 8px;
   color: #35975a;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.13em;
   text-transform: uppercase;
@@ -478,7 +488,7 @@ a {
   max-width: 720px;
   margin: 9px 0 0;
   color: #718176;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.7;
 }
 
@@ -508,7 +518,7 @@ a {
   gap: 6px;
   padding: 6px 10px;
   border-radius: 999px;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 750;
   white-space: nowrap;
 }
@@ -547,7 +557,7 @@ a {
     ),
     linear-gradient(112deg, #103b29 0%, #165a36 57%, #2a9a53 100%);
   border: 1px solid rgba(255, 255, 255, 0.28);
-  border-radius: 25px;
+  border-radius: 20px;
   box-shadow: 0 18px 40px rgba(21, 89, 48, 0.16);
 }
 
@@ -586,7 +596,7 @@ a {
   gap: 7px;
   margin-bottom: 15px;
   color: #d8ffe0;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.13em;
   text-transform: uppercase;
@@ -606,7 +616,7 @@ a {
   max-width: 560px;
   margin: 11px 0 20px;
   color: rgba(239, 255, 242, 0.78);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.7;
 }
 
@@ -619,8 +629,8 @@ a {
   justify-content: center;
   gap: 9px;
   padding: 0 17px;
-  border-radius: 12px;
-  font-size: 12px;
+  border-radius: 9px;
+  font-size: 13px;
   font-weight: 750;
   transition:
     transform 160ms ease,
@@ -694,7 +704,7 @@ a {
     rgba(235, 255, 238, 0.07)
   );
   border: 2px solid rgba(240, 255, 242, 0.74);
-  border-radius: 19px;
+  border-radius: 15px;
   box-shadow:
     0 17px 35px rgba(6, 38, 20, 0.22),
     inset 0 0 20px rgba(255, 255, 255, 0.08);
@@ -736,7 +746,7 @@ a {
   padding: 18px 17px;
   background: rgba(255, 255, 255, 0.88);
   border: 1px solid rgba(220, 234, 222, 0.9);
-  border-radius: 19px;
+  border-radius: 15px;
   box-shadow: 0 7px 22px rgba(30, 71, 42, 0.045);
   transition: transform 160ms ease, box-shadow 160ms ease;
 }
@@ -755,7 +765,7 @@ a {
   justify-content: center;
   color: #24854a;
   background: #e5f6e9;
-  border-radius: 14px;
+  border-radius: 11px;
 }
 
 .sd-stat-icon svg {
@@ -766,7 +776,7 @@ a {
 
 .sd-stat-label {
   color: #718176;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
   line-height: 1.4;
 }
@@ -783,7 +793,7 @@ a {
 .sd-stat-sub {
   margin-top: 7px;
   color: #89968c;
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1.4;
 }
 
@@ -812,7 +822,7 @@ a {
   justify-content: center;
   color: #24834a;
   background: #e8f6eb;
-  border-radius: 13px;
+  border-radius: 10px;
 }
 
 .sd-section-icon svg {
@@ -823,7 +833,7 @@ a {
 .sd-section-title {
   margin: 0;
   color: #1a3d2b;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 800;
   letter-spacing: -0.02em;
 }
@@ -831,7 +841,7 @@ a {
 .sd-section-description {
   margin: 4px 0 0;
   color: #829087;
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.5;
 }
 
@@ -842,7 +852,7 @@ a {
   padding: 22px;
   background: rgba(255, 255, 255, 0.92);
   border: 1px solid #e0ebe2;
-  border-radius: 22px;
+  border-radius: 18px;
   box-shadow: 0 10px 28px rgba(28, 69, 45, 0.055);
 }
 
@@ -858,7 +868,7 @@ a {
     #e9f6eb 100%
   );
   border: 1px solid #d9eddd;
-  border-radius: 17px;
+  border-radius: 13px;
 }
 
 .sd-rank-label {
@@ -869,7 +879,7 @@ a {
   color: #1d6d3c;
   background: #d8f2de;
   border-radius: 999px;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 800;
 }
 
@@ -884,14 +894,14 @@ a {
 
 .sd-recommendation-price {
   color: #26814a;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 800;
 }
 
 .sd-recommendation-note {
   margin-top: 7px;
   color: #829087;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .sd-score-panel {
@@ -903,13 +913,13 @@ a {
   padding: 17px;
   color: #effff1;
   background: linear-gradient(145deg, #174b31, #267c45);
-  border-radius: 15px;
+  border-radius: 12px;
   box-shadow: 0 10px 22px rgba(25, 94, 49, 0.16);
 }
 
 .sd-score-caption {
   color: rgba(235, 255, 238, 0.72);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 650;
 }
 
@@ -925,7 +935,7 @@ a {
 .sd-score-footnote {
   margin-top: 9px;
   color: rgba(235, 255, 238, 0.65);
-  font-size: 9px;
+  font-size: 11px;
 }
 
 .sd-criteria-grid {
@@ -940,12 +950,12 @@ a {
   padding: 11px 12px;
   background: #ffffff;
   border: 1px solid #e4eee5;
-  border-radius: 12px;
+  border-radius: 9px;
 }
 
 .sd-criterion-code {
   color: #8a988e;
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -955,7 +965,7 @@ a {
   overflow: hidden;
   margin-top: 4px;
   color: #65766a;
-  font-size: 10px;
+  font-size: 12px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -964,7 +974,7 @@ a {
   overflow: hidden;
   margin-top: 5px;
   color: #1c422d;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 800;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -982,7 +992,7 @@ a {
   text-align: center;
   background: #f8fbf8;
   border: 1px dashed #cbdccc;
-  border-radius: 17px;
+  border-radius: 13px;
 }
 
 .sd-empty-icon {
@@ -993,13 +1003,13 @@ a {
   justify-content: center;
   color: #388c53;
   background: #e5f4e8;
-  border-radius: 17px;
+  border-radius: 13px;
 }
 
 .sd-empty-title {
   margin: 13px 0 0;
   color: #244634;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 800;
 }
 
@@ -1007,7 +1017,7 @@ a {
   max-width: 470px;
   margin: 6px 0 15px;
   color: #829087;
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.6;
 }
 
@@ -1031,7 +1041,7 @@ a {
   padding: 20px;
   background: rgba(255, 255, 255, 0.9);
   border: 1px solid #e1ebe2;
-  border-radius: 20px;
+  border-radius: 16px;
   box-shadow: 0 8px 24px rgba(28, 69, 45, 0.045);
 }
 
@@ -1048,7 +1058,7 @@ a {
   color: #effff2;
   background: linear-gradient(145deg, #123d2b, #1d6840);
   border: 1px solid rgba(36, 116, 62, 0.25);
-  border-radius: 20px;
+  border-radius: 16px;
   box-shadow: 0 12px 26px rgba(25, 88, 48, 0.12);
 }
 
@@ -1080,13 +1090,13 @@ a {
   justify-content: center;
   color: #174a2f;
   background: #a4efae;
-  border-radius: 14px;
+  border-radius: 11px;
 }
 
 .sd-ai-title {
   margin: 15px 0 7px;
   color: #ffffff;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 800;
   letter-spacing: -0.025em;
 }
@@ -1095,7 +1105,7 @@ a {
   max-width: 420px;
   margin: 0;
   color: rgba(235, 255, 239, 0.73);
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.7;
 }
 
@@ -1113,7 +1123,7 @@ a {
   padding: 10px 12px;
   background: #f7faf7;
   border: 1px solid #e8efe8;
-  border-radius: 13px;
+  border-radius: 10px;
   transition:
     border 160ms ease,
     background 160ms ease,
@@ -1135,7 +1145,7 @@ a {
   justify-content: center;
   color: #2b8950;
   background: #e4f4e7;
-  border-radius: 11px;
+  border-radius: 9px;
 }
 
 .sd-quick-copy {
@@ -1145,14 +1155,14 @@ a {
 
 .sd-quick-title {
   color: #294a35;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 800;
 }
 
 .sd-quick-description {
   margin-top: 3px;
   color: #8a978e;
-  font-size: 9px;
+  font-size: 11px;
   line-height: 1.4;
 }
 
@@ -1168,8 +1178,8 @@ a {
   color: #a33d3d;
   background: #fff2f1;
   border: 1px solid #f5d1ce;
-  border-radius: 13px;
-  font-size: 12px;
+  border-radius: 10px;
+  font-size: 13px;
 }
 
 /* Loading */
@@ -1183,7 +1193,7 @@ a {
     #e6eee7 75%
   );
   background-size: 200% 100%;
-  border-radius: 8px;
+  border-radius: 6px;
   animation: sd-shimmer 1.35s ease infinite;
 }
 
@@ -1270,13 +1280,13 @@ a {
   .sd-stat-card {
     gap: 9px;
     padding: 13px 11px;
-    border-radius: 15px;
+    border-radius: 12px;
   }
 
   .sd-stat-icon {
     width: 36px;
     height: 36px;
-    border-radius: 11px;
+    border-radius: 9px;
   }
 
   .sd-stat-icon svg {
@@ -1285,7 +1295,7 @@ a {
   }
 
   .sd-stat-label {
-    font-size: 9px;
+    font-size: 11px;
   }
 
   .sd-stat-value {
@@ -1293,7 +1303,7 @@ a {
   }
 
   .sd-stat-sub {
-    font-size: 9px;
+    font-size: 11px;
   }
 
   .sd-dashboard {
@@ -1303,7 +1313,7 @@ a {
   .sd-welcome-banner {
     min-height: 0;
     padding: 23px 20px;
-    border-radius: 20px;
+    border-radius: 16px;
   }
 
   .sd-welcome-visual {
@@ -1315,13 +1325,13 @@ a {
   }
 
   .sd-welcome-description {
-    font-size: 12px;
+    font-size: 13px;
   }
 
   .sd-recommendation-card,
   .sd-panel {
     padding: 16px;
-    border-radius: 17px;
+    border-radius: 14px;
   }
 
   .sd-section-heading {
@@ -1435,6 +1445,7 @@ a {
 .sd-button-dark {
   background: linear-gradient(110deg, #1e693a, #287e46);
   border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 9px;
   box-shadow: 0 6px 16px rgba(30,105,58,0.16);
   transition: all 180ms ease;
 }
@@ -1447,7 +1458,7 @@ a {
 /* Tombol putih tidak terlalu menyilaukan */
 .sd-button-light {
   background: #ffffff !important;
-  border-radius: 12px;
+  border-radius: 9px;
   box-shadow: 0 3px 10px rgba(25,65,37,0.05);
   transition: all 180ms ease;
 }

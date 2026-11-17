@@ -69,7 +69,7 @@ function renderInlineFormatted(text) {
       return (
         <code
           key={i}
-          className="rounded-xs bg-slate-100 px-1 py-0.5 font-mono text-[11px] text-emerald-800"
+          className="rounded-xs bg-slate-100 px-1 py-0.5 font-mono text-sm text-emerald-800"
         >
           {token.slice(1, -1)}
         </code>

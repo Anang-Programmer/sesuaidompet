@@ -1,5 +1,5 @@
 import { supabase } from '../lib/supabase';
-import { createSmartphone } from './spkService';
+import { createSmartphone, fetchSmartphones } from './spkService';
 
 /**
  * Helper untuk timeout agar request tidak muter selamanya jika Edge Function belum aktif.
@@ -114,6 +114,7 @@ export async function explainSawRecommendation(rankedPhones = [], criteria = [])
 
 /**
  * Menyimpan smartphone yang belum terdaftar di DB ke daftar smartphone milik user setelah perhitungan SAW selesai.
+ * Mengembalikan array SEMUA smartphone (baru maupun yang sudah ada) lengkap dengan ID database.
  */
 export async function saveNewlyCreatedPhones(smartphones = [], userId) {
   console.group('💾 [SEDO AI] Menyimpan HP Baru ke Akun User');
@@ -125,35 +126,79 @@ export async function saveNewlyCreatedPhones(smartphones = [], userId) {
     return [];
   }
 
+  // Ambil semua HP dari DB untuk resolusi nama yang sudah ada
+  let dbPhones = [];
+  try {
+    dbPhones = await fetchSmartphones();
+  } catch (err) {
+    console.warn('⚠️ Gagal memuat daftar HP dari database:', err);
+  }
+
   const savedList = [];
   for (const phone of smartphones) {
-    // Jika belum punya ID numerik/UUID dari database, simpan sebagai alternatif milik user
-    if (!phone.id || String(phone.id).startsWith('temp-')) {
-      try {
-        console.log(`➕ Menyimpan "${phone.name}" ke database...`);
-        const payload = {
-          name: phone.name,
-          price: Number(phone.price) || 0,
-          camera_mp: Number(phone.camera_mp) || 0,
-          ram_gb: Number(phone.ram_gb) || 0,
-          battery_mah: Number(phone.battery_mah) || 0,
-          storage_gb: Number(phone.storage_gb) || 0,
-          antutu: Number(phone.antutu) || 0,
-          user_id: userId,
-        };
-        const created = await createSmartphone(payload);
-        console.log(`✅ Berhasil tersimpan dengan ID:`, created.id);
-        savedList.push(created);
-      } catch (err) {
-        console.warn(`⚠️ Gagal menyimpan smartphone ${phone.name} ke database user:`, err);
-      }
-    } else {
+    // Jika sudah punya ID database valid, langsung masukkan
+    if (phone.id && !String(phone.id).startsWith('temp-')) {
       console.log(`ℹ️ "${phone.name}" sudah ada di database (ID: ${phone.id}), tidak perlu disimpan ulang.`);
       savedList.push(phone);
+      continue;
+    }
+
+    // Cek apakah HP dengan nama ini sudah ada di database
+    const existingByName = dbPhones.find(
+      (dbPhone) =>
+        String(dbPhone.name).toLowerCase().trim() ===
+        String(phone.name).toLowerCase().trim()
+    );
+
+    if (existingByName) {
+      console.log(`ℹ️ "${phone.name}" sudah terdaftar di database (ID: ${existingByName.id}), gunakan data yang ada.`);
+      savedList.push(existingByName);
+      continue;
+    }
+
+    // HP benar-benar baru, simpan ke database
+    try {
+      console.log(`➕ Menyimpan "${phone.name}" ke database...`);
+      const payload = {
+        name: phone.name,
+        price: Number(phone.price) || 0,
+        camera_mp: Number(phone.camera_mp) || 0,
+        ram_gb: Number(phone.ram_gb) || 0,
+        battery_mah: Number(phone.battery_mah) || 0,
+        storage_gb: Number(phone.storage_gb) || 0,
+        antutu: Number(phone.antutu) || 0,
+        user_id: userId,
+      };
+      const created = await createSmartphone(payload);
+      console.log(`✅ Berhasil tersimpan dengan ID:`, created.id);
+      savedList.push(created);
+    } catch (err) {
+      console.warn(`⚠️ Gagal menyimpan smartphone ${phone.name}:`, err);
+
+      // Fallback: jika gagal (misal UNIQUE constraint), coba cari ulang di DB
+      try {
+        const refreshed = await fetchSmartphones();
+        const fallback = refreshed.find(
+          (dbPhone) =>
+            String(dbPhone.name).toLowerCase().trim() ===
+            String(phone.name).toLowerCase().trim()
+        );
+        if (fallback) {
+          console.log(`🔄 Ditemukan di database setelah retry (ID: ${fallback.id}).`);
+          savedList.push(fallback);
+        } else {
+          // Tetap masukkan data asli tanpa ID agar tidak hilang dari daftar
+          console.warn(`⚠️ "${phone.name}" tidak ditemukan di DB, masukkan data asli.`);
+          savedList.push(phone);
+        }
+      } catch (retryErr) {
+        console.warn(`⚠️ Retry fetch juga gagal, masukkan data asli:`, retryErr);
+        savedList.push(phone);
+      }
     }
   }
 
-  console.log('🏁 Selesai. Total tersimpan:', savedList.length);
+  console.log('🏁 Selesai. Total diproses:', savedList.length);
   console.groupEnd();
   return savedList;
 }

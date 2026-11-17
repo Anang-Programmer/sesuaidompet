@@ -21,7 +21,7 @@ function RankBadge({ rank }) {
 
   return (
     <span
-      className={`inline-flex min-w-[37px] items-center justify-center gap-1 rounded-lg px-2 py-1.5 text-[9px] font-extrabold ${
+      className={`inline-flex min-w-[37px] items-center justify-center gap-1 rounded-lg px-2 py-1.5 text-xs font-extrabold ${
         isFirst
           ? 'bg-[#287b44] text-white shadow-[0_3px_9px_rgba(40,123,68,0.17)]'
           : rank <= 3
@@ -75,7 +75,7 @@ function RankingTableCell({
 }) {
   return (
     <td
-      className={`border-b border-[#edf2ed] px-3 py-3 text-[10px] ${
+      className={`border-b border-[#edf2ed] px-3 py-3 text-xs ${
         align === 'right'
           ? 'text-right'
           : 'text-left'
@@ -100,7 +100,7 @@ function RankingTableCell({
 function RankingTableHeader({ children, align = 'left' }) {
   return (
     <th
-      className={`whitespace-nowrap border-b border-[#e1ebe2] bg-[#f2f8f3] px-3 py-3 text-[9px] font-extrabold uppercase tracking-[0.07em] text-[#637a68] ${
+      className={`whitespace-nowrap border-b border-[#e1ebe2] bg-[#f2f8f3] px-3 py-3 text-xs font-extrabold uppercase tracking-[0.07em] text-[#637a68] ${
         align === 'right'
           ? 'text-right'
           : 'text-left'
@@ -128,7 +128,7 @@ function RankingPagination({
 
   return (
     <div className="flex flex-col gap-3 border-t border-[#e6eee7] bg-[#fbfdfb] px-3.5 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-4">
-      <p className="text-center text-[9px] text-[#849188] sm:text-left">
+      <p className="text-center text-xs text-[#849188] sm:text-left">
         Menampilkan{' '}
         <strong className="text-[#46624b]">
           {startIndex + 1}
@@ -151,13 +151,13 @@ function RankingPagination({
             onPageChange(Math.max(currentPage - 1, 1))
           }
           disabled={currentPage <= 1}
-          className="sd-button-light inline-flex min-h-[34px] items-center gap-1 rounded-xl px-3 py-1.5 text-[9px] font-bold disabled:cursor-not-allowed disabled:opacity-40"
+          className="sd-button-light inline-flex min-h-[34px] items-center gap-1 rounded-xl px-3 py-1.5 text-xs font-bold disabled:cursor-not-allowed disabled:opacity-40"
         >
           <ChevronLeft size={13} />
           Sebelumnya
         </button>
 
-        <span className="min-w-[54px] text-center text-[9px] font-extrabold text-[#52705a]">
+        <span className="min-w-[54px] text-center text-xs font-extrabold text-[#52705a]">
           {currentPage} / {totalPages}
         </span>
 
@@ -169,7 +169,7 @@ function RankingPagination({
             )
           }
           disabled={currentPage >= totalPages}
-          className="sd-button-light inline-flex min-h-[34px] items-center gap-1 rounded-xl px-3 py-1.5 text-[9px] font-bold disabled:cursor-not-allowed disabled:opacity-40"
+          className="sd-button-light inline-flex min-h-[34px] items-center gap-1 rounded-xl px-3 py-1.5 text-xs font-bold disabled:cursor-not-allowed disabled:opacity-40"
         >
           Selanjutnya
           <ChevronRight size={13} />
@@ -193,7 +193,7 @@ export function RankingTable({ rows = [] }) {
           className="mx-auto text-[#a0b0a3]"
         />
 
-        <p className="mt-2 text-[10px] font-bold text-[#718477]">
+        <p className="mt-2 text-xs font-bold text-[#718477]">
           Belum ada data perankingan untuk ditampilkan.
         </p>
       </div>
@@ -267,17 +267,17 @@ export function RankingTable({ rows = [] }) {
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-start justify-between gap-2">
                     <div className="min-w-0 flex-1">
-                      <p className="break-words text-[11px] font-extrabold leading-snug text-[#36543d]">
+                      <p className="break-words text-sm font-extrabold leading-snug text-[#36543d]">
                         {name}
                       </p>
 
-                      <p className="mt-1 text-[9px] font-semibold text-[#8b988e]">
+                      <p className="mt-1 text-xs font-semibold text-[#8b988e]">
                         Kode alternatif {row.code || '-'}
                       </p>
                     </div>
 
                     <div className="shrink-0 text-right">
-                      <p className="text-[8px] font-bold text-[#87958a]">
+                      <p className="text-sm font-bold text-[#87958a]">
                         Nilai Vᵢ
                       </p>
 
@@ -294,12 +294,12 @@ export function RankingTable({ rows = [] }) {
                   </div>
 
                   <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-                    <p className="text-[9px] font-semibold text-[#738477]">
+                    <p className="text-xs font-semibold text-[#738477]">
                       {formatRupiah(price)}
                     </p>
 
                     {isFirst && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-[#e2f1e5] px-2 py-1 text-[8px] font-extrabold text-[#347b49]">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-[#e2f1e5] px-2 py-1 text-sm font-extrabold text-[#347b49]">
                         <Trophy size={10} />
                         Rekomendasi terbaik
                       </span>

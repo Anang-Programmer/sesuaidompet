@@ -3,8 +3,6 @@ import { SawSessionContext } from './SawSessionContext';
 
 const STORAGE_KEY = 'sesuaidompet_saw_session_v1';
 
-const MAX_COMPARE = 4;
-
 const DEFAULT_SESSION = {
   maxBudget: '',
   weightMode: 'default', // 'default' | 'custom'
@@ -37,7 +35,7 @@ function loadInitialState() {
         ? parsed.deselectedIds
         : [],
       compareIds: Array.isArray(parsed.compareIds)
-        ? parsed.compareIds.slice(0, MAX_COMPARE)
+        ? parsed.compareIds
         : [],
       compareInitialized: Boolean(parsed.compareInitialized),
     };
@@ -126,9 +124,6 @@ export function SawSessionProvider({ children }) {
           compareIds: prev.compareIds.filter((item) => item !== id),
         };
       }
-      if (prev.compareIds.length >= MAX_COMPARE) {
-        return prev;
-      }
       return {
         ...prev,
         compareInitialized: true,
@@ -144,7 +139,7 @@ export function SawSessionProvider({ children }) {
       return {
         ...prev,
         compareInitialized: true,
-        compareIds: Array.isArray(nextIds) ? nextIds.slice(0, MAX_COMPARE) : [],
+        compareIds: Array.isArray(nextIds) ? nextIds : [],
       };
     });
   }, []);

@@ -68,7 +68,7 @@ function SummaryCard({ icon: Icon, label, value, description }) {
       </div>
 
       <div className="min-w-0">
-        <p className="text-[10px] font-bold text-[#819087]">
+        <p className="text-xs font-bold text-[#819087]">
           {label}
         </p>
 
@@ -76,7 +76,7 @@ function SummaryCard({ icon: Icon, label, value, description }) {
           {value}
         </p>
 
-        <p className="mt-1 truncate text-[10px] text-[#93a097]">
+        <p className="mt-1 truncate text-xs text-[#93a097]">
           {description}
         </p>
       </div>
@@ -97,12 +97,12 @@ function SpecificationItem({ icon: Icon, label, value }) {
       </div>
 
       <div className="min-w-0">
-        <p className="text-[9px] font-semibold text-[#8b998e]">
+        <p className="text-xs font-semibold text-[#8b998e]">
           {label}
         </p>
 
         <p
-          className="mt-0.5 truncate text-[11px] font-extrabold text-[#34513b]"
+          className="mt-0.5 truncate text-sm font-extrabold text-[#34513b]"
           title={String(value)}
         >
           {value}
@@ -133,8 +133,6 @@ function SmartphoneCard({
   const complete = isCompleteSmartphone(phone, criteria);
 
   const inCompare = compareIds.includes(phone.id);
-
-  const compareFull = !inCompare && compareIds.length >= 4;
 
   const specifications = [
     {
@@ -188,12 +186,12 @@ function SmartphoneCard({
             <div className="min-w-0">
 
               <div className="flex flex-wrap items-center gap-1.5">
-                <span className="rounded-md bg-[#f0f5f0] px-2 py-1 text-[9px] font-extrabold tracking-wide text-[#718477]">
+                <span className="rounded-md bg-[#f0f5f0] px-2 py-1 text-xs font-extrabold tracking-wide text-[#718477]">
                   {code}
                 </span>
 
                 {inCompare && (
-                  <span className="inline-flex items-center gap-1 rounded-md bg-[#e2f4e6] px-2 py-1 text-[9px] font-extrabold text-[#277641]">
+                  <span className="inline-flex items-center gap-1 rounded-md bg-[#e2f4e6] px-2 py-1 text-xs font-extrabold text-[#277641]">
                     <Check size={11} />
                     Dipilih
                   </span>
@@ -229,7 +227,7 @@ function SmartphoneCard({
         {/* HARGA */}
 
         <div className="mt-4 rounded-2xl bg-gradient-to-r from-[#edf8ef] to-[#f6fbf6] px-4 py-3">
-          <div className="flex items-center gap-1.5 text-[10px] font-semibold text-[#788c7d]">
+          <div className="flex items-center gap-1.5 text-xs font-semibold text-[#788c7d]">
             <Wallet size={13} />
             Harga smartphone
           </div>
@@ -247,11 +245,11 @@ function SmartphoneCard({
         <div className="mt-4">
 
           <div className="mb-2 flex items-center justify-between">
-            <span className="text-[10px] font-extrabold uppercase tracking-[0.1em] text-[#849389]">
+            <span className="text-xs font-extrabold uppercase tracking-[0.1em] text-[#849389]">
               Spesifikasi
             </span>
 
-            <span className="text-[9px] text-[#a0aaa3]">
+            <span className="text-xs text-[#a0aaa3]">
               Ringkasan perangkat
             </span>
           </div>
@@ -277,12 +275,12 @@ function SmartphoneCard({
         <div className="mr-auto">
 
           {complete ? (
-            <span className="inline-flex items-center gap-1 text-[9px] font-semibold text-[#388250]">
+            <span className="inline-flex items-center gap-1 text-xs font-semibold text-[#388250]">
               <CheckCircle2 size={13} />
               Siap dibandingkan
             </span>
           ) : (
-            <span className="inline-flex items-center gap-1 text-[9px] font-semibold text-[#b17b2e]">
+            <span className="inline-flex items-center gap-1 text-xs font-semibold text-[#b17b2e]">
               <AlertCircle size={13} />
               Belum siap SAW
             </span>
@@ -296,21 +294,16 @@ function SmartphoneCard({
         {complete && (
           <button
             type="button"
-            disabled={compareFull}
             onClick={() => toggleCompareId(phone.id)}
             title={
-              compareFull
-                ? 'Maksimal 4 smartphone dalam perbandingan'
-                : inCompare
-                  ? 'Keluarkan dari perbandingan'
-                  : 'Tambahkan ke perbandingan'
+              inCompare
+                ? 'Keluarkan dari perbandingan'
+                : 'Tambahkan ke perbandingan'
             }
-            className={`inline-flex min-h-[34px] items-center gap-1.5 rounded-xl border px-3 py-1.5 text-[10px] font-bold transition ${
+            className={`inline-flex min-h-[34px] items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition ${
               inCompare
                 ? 'border-[#c4e5cb] bg-[#e7f5ea] text-[#287744] hover:bg-[#d9efdf]'
-                : compareFull
-                  ? 'cursor-not-allowed border-[#e4e9e4] bg-[#f2f4f2] text-[#a0aaa2]'
-                  : 'border-[#cde5d2] bg-white text-[#30804a] hover:bg-[#edf8ef]'
+                : 'border-[#cde5d2] bg-white text-[#30804a] hover:bg-[#edf8ef]'
             }`}
           >
             {inCompare ? (
@@ -336,7 +329,7 @@ function SmartphoneCard({
               type="button"
               onClick={onEdit}
               title="Edit smartphone"
-              className="inline-flex min-h-[34px] items-center gap-1.5 rounded-xl border border-[#e1e9e2] bg-white px-3 py-1.5 text-[10px] font-bold text-[#647568] transition hover:border-[#c7dfcb] hover:bg-[#f0f8f1] hover:text-[#267541]"
+              className="inline-flex min-h-[34px] items-center gap-1.5 rounded-xl border border-[#e1e9e2] bg-white px-3 py-1.5 text-xs font-bold text-[#647568] transition hover:border-[#c7dfcb] hover:bg-[#f0f8f1] hover:text-[#267541]"
             >
               <Pencil size={13} />
               Edit
@@ -346,7 +339,7 @@ function SmartphoneCard({
               type="button"
               onClick={onDelete}
               title="Hapus smartphone"
-              className="inline-flex min-h-[34px] items-center gap-1.5 rounded-xl border border-[#f0dede] bg-white px-3 py-1.5 text-[10px] font-bold text-[#ba6060] transition hover:border-[#e9bcbc] hover:bg-[#fff4f3] hover:text-[#a53e3e]"
+              className="inline-flex min-h-[34px] items-center gap-1.5 rounded-xl border border-[#f0dede] bg-white px-3 py-1.5 text-xs font-bold text-[#ba6060] transition hover:border-[#e9bcbc] hover:bg-[#fff4f3] hover:text-[#a53e3e]"
             >
               <Trash2 size={13} />
               Hapus
@@ -603,7 +596,7 @@ export default function Alternatif() {
         }
         badge={
           isAdmin ? (
-            <span className="rounded-full bg-[#e5f4e8] px-3 py-1 text-[10px] font-extrabold text-[#2d7c45]">
+            <span className="rounded-full bg-[#e5f4e8] px-3 py-1 text-xs font-extrabold text-[#2d7c45]">
               Administrator
             </span>
           ) : null
@@ -664,8 +657,8 @@ export default function Alternatif() {
         <SummaryCard
           icon={Scale}
           label="Daftar perbandingan"
-          value={`${compareIds.length} / 4`}
-          description="Maksimal empat smartphone"
+          value={`${compareIds.length} HP`}
+          description="Alternatif yang dibandingkan"
         />
 
       </section>
@@ -683,7 +676,7 @@ export default function Alternatif() {
               Daftar smartphone
             </div>
 
-            <p className="mt-1 text-[10px] text-[#89968c]">
+            <p className="mt-1 text-xs text-[#89968c]">
               Cari perangkat atau pilih sumber data yang ingin ditampilkan.
             </p>
           </div>
@@ -747,7 +740,7 @@ export default function Alternatif() {
                       setSourceFilter(tab.id);
                       setCurrentPage(1);
                     }}
-                    className={`min-h-[34px] rounded-lg px-3 py-1.5 text-[10px] font-bold transition ${
+                    className={`min-h-[34px] rounded-lg px-3 py-1.5 text-xs font-bold transition ${
                       sourceFilter === tab.id
                         ? 'bg-[#27884a] text-white shadow-sm'
                         : 'text-[#718176] hover:bg-white hover:text-[#287a43]'
@@ -770,7 +763,7 @@ export default function Alternatif() {
 
         <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-[#edf1ed] pt-3">
 
-          <span className="text-[10px] text-[#859288]">
+          <span className="text-xs text-[#859288]">
             Menampilkan{' '}
             <strong className="text-[#42634a]">
               {filteredPhones.length}
@@ -790,7 +783,7 @@ export default function Alternatif() {
                 setSourceFilter('all');
                 setCurrentPage(1);
               }}
-              className="text-[10px] font-bold text-[#378450] hover:underline"
+              className="text-xs font-bold text-[#378450] hover:underline"
             >
               Reset pencarian dan filter
             </button>
@@ -814,10 +807,10 @@ export default function Alternatif() {
 
             <div>
               <p className="text-xs font-extrabold text-[#285b37]">
-                {compareIds.length} dari 4 smartphone dipilih
+                {compareIds.length} smartphone dipilih untuk perbandingan
               </p>
 
-              <p className="mt-1 text-[10px] text-[#78907d]">
+              <p className="mt-1 text-xs text-[#78907d]">
                 {compareIds.length < 2
                   ? 'Pilih minimal satu smartphone lagi untuk mulai membandingkan.'
                   : 'Smartphone siap dibuka pada halaman perbandingan.'}
@@ -832,14 +825,14 @@ export default function Alternatif() {
             <button
               type="button"
               onClick={clearCompareIds}
-              className="rounded-xl px-3 py-2 text-[10px] font-bold text-[#78877b] transition hover:bg-white hover:text-[#b44e4e]"
+              className="rounded-xl px-3 py-2 text-xs font-bold text-[#78877b] transition hover:bg-white hover:text-[#b44e4e]"
             >
               Kosongkan
             </button>
 
             <Link
               to="/bandingkan"
-              className="sd-button-dark inline-flex min-h-[37px] items-center gap-2 rounded-xl px-3.5 py-2 text-[10px] font-extrabold transition hover:-translate-y-0.5"
+              className="sd-button-dark inline-flex min-h-[37px] items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-extrabold transition hover:-translate-y-0.5"
             >
               Buka Perbandingan
               <ArrowRight size={14} />
@@ -942,7 +935,7 @@ export default function Alternatif() {
 
             <div className="flex flex-col gap-3 rounded-2xl border border-[#e2ebe3] bg-white px-4 py-3.5 shadow-[0_4px_16px_rgba(24,67,38,0.03)] sm:flex-row sm:items-center sm:justify-between">
 
-              <p className="text-center text-[10px] text-[#839087] sm:text-left">
+              <p className="text-center text-xs text-[#839087] sm:text-left">
                 Menampilkan{' '}
                 <strong className="text-[#45634c]">
                   {startIndex + 1}
@@ -970,13 +963,13 @@ export default function Alternatif() {
                     setCurrentPage((page) => Math.max(page - 1, 1))
                   }
                   disabled={safeCurrentPage === 1}
-                  className="inline-flex min-h-[36px] items-center gap-1.5 rounded-xl border border-[#e0e9e1] bg-white px-3 py-2 text-[10px] font-bold text-[#607365] transition hover:bg-[#f0f7f1] disabled:cursor-not-allowed disabled:opacity-40"
+                  className="inline-flex min-h-[36px] items-center gap-1.5 rounded-xl border border-[#e0e9e1] bg-white px-3 py-2 text-xs font-bold text-[#607365] transition hover:bg-[#f0f7f1] disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   <ChevronLeft size={14} />
                   Sebelumnya
                 </button>
 
-                <span className="min-w-[90px] text-center text-[10px] font-extrabold text-[#48624d]">
+                <span className="min-w-[90px] text-center text-xs font-extrabold text-[#48624d]">
                   {safeCurrentPage} / {totalPages}
                 </span>
 
@@ -988,7 +981,7 @@ export default function Alternatif() {
                     )
                   }
                   disabled={safeCurrentPage === totalPages}
-                  className="inline-flex min-h-[36px] items-center gap-1.5 rounded-xl border border-[#e0e9e1] bg-white px-3 py-2 text-[10px] font-bold text-[#607365] transition hover:bg-[#f0f7f1] disabled:cursor-not-allowed disabled:opacity-40"
+                  className="inline-flex min-h-[36px] items-center gap-1.5 rounded-xl border border-[#e0e9e1] bg-white px-3 py-2 text-xs font-bold text-[#607365] transition hover:bg-[#f0f7f1] disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   Selanjutnya
                   <ChevronRight size={14} />

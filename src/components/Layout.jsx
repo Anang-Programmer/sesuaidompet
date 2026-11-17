@@ -56,6 +56,8 @@ export function Layout() {
   const displayName =
     profile?.name || user?.email?.split('@')[0] || 'Pengguna';
 
+  const isAiPage = location.pathname === '/sedo-ai';
+
   const activePage =
     NAV_ITEMS.find((item) => item.to === location.pathname)?.label ||
     'Ruang Kerja';
@@ -198,65 +200,69 @@ export function Layout() {
       </aside>
 
 
-      <div className="sd-main-area">
+      <div className={`sd-main-area ${isAiPage ? 'flex h-screen flex-col overflow-hidden' : ''}`}>
 
-        <header className="sd-topbar">
+        {!isAiPage && (
+          <header className="sd-topbar shrink-0">
 
-          <div className="flex min-w-0 items-center gap-3">
+            <div className="flex min-w-0 items-center gap-3">
 
-            <button
-              type="button"
-              className="sd-mobile-menu"
-              onClick={() => setSidebarOpen(true)}
-              aria-label="Buka menu navigasi"
-              aria-expanded={sidebarOpen}
-            >
-              <Menu size={20} />
-            </button>
+              <button
+                type="button"
+                className="sd-mobile-menu"
+                onClick={() => setSidebarOpen(true)}
+                aria-label="Buka menu navigasi"
+                aria-expanded={sidebarOpen}
+              >
+                <Menu size={20} />
+              </button>
 
-            <div className="sd-topbar-context">
+              <div className="sd-topbar-context">
 
-              <span className="sd-topbar-eyebrow">
-                SesuaiDompet workspace
-              </span>
+                <span className="sd-topbar-eyebrow">
+                  SesuaiDompet workspace
+                </span>
 
-              <span className="sd-topbar-title">
-                {activePage}
-              </span>
+                <span className="sd-topbar-title">
+                  {activePage}
+                </span>
 
-            </div>
-
-          </div>
-
-          <div className="sd-topbar-user">
-
-            <div className="sd-topbar-user-meta">
-
-              <div className="sd-topbar-user-name">
-                {displayName}
-              </div>
-
-              <div className="sd-topbar-user-role">
-                {isAdmin ? 'Administrator' : 'Pengguna'}
               </div>
 
             </div>
 
-            <div className="sd-avatar" aria-hidden="true">
-              {getInitials(displayName)}
+            <div className="sd-topbar-user">
+
+              <div className="sd-topbar-user-meta">
+
+                <div className="sd-topbar-user-name">
+                  {displayName}
+                </div>
+
+                <div className="sd-topbar-user-role">
+                  {isAdmin ? 'Administrator' : 'Pengguna'}
+                </div>
+
+              </div>
+
+              <div className="sd-avatar" aria-hidden="true">
+                {getInitials(displayName)}
+              </div>
+
             </div>
 
-          </div>
+          </header>
+        )}
 
-        </header>
+        <main className={isAiPage ? 'flex flex-1 min-h-0 w-full flex-col overflow-hidden !p-0 !m-0 !max-w-none' : 'sd-main-content'}>
 
-        <main className="sd-main-content">
+          <Outlet context={{ setSidebarOpen }} />
 
-          <Outlet />
-
-          <footer className="sd-footer-note">
-            SesuaiDompet · Sistem Pendukung Keputusan Pemilihan Smartphone
-          </footer>
+          {!isAiPage && (
+            <footer className="sd-footer-note">
+              SesuaiDompet · Sistem Pendukung Keputusan Pemilihan Smartphone
+            </footer>
+          )}
 
         </main>
 
