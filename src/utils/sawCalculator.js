@@ -153,17 +153,20 @@ export function calculateSAW(criteria = [], smartphones = [], customWeights = nu
       ...item,
     }));
 
-  return {
-    isReady: true,
-    wasWeightNormalized,
-    weightSum,
-    bobotTernormalisasi,
-    matriksAwal,
-    nilaiMaxMin,
-    matriksNormalisasi,
-    rincianPreferensi,
-    hasilAkhir,
-    rekomendasiTerbaik: hasilAkhir[0] ?? null,
-  };
-}
+      return {
+      isReady: true,
+      wasWeightNormalized,
+      weightSum,
+      bobotTernormalisasi,
+      matriksAwal,
+      nilaiMaxMin,
+      matriksNormalisasi,
+      rincianPreferensi,
+      hasilAkhir,
+      rekomendasiTerbaik: hasilAkhir[0] ?? null,
+      
+      normalisasi: matriksNormalisasi[0]?.values || {},
+      skorAkhir: rincianPreferensi[0]?.totalScore || 0,
+    };
+} // 
 
