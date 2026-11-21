@@ -334,6 +334,7 @@ export default function SedoAI() {
     setCompareIds,
     deselectIds,
     setMaxBudget,
+    setChatSmartphones,
   } = useSawSession();
 
   const [criteria, setCriteria] = useState([]);
@@ -1296,8 +1297,29 @@ export default function SedoAI() {
   ========================================= */
 
   async function handleOpenComparison(phones) {
-    // Selalu fetch data terbaru dari DB agar ID tidak stale
-    let allPhones;
+    // 1. Ambil seluruh HP yang ada di percakapan (prioritaskan phones yang di-pass, fallback ke kartu spesifikasi/hasil aktif)
+    let phonesToCompare = Array.isArray(phones) && phones.length > 0 ? phones : [];
+
+    if (phonesToCompare.length === 0) {
+      const cardMsg = [...messages].reverse().find(
+        (m) =>
+          (m.type === 'saw_result' || m.type === 'spec_card') &&
+          Array.isArray(m.phones) &&
+          m.phones.length > 0
+      );
+      if (cardMsg) {
+        phonesToCompare = cardMsg.phones;
+      }
+    }
+
+    if (phonesToCompare.length === 0) {
+      console.warn('Tidak ada data smartphone dalam percakapan untuk ditarik.');
+      navigate('/perhitungan');
+      return;
+    }
+
+    // 2. Fetch data smartphone terbaru dari database
+    let allPhones = [];
     try {
       allPhones = await fetchSmartphones();
       setSmartphones(allPhones);
@@ -1306,58 +1328,66 @@ export default function SedoAI() {
       allPhones = smartphones;
     }
 
-    if (!allPhones || allPhones.length === 0) {
-      console.warn('Tidak ada smartphone di database.');
-      navigate('/perhitungan');
-      return;
+    // 3. Simpan HP baru ke database jika pengguna sedang login
+    let resolvedPhones = [...phonesToCompare];
+    if (user?.id) {
+      try {
+        const saved = await saveNewlyCreatedPhones(resolvedPhones, user.id);
+        if (saved && saved.length > 0) {
+          resolvedPhones = phonesToCompare.map((orig) => {
+            const match = saved.find(
+              (s) =>
+                String(s.name).toLowerCase().trim() ===
+                String(orig.name).toLowerCase().trim()
+            );
+            return match || orig;
+          });
+          allPhones = await fetchSmartphones().catch(() => allPhones);
+          setSmartphones(allPhones);
+        }
+      } catch (saveErr) {
+        console.warn('Gagal auto-save HP saat buka perbandingan:', saveErr);
+      }
     }
 
-    const targetIds = [];
-
-    for (const phone of phones) {
-      // Prioritas 1: gunakan ID database yang sudah ada di phone object
-      if (
-        phone.id &&
-        !String(phone.id).startsWith('temp-')
-      ) {
-        // Pastikan ID ini masih ada di allPhones
-        const stillExists = allPhones.some(
-          (dbPhone) => String(dbPhone.id) === String(phone.id)
-        );
-        if (stillExists) {
-          targetIds.push(phone.id);
-          continue;
-        }
-      }
-
-      // Prioritas 2: cari berdasarkan nama di database
-      const found = allPhones.find(
-        (existingPhone) =>
-          String(existingPhone.name)
-            .toLowerCase()
-            .trim() ===
-          String(phone.name)
-            .toLowerCase()
-            .trim()
+    // 4. Siapkan format smartphone lengkap dengan ID yang valid untuk halaman /perhitungan
+    const chatSmartphonesForSession = resolvedPhones.map((phone, index) => {
+      const dbMatch = allPhones.find(
+        (dbP) =>
+          (phone.id &&
+            !String(phone.id).startsWith('temp-') &&
+            String(dbP.id) === String(phone.id)) ||
+          String(dbP.name).toLowerCase().trim() ===
+            String(phone.name).toLowerCase().trim()
       );
 
-      if (found?.id) {
-        targetIds.push(found.id);
-      }
-    }
+      const assignedId =
+        dbMatch?.id ??
+        (phone.id && !String(phone.id).startsWith('temp-')
+          ? phone.id
+          : `chat-${Date.now()}-${index + 1}`);
 
-    const selectedTargetIds = targetIds;
-    const targetSet = new Set(
-      selectedTargetIds.map(String)
-    );
+      return {
+        ...phone,
+        id: assignedId,
+        user_id: phone.user_id ?? dbMatch?.user_id ?? user?.id ?? null,
+      };
+    });
 
+    const targetIds = chatSmartphonesForSession.map((p) => p.id);
+    const targetSet = new Set(targetIds.map(String));
+
+    // Deselect HP database lain yang bukan bagian dari percakapan ini
     const otherIds = allPhones
       .map((phone) => phone.id)
       .filter((id) => !targetSet.has(String(id)));
 
+    // Simpan ke SawSessionContext:
+    // Seluruh data smartphone yang ada di percakapan (HP A, HP B, dst.) dijamin 100% ikut ditarik dan terpilih!
+    setChatSmartphones(chatSmartphonesForSession);
     deselectIds(otherIds);
     setMaxBudget('');
-    setCompareIds(selectedTargetIds);
+    setCompareIds(targetIds);
 
     navigate('/perhitungan');
   }

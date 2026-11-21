@@ -17,6 +17,7 @@ const DEFAULT_SESSION = {
   deselectedIds: [],
   compareIds: [],
   compareInitialized: false,
+  chatSmartphones: [],
 };
 
 function loadInitialState() {
@@ -38,6 +39,9 @@ function loadInitialState() {
         ? parsed.compareIds
         : [],
       compareInitialized: Boolean(parsed.compareInitialized),
+      chatSmartphones: Array.isArray(parsed.chatSmartphones)
+        ? parsed.chatSmartphones
+        : [],
     };
   } catch {
     return DEFAULT_SESSION;
@@ -83,11 +87,11 @@ export function SawSessionProvider({ children }) {
 
   const toggleSmartphoneId = useCallback((id) => {
     setState((prev) => {
-      const exists = prev.deselectedIds.includes(id);
+      const exists = prev.deselectedIds.map(String).includes(String(id));
       return {
         ...prev,
         deselectedIds: exists
-          ? prev.deselectedIds.filter((item) => item !== id)
+          ? prev.deselectedIds.filter((item) => String(item) !== String(id))
           : [...prev.deselectedIds, id],
       };
     });
@@ -111,6 +115,14 @@ export function SawSessionProvider({ children }) {
       customWeights: nextWeights,
       compareIds: prev.compareIds,
       compareInitialized: prev.compareInitialized,
+      chatSmartphones: [],
+    }));
+  }, []);
+
+  const setChatSmartphones = useCallback((phones) => {
+    setState((prev) => ({
+      ...prev,
+      chatSmartphones: Array.isArray(phones) ? phones : [],
     }));
   }, []);
 
@@ -169,6 +181,7 @@ export function SawSessionProvider({ children }) {
         deselectedIds: state.deselectedIds,
         compareIds: state.compareIds,
         compareInitialized: state.compareInitialized,
+        chatSmartphones: state.chatSmartphones,
         setMaxBudget,
         setWeightMode,
         setCustomWeight,
@@ -181,6 +194,7 @@ export function SawSessionProvider({ children }) {
         setCompareIds,
         removeCompareId,
         clearCompareIds,
+        setChatSmartphones,
       }}
     >
       {children}

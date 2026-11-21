@@ -187,9 +187,19 @@ export async function saveNewlyCreatedPhones(smartphones = [], userId) {
           console.log(`🔄 Ditemukan di database setelah retry (ID: ${fallback.id}).`);
           savedList.push(fallback);
         } else {
-          // Tetap masukkan data asli tanpa ID agar tidak hilang dari daftar
-          console.warn(`⚠️ "${phone.name}" tidak ditemukan di DB, masukkan data asli.`);
-          savedList.push(phone);
+          // Jika gagal karena constraint nama unik namun row milik user lain (RLS), coba simpan dengan varian nama
+          try {
+            const suffixPayload = {
+              ...payload,
+              name: `${phone.name} (User)`,
+            };
+            const customCreated = await createSmartphone(suffixPayload);
+            console.log(`✅ Berhasil tersimpan dengan nama alternatif (ID: ${customCreated.id}).`);
+            savedList.push(customCreated);
+          } catch {
+            console.warn(`⚠️ "${phone.name}" tidak dapat disimpan ke DB, masukkan data asli.`);
+            savedList.push(phone);
+          }
         }
       } catch (retryErr) {
         console.warn(`⚠️ Retry fetch juga gagal, masukkan data asli:`, retryErr);
