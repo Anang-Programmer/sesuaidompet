@@ -536,7 +536,7 @@ export default function Perhitungan() {
               </div>
             ) : (
               filteredPhones.map((phone) => {
-                const checked = !deselectedIds.includes(phone.id);
+                const checked = !deselectedIds.map(String).includes(String(phone.id));
 
                 return (
                   <button

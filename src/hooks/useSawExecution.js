@@ -42,23 +42,67 @@ export function useSawExecution() {
     return Number.isFinite(val) && val > 0 ? val : null;
   }, [session.maxBudget]);
 
+  // Menggabungkan smartphone dari database dengan smartphone dari percakapan Chat AI (jika ada)
+  const effectiveSmartphones = useMemo(() => {
+    if (!session.chatSmartphones || session.chatSmartphones.length === 0) {
+      return smartphones;
+    }
+
+    // Pastikan seluruh smartphone dari percakapan Chat AI memiliki ID yang valid
+    const chatPhones = session.chatSmartphones.map((phone, idx) => {
+      const dbMatch = smartphones.find(
+        (dbP) =>
+          (phone.id && !String(phone.id).startsWith('temp-') && String(dbP.id) === String(phone.id)) ||
+          String(dbP.name).toLowerCase().trim() === String(phone.name).toLowerCase().trim()
+      );
+
+      const assignedId =
+        dbMatch?.id ??
+        (phone.id && !String(phone.id).startsWith('temp-')
+          ? phone.id
+          : `chat-${idx + 1}`);
+
+      return {
+        ...phone,
+        id: assignedId,
+        user_id: phone.user_id ?? dbMatch?.user_id ?? null,
+        isFromChat: true,
+      };
+    });
+
+    const chatNames = new Set(
+      chatPhones.map((p) => String(p.name).toLowerCase().trim())
+    );
+    const chatIds = new Set(
+      chatPhones.map((p) => String(p.id))
+    );
+
+    // HP database lain yang tidak ada di chat tetap disertakan agar user bisa menambah alternatif jika diinginkan
+    const otherDbPhones = smartphones.filter(
+      (dbP) =>
+        !chatIds.has(String(dbP.id)) &&
+        !chatNames.has(String(dbP.name).toLowerCase().trim())
+    );
+
+    return [...chatPhones, ...otherDbPhones];
+  }, [smartphones, session.chatSmartphones]);
+
   const completePhones = useMemo(
-    () => smartphones.filter((p) => isCompleteSmartphone(p, criteria)),
-    [smartphones, criteria]
+    () => effectiveSmartphones.filter((p) => isCompleteSmartphone(p, criteria)),
+    [effectiveSmartphones, criteria]
   );
 
-  const incompleteCount = smartphones.length - completePhones.length;
+  const incompleteCount = effectiveSmartphones.length - completePhones.length;
 
   const eligiblePhones = useMemo(() => {
     if (!parsedBudget) return completePhones;
     return completePhones.filter((p) => Number(p.price) <= parsedBudget);
   }, [completePhones, parsedBudget]);
 
-  const selectedPhones = useMemo(
-    () =>
-      eligiblePhones.filter((p) => !session.deselectedIds.includes(p.id)),
-    [eligiblePhones, session.deselectedIds]
-  );
+  const selectedPhones = useMemo(() => {
+    const deselectedSet = new Set(session.deselectedIds.map(String));
+    return eligiblePhones.filter((p) => !deselectedSet.has(String(p.id)));
+  }, [eligiblePhones, session.deselectedIds]);
 
   const effectiveWeightMode = isAdmin ? session.weightMode : 'default';
 
@@ -88,7 +132,7 @@ export function useSawExecution() {
     ...session,
     weightMode: effectiveWeightMode,
     criteria,
-    smartphones,
+    smartphones: effectiveSmartphones,
     completePhones,
     incompleteCount,
     eligiblePhones,
