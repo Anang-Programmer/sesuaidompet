@@ -443,13 +443,51 @@ export default function SedoAI() {
   const [isLiveModeOpen, setIsLiveModeOpen] = useState(false);
   const [liveStatus, setLiveStatus] = useState('listening');
   const [liveAiText, setLiveAiText] = useState('');
+  const [liveError, setLiveError] = useState('');
+  const [liveLastSpoken, setLiveLastSpoken] = useState('');
+  const [liveInitialCardId, setLiveInitialCardId] = useState(null);
   const [isLiveMicMuted, setIsLiveMicMuted] = useState(false);
+  const [speechRate, setSpeechRate] = useState(1.22);
+
+  const handleCycleSpeechRate = useCallback(() => {
+    const presets = [1.0, 1.22, 1.35];
+    setSpeechRate((current) => {
+      const idx = presets.findIndex((v) => Math.abs(v - current) < 0.05);
+      return presets[(idx + 1) % presets.length];
+    });
+  }, []);
+
   const isLiveModeRef = useRef(false);
+  const liveStatusRef = useRef('idle');
+  const isLiveMicMutedRef = useRef(false);
   const isProcessingRef = useRef(false);
+  const liveRestartTimerRef = useRef(null);
+
+  const updateLiveStatus = useCallback((nextStatus) => {
+    liveStatusRef.current = nextStatus;
+    setLiveStatus(nextStatus);
+  }, []);
+
+  const updateLiveMicMuted = useCallback((muted) => {
+    isLiveMicMutedRef.current = muted;
+    setIsLiveMicMuted(muted);
+  }, []);
+
+  const clearLiveRestartTimer = useCallback(() => {
+    if (liveRestartTimerRef.current) {
+      clearTimeout(liveRestartTimerRef.current);
+      liveRestartTimerRef.current = null;
+    }
+  }, []);
 
   useEffect(() => {
-    isLiveModeRef.current = isLiveModeOpen;
-  }, [isLiveModeOpen]);
+    return () => {
+      if (liveRestartTimerRef.current) {
+        clearTimeout(liveRestartTimerRef.current);
+        liveRestartTimerRef.current = null;
+      }
+    };
+  }, []);
 
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
@@ -776,6 +814,7 @@ export default function SedoAI() {
     speakingMessageId,
     liveTranscript,
     audioLevel,
+    isSupported: isVoiceSupported,
     startListening,
     stopListening,
     abortListening,
@@ -785,26 +824,95 @@ export default function SedoAI() {
   } = useVoiceHandler({
     lang: 'id-ID',
     silenceTimeoutMs: 1800,
+    defaultRate: speechRate,
     onTranscript: (spokenText) => {
-      // Menampilkan teks yang sedang diucapkan secara real-time ke input form
-      setInputMessage(spokenText);
+      // Saat chat teks biasa, tampilkan teks real-time ke input form (jangan kotori input saat mode Live)
+      if (!isLiveModeRef.current) {
+        setInputMessage(spokenText);
+      }
     },
     onFinalTranscript: (finalText) => {
-      // Kalimat final selesai diucapkan
-      setInputMessage(finalText);
+      if (!isLiveModeRef.current) {
+        setInputMessage(finalText);
+      }
     },
     onSilence: (spokenText) => {
       // Pada Gemini Live Mode: kirim otomatis jika pengguna selesai bicara (jeda hening)
-      if (isLiveModeRef.current && !isProcessingRef.current && spokenText?.trim()) {
-        stopListening();
-        setLiveStatus('processing');
+      if (
+        isLiveModeRef.current &&
+        !isProcessingRef.current &&
+        !isLiveMicMutedRef.current &&
+        spokenText?.trim()
+      ) {
+        clearLiveRestartTimer();
+        setLiveLastSpoken(spokenText.trim());
+        abortListening();
+        updateLiveStatus('processing');
         handleSendMessage(spokenText.trim(), { fromLive: true });
       }
     },
+    onUnexpectedEnd: () => {
+      // Chrome otomatis memutus SpeechRecognition saat hening ~10 detik (no-speech).
+      // Jika masih dalam Live Mode & status masih 'listening' & tidak di-mute, nyalakan lagi otomatis.
+      if (
+        isLiveModeRef.current &&
+        liveStatusRef.current === 'listening' &&
+        !isLiveMicMutedRef.current &&
+        !isProcessingRef.current
+      ) {
+        clearLiveRestartTimer();
+        liveRestartTimerRef.current = setTimeout(() => {
+          liveRestartTimerRef.current = null;
+          if (
+            isLiveModeRef.current &&
+            liveStatusRef.current === 'listening' &&
+            !isLiveMicMutedRef.current &&
+            !isProcessingRef.current
+          ) {
+            const started = startListening();
+            if (!started) {
+              updateLiveStatus('idle');
+              updateLiveMicMuted(true);
+            }
+          }
+        }, 300);
+      }
+    },
     onError: (errorMessage) => {
-      window.alert(errorMessage);
+      if (isLiveModeRef.current) {
+        clearLiveRestartTimer();
+        setLiveError(errorMessage);
+        updateLiveStatus('idle');
+        updateLiveMicMuted(true);
+      } else {
+        window.alert(errorMessage);
+      }
     },
   });
+
+  const scheduleLiveListen = useCallback(
+    (delayMs = 200) => {
+      clearLiveRestartTimer();
+      liveRestartTimerRef.current = setTimeout(() => {
+        liveRestartTimerRef.current = null;
+        if (
+          !isLiveModeRef.current ||
+          isLiveMicMutedRef.current ||
+          isProcessingRef.current
+        ) {
+          return;
+        }
+        setLiveLastSpoken('');
+        updateLiveStatus('listening');
+        const started = startListening();
+        if (!started) {
+          updateLiveStatus('idle');
+          updateLiveMicMuted(true);
+        }
+      }, delayMs);
+    },
+    [clearLiveRestartTimer, startListening, updateLiveStatus, updateLiveMicMuted]
+  );
 
   const handleVoiceSubmit = useCallback(
     (textToSend) => {
@@ -828,59 +936,126 @@ export default function SedoAI() {
   ========================================= */
 
   const handleOpenLiveMode = useCallback(() => {
-    setIsLiveModeOpen(true);
-    setLiveStatus('listening');
-    setIsLiveMicMuted(false);
-    setLiveAiText('');
+    clearLiveRestartTimer();
     stopSpeaking();
-    setTimeout(() => {
-      startListening();
-    }, 150);
-  }, [startListening, stopSpeaking]);
+    abortListening();
+
+    const currentLatestCard = [...messages].reverse().find(
+      (m) => m.type === 'spec_card' || m.type === 'saw_result'
+    );
+    setLiveInitialCardId(currentLatestCard?.id ?? null);
+
+    isLiveModeRef.current = true;
+    setIsLiveModeOpen(true);
+    setLiveAiText('');
+    setLiveLastSpoken('');
+    setLiveError('');
+
+    if (!isVoiceSupported) {
+      updateLiveMicMuted(true);
+      updateLiveStatus('idle');
+      setLiveError(
+        'Browser ini belum mendukung Speech Recognition. Gunakan Google Chrome atau Microsoft Edge untuk Mode Live Suara.'
+      );
+      return;
+    }
+
+    updateLiveMicMuted(false);
+    updateLiveStatus('listening');
+    scheduleLiveListen(150);
+  }, [
+    clearLiveRestartTimer,
+    stopSpeaking,
+    abortListening,
+    messages,
+    isVoiceSupported,
+    updateLiveMicMuted,
+    updateLiveStatus,
+    scheduleLiveListen,
+  ]);
 
   const handleCloseLiveMode = useCallback(() => {
-    setIsLiveModeOpen(false);
-    stopListening();
+    isLiveModeRef.current = false;
+    clearLiveRestartTimer();
+    abortListening();
     stopSpeaking();
-    setLiveStatus('idle');
+    setIsLiveModeOpen(false);
+    updateLiveStatus('idle');
+    updateLiveMicMuted(false);
     setLiveAiText('');
-  }, [stopListening, stopSpeaking]);
+    setLiveLastSpoken('');
+    setLiveError('');
+  }, [
+    clearLiveRestartTimer,
+    abortListening,
+    stopSpeaking,
+    updateLiveStatus,
+    updateLiveMicMuted,
+  ]);
 
   const handleToggleLiveMic = useCallback(() => {
-    if (isListening) {
-      stopListening();
-      setIsLiveMicMuted(true);
-      setLiveStatus('idle');
-    } else {
-      setIsLiveMicMuted(false);
-      setLiveStatus('listening');
-      startListening();
+    if (isProcessingRef.current) return;
+
+    clearLiveRestartTimer();
+
+    // Jika AI sedang berbicara lalu user menekan tombol mic -> hentikan suara & mute
+    if (liveStatusRef.current === 'speaking') {
+      stopSpeaking();
+      abortListening();
+      updateLiveMicMuted(true);
+      updateLiveStatus('idle');
+      return;
     }
-  }, [isListening, stopListening, startListening]);
+
+    if (isListening || liveStatusRef.current === 'listening') {
+      abortListening();
+      updateLiveMicMuted(true);
+      updateLiveStatus('idle');
+    } else {
+      setLiveError('');
+      setLiveLastSpoken('');
+      updateLiveMicMuted(false);
+      updateLiveStatus('listening');
+      const started = startListening();
+      if (!started) {
+        updateLiveMicMuted(true);
+        updateLiveStatus('idle');
+      }
+    }
+  }, [
+    clearLiveRestartTimer,
+    stopSpeaking,
+    abortListening,
+    isListening,
+    startListening,
+    updateLiveMicMuted,
+    updateLiveStatus,
+  ]);
 
   const handleLiveInterrupt = useCallback(() => {
+    if (isProcessingRef.current) return;
+    clearLiveRestartTimer();
     stopSpeaking();
+    setLiveError('');
+    updateLiveMicMuted(false);
     if (isLiveModeRef.current) {
-      setTimeout(() => {
-        if (isLiveModeRef.current) {
-          setLiveStatus('listening');
-          startListening();
-        }
-      }, 250);
+      scheduleLiveListen(200);
     }
-  }, [stopSpeaking, startListening]);
+  }, [
+    clearLiveRestartTimer,
+    stopSpeaking,
+    updateLiveMicMuted,
+    scheduleLiveListen,
+  ]);
 
   /* =========================================
      KIRIM PESAN KE AI
   ========================================= */
 
   async function handleSendMessage(customText, options = {}) {
-    if (isListening) {
-      stopListening();
-    }
-    if (isSpeaking) {
-      stopSpeaking();
-    }
+    clearLiveRestartTimer();
+    abortListening();
+    stopSpeaking();
 
     const textToSend = (
       customText || inputMessage
@@ -890,20 +1065,17 @@ export default function SedoAI() {
     isProcessingRef.current = true;
 
     setInputMessage('');
+    setLiveError('');
 
     const userMessageId = `user-${Date.now()}`;
+    const userMessage = {
+      id: userMessageId,
+      sender: 'user',
+      text: textToSend,
+      type: 'text',
+    };
 
-    const newMessages = [
-      ...messages,
-      {
-        id: userMessageId,
-        sender: 'user',
-        text: textToSend,
-        type: 'text',
-      },
-    ];
-
-    setMessages(newMessages);
+    setMessages((previous) => [...previous, userMessage]);
     setIsProcessing(true);
 
     // 1. Cek respon percakapan kasual (terima kasih, salam, pujian, identitas) secara instan & alami
@@ -919,31 +1091,30 @@ export default function SedoAI() {
         },
       ]);
 
+      setIsProcessing(false);
+      isProcessingRef.current = false;
+
       if (isLiveModeRef.current) {
+        setLiveLastSpoken('');
         setLiveAiText(conversationalReply);
-        setLiveStatus('speaking');
+        updateLiveStatus('speaking');
         speakText(conversationalReply, {
           onEnd: () => {
-            if (isLiveModeRef.current) {
-              setTimeout(() => {
-                if (isLiveModeRef.current) {
-                  setLiveStatus('listening');
-                  startListening();
-                }
-              }, 400);
+            if (isLiveModeRef.current && !isLiveMicMutedRef.current) {
+              scheduleLiveListen(150);
+            } else if (isLiveModeRef.current) {
+              updateLiveStatus('idle');
             }
           },
         });
       }
-
-      setIsProcessing(false);
-      isProcessingRef.current = false;
       return;
     }
 
     const isFromLive = options.fromLive || isLiveModeRef.current;
     if (isFromLive) {
-      setLiveStatus('processing');
+      setLiveLastSpoken(textToSend);
+      updateLiveStatus('processing');
     }
 
     try {
@@ -1002,29 +1173,27 @@ export default function SedoAI() {
 
       const isSpecCard = Boolean(result.smartphones && result.smartphones.length > 0);
 
+      // Bebaskan processing lock sebelum mulai berbicara agar tombol sela/mute bisa dipakai saat TTS berjalan
+      setIsProcessing(false);
+      isProcessingRef.current = false;
+
       // Gemini Live Voice Turn-Taking Loop:
       if (isLiveModeRef.current && spokenAiResponse) {
+        setLiveLastSpoken('');
         setLiveAiText(spokenAiResponse);
-        setLiveStatus('speaking');
+        updateLiveStatus('speaking');
         speakText(spokenAiResponse, {
           onEnd: () => {
-            if (isLiveModeRef.current) {
-              if (isSpecCard) {
-                // Sesuai permintaan user:
-                // Pas form perbandingan spesifikasi muncul, mic otomatis di-disable / mute.
-                // Pengguna bisa memeriksa atau mengubah angka dengan tenang.
-                // Mic baru akan dibuka lagi saat tombol Hitung SAW ditekan & dijawab.
-                stopListening();
-                setLiveStatus('idle');
-              } else {
-                // Percakapan biasa tanpa form: buka mic lagi untuk giliran user
-                setTimeout(() => {
-                  if (isLiveModeRef.current) {
-                    setLiveStatus('listening');
-                    startListening();
-                  }
-                }, 400);
-              }
+            if (!isLiveModeRef.current) return;
+            if (isSpecCard) {
+              // Pas form perbandingan spesifikasi muncul, mic otomatis di-mute agar user bisa cek/ubah angka dengan tenang.
+              abortListening();
+              updateLiveMicMuted(true);
+              updateLiveStatus('idle');
+            } else if (!isLiveMicMutedRef.current) {
+              scheduleLiveListen(150);
+            } else {
+              updateLiveStatus('idle');
             }
           },
         });
@@ -1043,18 +1212,19 @@ export default function SedoAI() {
         },
       ]);
 
+      setIsProcessing(false);
+      isProcessingRef.current = false;
+
       if (isLiveModeRef.current) {
+        setLiveLastSpoken('');
         setLiveAiText(errorMsg);
-        setLiveStatus('speaking');
+        updateLiveStatus('speaking');
         speakText(errorMsg, {
           onEnd: () => {
-            if (isLiveModeRef.current) {
-              setTimeout(() => {
-                if (isLiveModeRef.current) {
-                  setLiveStatus('listening');
-                  startListening();
-                }
-              }, 400);
+            if (isLiveModeRef.current && !isLiveMicMutedRef.current) {
+              scheduleLiveListen(200);
+            } else if (isLiveModeRef.current) {
+              updateLiveStatus('idle');
             }
           },
         });
@@ -1181,10 +1351,16 @@ export default function SedoAI() {
       return;
     }
 
+    clearLiveRestartTimer();
+    abortListening();
+    stopSpeaking();
+
     isProcessingRef.current = true;
     setIsProcessing(true);
+    setLiveError('');
     if (isLiveModeRef.current) {
-      setLiveStatus('processing');
+      setLiveLastSpoken('');
+      updateLiveStatus('processing');
     }
 
     try {
@@ -1263,29 +1439,33 @@ export default function SedoAI() {
         },
       ]);
 
-      // Jika dalam Gemini Live Mode, bacakan juara rekomendasi
+      setIsProcessing(false);
+      isProcessingRef.current = false;
+
+      // Jika dalam Gemini Live Mode, bacakan juara rekomendasi lalu buka mic kembali
       if (isLiveModeRef.current && sawResult.rekomendasiTerbaik?.smartphone?.name) {
         const winnerSummary = `Perhitungan SAW selesai! Juara rekomendasi terbaik adalah ${sawResult.rekomendasiTerbaik.smartphone.name} dengan nilai preferensi ${formatDecimal(sawResult.rekomendasiTerbaik.totalScore, 4)}.`;
         setLiveAiText(winnerSummary);
-        setLiveStatus('speaking');
+        updateLiveStatus('speaking');
         speakText(winnerSummary, {
           onEnd: () => {
             if (isLiveModeRef.current) {
-              setTimeout(() => {
-                if (isLiveModeRef.current) {
-                  setLiveStatus('listening');
-                  startListening();
-                }
-              }, 400);
+              updateLiveMicMuted(false);
+              scheduleLiveListen(150);
             }
           },
         });
       }
     } catch (error) {
-      window.alert(
-        error.message ||
-          'Terjadi kesalahan saat menghitung rekomendasi.'
-      );
+      const errMessage =
+        error.message || 'Terjadi kesalahan saat menghitung rekomendasi.';
+      if (isLiveModeRef.current) {
+        setLiveError(errMessage);
+        updateLiveMicMuted(true);
+        updateLiveStatus('idle');
+      } else {
+        window.alert(errMessage);
+      }
     } finally {
       setIsProcessing(false);
       isProcessingRef.current = false;
@@ -2226,13 +2406,16 @@ export default function SedoAI() {
         isOpen={isLiveModeOpen}
         onClose={handleCloseLiveMode}
         liveStatus={liveStatus}
-        liveTranscript={liveTranscript}
+        liveTranscript={liveTranscript || liveLastSpoken}
         aiResponseText={liveAiText}
+        liveError={liveError}
+        onDismissError={() => setLiveError('')}
         audioLevel={audioLevel}
         onToggleMic={handleToggleLiveMic}
         isMicMuted={isLiveMicMuted}
         onInterrupt={handleLiveInterrupt}
         activeCard={latestCardMessage}
+        initialCardId={liveInitialCardId}
         specFields={SPEC_FIELDS}
         onUpdatePhoneSpec={handleUpdatePhoneSpec}
         onAddManualPhone={handleAddManualPhoneToCard}
@@ -2240,6 +2423,8 @@ export default function SedoAI() {
         onExecuteSaw={handleExecuteSaw}
         onOpenComparison={handleOpenComparison}
         isProcessing={isProcessing}
+        speechRate={speechRate}
+        onCycleSpeechRate={handleCycleSpeechRate}
       />
     </section>
   );

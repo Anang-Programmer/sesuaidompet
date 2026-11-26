@@ -370,7 +370,7 @@ export default function Home() {
   const isLoggedIn = !loading && Boolean(user);
 
   const primaryCta = isLoggedIn
-    ? { to: '/dashboard', label: 'Buka Dashboard', icon: LayoutDashboard }
+    ? { to: '/dashboard', label: 'Buka Dashboard', icon: LayoutDashboard}
     : { to: '/register', label: 'Mulai Gratis', icon: ArrowRight };
 
   const PrimaryIcon = primaryCta.icon;
@@ -888,10 +888,7 @@ export default function Home() {
                     Alternatif diurutkan dari skor <Formula tex="V_i" /> terbesar. Jika skor sama, harga lebih terjangkau menjadi penentu peringkat pertama.
                   </p>
                 </div>
-                <div className="mt-4 flex items-center gap-2 rounded-xl bg-[#e7f4e9] px-3.5 py-2.5 text-xs font-bold text-[#2c7944]">
-                  <CheckCircle2 size={15} className="shrink-0" />
-                  Peringkat 1 siap disimpan ke riwayat
-                </div>
+               
               </article>
             </div>
 
@@ -940,7 +937,7 @@ export default function Home() {
                 to={isLoggedIn ? '/sedo-ai' : '/register'}
                 className="sd-button-light mt-8 inline-flex min-h-[48px] items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-extrabold !text-[#1a5a36] shadow-lg transition hover:-translate-y-0.5"
               >
-                <Bot size={17} />
+                
                 {isLoggedIn ? 'Mulai chat dengan SEDO AI' : 'Daftar untuk mencoba'}
               </Link>
             </div>
