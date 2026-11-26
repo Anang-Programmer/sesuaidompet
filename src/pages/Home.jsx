@@ -171,10 +171,7 @@ function Formula({ tex, display = false, className = '' }) {
 function SectionHeader({ eyebrow, title, description, center = false }) {
   return (
     <div className={`max-w-2xl ${center ? 'mx-auto text-center' : ''}`}>
-      <span className="inline-flex items-center gap-2 rounded-full border border-[#d4e8d8] bg-white px-3 py-1 text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#2f8a4f]">
-        <span className="h-1.5 w-1.5 rounded-full bg-[#3caf62]" />
-        {eyebrow}
-      </span>
+      
       <h2 className="mt-4 text-[28px] font-extrabold leading-tight tracking-[-0.03em] text-[#183b29] sm:text-[34px]">
         {title}
       </h2>
@@ -572,20 +569,22 @@ export default function Home() {
         </section>
 
         {/* ================= HIGHLIGHTS ================= */}
-        <section className="relative z-10 mx-auto -mt-10 max-w-[1200px] px-5 sm:px-7">
-          <div className="grid grid-cols-2 overflow-hidden rounded-[24px] border border-[#e1ebe2] bg-white shadow-[0_18px_45px_rgba(24,67,38,0.07)] lg:grid-cols-4">
+        <section className="relative z-10 border-y border-[#e1ebe2] bg-white">
+          <div className="mx-auto grid max-w-[1200px] grid-cols-2 px-5 sm:px-7 lg:grid-cols-4">
             {HIGHLIGHTS.map((item, index) => (
               <div
                 key={item.label}
-                className={`p-5 sm:p-6 ${index % 2 === 1 ? 'border-l border-[#edf2ed]' : ''} ${
+                className={`flex items-center gap-3 px-3 py-3 sm:px-5 sm:py-3.5 ${index % 2 === 1 ? 'border-l border-[#edf2ed]' : ''} ${
                   index >= 2 ? 'border-t border-[#edf2ed] lg:border-t-0' : ''
                 } ${index === 2 ? 'lg:border-l' : ''}`}
               >
-                <p className="bg-gradient-to-r from-[#21834a] to-[#48b96a] bg-clip-text text-3xl font-extrabold tracking-tight text-transparent">
+                <p className="shrink-0 bg-gradient-to-r from-[#21834a] to-[#48b96a] bg-clip-text text-xl font-extrabold tracking-tight text-transparent sm:text-2xl">
                   {item.value}
                 </p>
-                <p className="mt-1.5 text-sm font-extrabold text-[#25462f]">{item.label}</p>
-                <p className="mt-1 text-xs leading-5 text-[#869489]">{item.detail}</p>
+                <div className="min-w-0">
+                  <p className="truncate text-xs font-extrabold text-[#25462f] sm:text-[13px]">{item.label}</p>
+                  <p className="truncate text-[11px] text-[#869489]">{item.detail}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -905,50 +904,48 @@ export default function Home() {
         </section>
 
         {/* ================= SEDO AI ================= */}
-        <section className="mx-auto max-w-[1200px] px-5 py-20 sm:px-7 lg:py-28">
-          <div className="relative overflow-hidden rounded-[30px] bg-gradient-to-br from-[#0f2f1f] via-[#164a30] to-[#1f6f40] p-7 text-white shadow-[0_30px_70px_rgba(18,60,36,0.25)] sm:p-10 lg:p-14">
-            <div className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-[#3caf62]/25 blur-3xl" />
-            <div className="pointer-events-none absolute -bottom-28 -left-20 h-80 w-80 rounded-full bg-[#5ee18d]/10 blur-3xl" />
+        <section className="relative overflow-hidden bg-gradient-to-br from-[#0f2f1f] via-[#164a30] to-[#1f6f40] text-white">
+          <div className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-[#3caf62]/25 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-28 -left-20 h-80 w-80 rounded-full bg-[#5ee18d]/10 blur-3xl" />
 
-            <div className="relative grid items-center gap-10 lg:grid-cols-2">
-              <div>
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#b9f3c5]">
-                  <Sparkles size={13} />
-                  SEDO AI
-                </span>
-                <h2 className="mt-5 text-[28px] font-extrabold leading-tight tracking-[-0.03em] sm:text-[36px]">
-                  Cukup sebutkan nama HP-nya, biar SEDO AI yang menyiapkan datanya.
-                </h2>
-                <p className="mt-4 max-w-lg text-[15px] leading-7 text-[#c3dccb]">
-                  Tidak perlu mencari spesifikasi satu per satu. SEDO AI mengenali smartphone yang
-                  kamu sebutkan, melengkapi data enam kriteria, menghitung SAW, lalu menjelaskan
-                  alasan rekomendasinya dalam bahasa yang mudah dipahami.
-                </p>
+          <div className="relative mx-auto grid max-w-[1200px] items-center gap-10 px-5 py-20 sm:px-7 lg:grid-cols-2 lg:py-24">
+            <div>
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#b9f3c5]">
+                <Sparkles size={13} />
+                SEDO AI
+              </span>
+              <h2 className="mt-5 text-[28px] font-extrabold leading-tight tracking-[-0.03em] sm:text-[36px]">
+                Cukup sebutkan nama HP-nya, biar SEDO AI yang menyiapkan datanya.
+              </h2>
+              <p className="mt-4 max-w-lg text-[15px] leading-7 text-[#c3dccb]">
+                Tidak perlu mencari spesifikasi satu per satu. SEDO AI mengenali smartphone yang
+                kamu sebutkan, melengkapi data enam kriteria, menghitung SAW, lalu menjelaskan
+                alasan rekomendasinya dalam bahasa yang mudah dipahami.
+              </p>
 
-                <ul className="mt-7 space-y-3 text-sm">
-                  {[
-                    'Ekstraksi nama smartphone dari kalimat bebas',
-                    'Spesifikasi dapat diperiksa dan diedit sebelum dihitung',
-                    'Mode Live: percakapan suara dua arah ala asisten virtual',
-                  ].map((item) => (
-                    <li key={item} className="flex items-start gap-2.5">
-                      <CheckCircle2 size={17} className="mt-0.5 shrink-0 text-[#7ee39b]" />
-                      <span className="text-white/90">{item}</span>
-                    </li>
-                  ))}
-                </ul>
+              <ul className="mt-7 space-y-3 text-sm">
+                {[
+                  'Ekstraksi nama smartphone dari kalimat bebas',
+                  'Spesifikasi dapat diperiksa dan diedit sebelum dihitung',
+                  'Mode Live: percakapan suara dua arah ala asisten virtual',
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-2.5">
+                    <CheckCircle2 size={17} className="mt-0.5 shrink-0 text-[#7ee39b]" />
+                    <span className="text-white/90">{item}</span>
+                  </li>
+                ))}
+              </ul>
 
-                <Link
-                  to={isLoggedIn ? '/sedo-ai' : '/register'}
-                  className="sd-button-light mt-8 inline-flex min-h-[48px] items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-extrabold !text-[#1a5a36] shadow-lg transition hover:-translate-y-0.5"
-                >
-                  <Bot size={17} />
-                  {isLoggedIn ? 'Mulai chat dengan SEDO AI' : 'Daftar untuk mencoba'}
-                </Link>
-              </div>
-
-              <AiChatMockup />
+              <Link
+                to={isLoggedIn ? '/sedo-ai' : '/register'}
+                className="sd-button-light mt-8 inline-flex min-h-[48px] items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-extrabold !text-[#1a5a36] shadow-lg transition hover:-translate-y-0.5"
+              >
+                <Bot size={17} />
+                {isLoggedIn ? 'Mulai chat dengan SEDO AI' : 'Daftar untuk mencoba'}
+              </Link>
             </div>
+
+            <AiChatMockup />
           </div>
         </section>
 
@@ -969,8 +966,8 @@ export default function Home() {
         </section>
 
         {/* ================= CTA ================= */}
-        <section className="mx-auto max-w-[1200px] px-5 py-16 sm:px-7">
-          <div className="flex flex-col items-start justify-between gap-6 rounded-[26px] border border-[#cfe4d3] bg-gradient-to-r from-[#e9f6ec] via-[#f2faf3] to-[#e4f3e8] p-7 sm:p-10 lg:flex-row lg:items-center">
+        <section className="border-t border-[#cfe4d3] bg-gradient-to-r from-[#e9f6ec] via-[#f2faf3] to-[#e4f3e8]">
+          <div className="mx-auto flex max-w-[1200px] flex-col items-start justify-between gap-6 px-5 py-16 sm:px-7 lg:flex-row lg:items-center lg:py-20">
             <div>
               <h2 className="text-2xl font-extrabold tracking-tight text-[#183b29] sm:text-[28px]">
                 Siap menemukan smartphone terbaikmu?
