@@ -1478,3 +1478,106 @@ a {
 
 /* =========================================
    ANIMASI SPEECH-TO-TEXT (STT) & VOICE
+========================================= */
+
+@keyframes voice-bar {
+  0%, 100% {
+    transform: scaleY(0.35);
+    opacity: 0.75;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+.animate-voice-bar {
+  animation: voice-bar 0.85s ease-in-out infinite;
+}
+
+@keyframes voice-pulse-ring {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.65;
+  }
+  70% {
+    transform: scale(1.25);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.25);
+    opacity: 0;
+  }
+}
+
+.animate-voice-pulse-ring {
+  animation: voice-pulse-ring 1.6s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+}
+
+@keyframes gemini-wave-ring {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(1.38);
+    opacity: 0;
+  }
+}
+
+.animate-gemini-wave-ring {
+  animation: gemini-wave-ring 2.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+@keyframes scaleUp {
+  0% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-scaleUp {
+  animation: scaleUp 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+/* Custom scrollbar for Gemini Live Popups */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(46, 164, 88, 0.45) rgba(255, 255, 255, 0.05);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 9999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(46, 164, 88, 0.5);
+  border-radius: 9999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(56, 193, 104, 0.8);
+}
+
